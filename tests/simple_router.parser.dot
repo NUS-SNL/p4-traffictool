@@ -1,0 +1,12 @@
+digraph g {
+   wire [shape=doublecircle];
+   __table__condition_0 [label=_condition_0 shape=doublecircle];
+   wire -> start
+   start [shape=record label="{start}"];
+   start -> parse_ethernet [label="default"];
+   parse_ethernet [shape=record label="{parse_ethernet | {ethernet.etherType}}"];
+   parse_ethernet -> parse_ipv4 [label="0x800"];
+   parse_ipv4 [shape=record label="{parse_ipv4}"];
+   parse_ipv4 -> _condition_0 [label="default"];
+   parse_ethernet -> _condition_0 [label="default"];
+}

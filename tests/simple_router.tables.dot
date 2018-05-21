@@ -1,0 +1,14 @@
+digraph g {
+   buffer [shape=doublecircle];
+   egress [shape=doublecircle];
+   _condition_0 [shape=box label="((valid ipv4) and (ipv4.ttl > 0))"];
+   _condition_0 -> buffer [arrowhead=odot label=""];
+   _condition_0 -> ipv4_lpm [arrowhead=dot label=""];
+   ipv4_lpm [shape=ellipse];
+   ipv4_lpm -> forward [arrowhead=normal label="ALL"];
+   forward [shape=ellipse];
+   forward -> buffer [arrowhead=normal label="ALL"];
+   buffer -> send_frame
+   send_frame [shape=ellipse];
+   send_frame -> egress [arrowhead=normal label="ALL"];
+}

@@ -1,0 +1,5 @@
+digraph ingress {
+_condition_0 [shape=box label="_condition_0\n((valid ipv4) and (ipv4.ttl > 0))"];
+ipv4_lpm -> forward [color=red label="routing_metadata.nhop_ipv4" decorate=true];
+_condition_0 -> ipv4_lpm [color=green label="" decorate=true arrowhead = dot];
+}
