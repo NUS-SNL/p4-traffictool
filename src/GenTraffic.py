@@ -1,16 +1,18 @@
 import json
 import sys
 MAX_PATH_LENGTH = 10
+DESTINATION = "foo"
 
 try:
     data = json.load(open(sys.argv[1]))
+    DESTINATION = sys.argv[2]
 except:
     print "Incorrect argument specification"
     exit(0)
     
-if (len(sys.argv)>2):
+if (len(sys.argv)>3):
     try:
-        MAX_PATH_LENGTH = int(sys.argv[2])
+        MAX_PATH_LENGTH = int(sys.argv[3])
     except:
         print "Incorrect argument specification"
         exit(0)
@@ -107,7 +109,7 @@ def make_packets(control_graph, fout):
         fout.write(
             "\n#No possible packets which can be parsed to the final state")
         return
-    fout.write("possible_packets = [\n")
+    fout.write("_possible_packets = [\n")
     for i in paths[:-1]:
         fout.write("\t(%s)),\n" % (string_packet(i)))
     fout.write("\t(%s))\n" % (string_packet(paths[-1])))
@@ -115,18 +117,21 @@ def make_packets(control_graph, fout):
 
 
 def make_template(json_data, destination):
-    fout = open(destination, 'w')
-    fout.write("from scapy import *\n")
+    try:
+        fout = open(destination, 'w')
+        fout.write("from scapy import *\n")
 
-    fout.write("\n ##class definitions\n")
-    header_ports = make_classes(json_data, fout)
+        fout.write("\n ##class definitions\n")
+        header_ports = make_classes(json_data, fout)
 
-    fout.write("\n##bindings\n")
-    control_graph = make_control_graph(json_data["parsers"])
-    make_parsers(control_graph, header_ports, fout)
+        fout.write("\n##bindings\n")
+        control_graph = make_control_graph(json_data["parsers"])
+        make_parsers(control_graph, header_ports, fout)
 
-    fout.write("\n##packet_list\n")
-    make_packets(control_graph, fout)
+        fout.write("\n##packet_list\n")
+        make_packets(control_graph, fout)
+    catch:
+        print("Destination file cannot be created\n")
+        exit(0)
 
-
-make_template(data, "TrafficGen_"+sys.argv[1].split(".")[0]+".py")
+make_template(data, DESTINATION)
