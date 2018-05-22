@@ -1,7 +1,7 @@
 from scapy import *
 
  ##class definitions
-class ethernet(Packet):
+class Ethernet(Packet):
 	name = 'ethernet'
 	fields_desc = [
 		BitField('dstAddr',0,48),
@@ -9,7 +9,7 @@ class ethernet(Packet):
 		BitField('srcAddr',0,48)
 	]
 
-class ipv4(Packet):
+class Ipv4(Packet):
 	name = 'ipv4'
 	fields_desc = [
 		BitField('version',0,4),
@@ -28,3 +28,10 @@ class ipv4(Packet):
 
 
 ##bindings
+bind_layers(Ethernet, Ipv4, etherType = 0x0800)
+
+##packet_list
+possible_packets = [
+	(Ethernet()/Ipv4()),
+	(Ethernet())
+]

@@ -72,3 +72,12 @@ bind_layers(Ethernet, Ipv4, etherType = 0x0800)
 bind_layers(Ipv4, Udp, protocol = 0x11)
 bind_layers(Udp, Q_meta, dstPort = 0x1e61)
 bind_layers(Udp, Snapshot, dstPort = 0x22b8)
+
+##packet_list
+possible_packets = [
+	(Ethernet()/Ipv4()/Udp()/Q_meta()),
+	(Ethernet()/Ipv4()/Udp()/Snapshot()),
+	(Ethernet()/Ipv4()/Udp()),
+	(Ethernet()/Ipv4()),
+	(Ethernet())
+]
