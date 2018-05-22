@@ -1,0 +1,4 @@
+digraph ingress {
+src_rewrite -> dst_rewrite [color=yellow label="ipv4.dstAddr" decorate=true];
+dst_rewrite -> ipv4_forward [color=red label="ipv4.dstAddr" decorate=true];
+}
