@@ -2,8 +2,18 @@ import json
 import sys
 MAX_PATH_LENGTH = 10
 
-data = json.load(open(sys.argv[1]))
-
+try:
+    data = json.load(open(sys.argv[1]))
+except:
+    print "Incorrect argument specification"
+    exit(0)
+    
+if (len(sys.argv)>2):
+    try:
+        MAX_PATH_LENGTH = int(sys.argv[2])
+    except:
+        print "Incorrect argument specification"
+        exit(0)
 
 def valid_name(state):
     if len(state["parser_ops"]) > 0:
@@ -59,8 +69,11 @@ def make_control_graph(parsers):
             if len(state["transition_key"]) > 0:
                 for transition in state["transitions"]:
                     if transition["next_state"] != None:
-                        graph.append([name, state["transition_key"][0]["value"][1], transition["value"], search_state(
-                            parser, transition["next_state"])])
+                        graph.append([  name, 
+                                        state["transition_key"][0]["value"][1], 
+                                        transition["value"], 
+                                        search_state(parser, transition["next_state"])
+                                    ])
                     else:
                         graph.append([name, None, None, "final"])
             else:
@@ -87,7 +100,6 @@ def string_packet(packet):
     for i in packet[1:-1]:
         s += i.capitalize() + "()/"
     return s[:-2]
-
 
 def make_packets(control_graph, fout):
     paths = possible_paths('start', control_graph, 0)
