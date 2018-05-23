@@ -523,14 +523,8 @@
             ]
         },
         {
-            "name": "nop",
-            "id": 1,
-            "runtime_data": [],
-            "primitives": []
-        },
-        {
             "name": "forward",
-            "id": 2,
+            "id": 1,
             "runtime_data": [
                 {
                     "name": "newSrcMAC",
@@ -591,6 +585,12 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "nop",
+            "id": 2,
+            "runtime_data": [],
+            "primitives": []
         },
         {
             "name": "dstReWrite",

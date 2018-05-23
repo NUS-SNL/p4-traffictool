@@ -60,6 +60,8 @@ def make_classes(header_data, fout):
                 fout.write("\t\tBitField('%s',0,%d),\n" % (field[0], field[1]))
             fout.write("\t\tBitField('%s',0,%d)\n" % (field[0], field[1]))
             fout.write("\t]\n\n")
+    # for i in header_ports:
+    #     print (i)
     return header_ports
 
 
@@ -97,22 +99,25 @@ def make_parsers(control_graph, header_ports, fout):
                 edge[0].capitalize(), edge[-1].capitalize(), edge[1], edge[2]))
 
 
-def string_packet(packet):
+def string_packet(header_ports,packet):
     s = ""
-    for i in packet[1:-1]:
-        s += i.capitalize() + "()/"
+    for i in packet:
+        if i in header_ports:
+            s += i.capitalize() + "()/"
     return s[:-2]
 
-def make_packets(control_graph, fout):
-    paths = possible_paths('start', control_graph, 0)
+def make_packets(header_ports, init_states, control_graph, fout):
+    paths = []
+    for i in init_states:
+        paths += possible_paths(i, control_graph, 0)
     if (len(paths) == 0):
         fout.write(
             "\n#No possible packets which can be parsed to the final state")
         return
-    fout.write("_possible_packets = [\n")
+    fout.write("_possible_packets_ = [\n")
     for i in paths[:-1]:
-        fout.write("\t(%s)),\n" % (string_packet(i)))
-    fout.write("\t(%s))\n" % (string_packet(paths[-1])))
+        fout.write("\t(%s)),\n" % (string_packet(header_ports,i)))
+    fout.write("\t(%s))\n" % (string_packet(header_ports,paths[-1])))
     fout.write("]\n")
 
 
@@ -129,8 +134,12 @@ def make_template(json_data, destination):
         make_parsers(control_graph, header_ports, fout)
 
         fout.write("\n##packet_list\n")
-        make_packets(control_graph, fout)
-    catch:
+        init_states = []
+        for parser in json_data["parsers"]:
+            init_states.append(search_state(parser,parser["init_state"]))
+        make_packets(header_ports, init_states, control_graph, fout)
+
+    except IOError:
         print("Destination file cannot be created\n")
         exit(0)
 

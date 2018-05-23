@@ -31,7 +31,7 @@ class Ipv4(Packet):
 bind_layers(Ethernet, Ipv4, etherType = 0x0800)
 
 ##packet_list
-possible_packets = [
+_possible_packets = [
 	(Ethernet()/Ipv4()),
 	(Ethernet())
 ]

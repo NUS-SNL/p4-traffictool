@@ -74,7 +74,7 @@ bind_layers(Udp, Q_meta, dstPort = 0x1e61)
 bind_layers(Udp, Snapshot, dstPort = 0x22b8)
 
 ##packet_list
-possible_packets = [
+_possible_packets = [
 	(Ethernet()/Ipv4()/Udp()/Q_meta()),
 	(Ethernet()/Ipv4()/Udp()/Snapshot()),
 	(Ethernet()/Ipv4()/Udp()),

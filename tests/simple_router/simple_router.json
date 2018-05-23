@@ -124,123 +124,11 @@
             "max_length": null
         },
         {
-            "name": "udp_t",
+            "name": "routing_metadata_t",
             "id": 3,
             "fields": [
                 [
-                    "srcPort",
-                    16
-                ],
-                [
-                    "dstPort",
-                    16
-                ],
-                [
-                    "hdr_length",
-                    16
-                ],
-                [
-                    "checksum",
-                    16
-                ]
-            ],
-            "length_exp": null,
-            "max_length": null
-        },
-        {
-            "name": "queueing_metadata_t",
-            "id": 4,
-            "fields": [
-                [
-                    "flow_id",
-                    16
-                ],
-                [
-                    "_pad0",
-                    16
-                ],
-                [
-                    "ingress_global_tstamp",
-                    48
-                ],
-                [
-                    "_pad1",
-                    16
-                ],
-                [
-                    "egress_global_tstamp",
-                    48
-                ],
-                [
-                    "_spare_pad_bits",
-                    15
-                ],
-                [
-                    "markbit",
-                    1
-                ],
-                [
-                    "_pad2",
-                    13
-                ],
-                [
-                    "enq_qdepth",
-                    19
-                ],
-                [
-                    "_pad3",
-                    13
-                ],
-                [
-                    "deq_qdepth",
-                    19
-                ]
-            ],
-            "length_exp": null,
-            "max_length": null
-        },
-        {
-            "name": "snapshot_debug_t",
-            "id": 5,
-            "fields": [
-                [
-                    "ingress_global_tstamp_hi_16",
-                    16
-                ],
-                [
-                    "ingress_global_tstamp_lo_32",
-                    32
-                ],
-                [
-                    "egress_global_tstamp_lo_32",
-                    32
-                ],
-                [
-                    "enq_qdepth",
-                    32
-                ],
-                [
-                    "deq_qdepth",
-                    32
-                ],
-                [
-                    "_pad0",
-                    16
-                ],
-                [
-                    "orig_egress_global_tstamp",
-                    48
-                ],
-                [
-                    "_pad1",
-                    16
-                ],
-                [
-                    "new_egress_global_tstamp",
-                    48
-                ],
-                [
-                    "new_enq_tstamp",
+                    "nhop_ipv4",
                     32
                 ]
             ],
@@ -268,22 +156,10 @@
             "metadata": false
         },
         {
-            "name": "udp",
+            "name": "routing_metadata",
             "id": 3,
-            "header_type": "udp_t",
-            "metadata": false
-        },
-        {
-            "name": "q_meta",
-            "id": 4,
-            "header_type": "queueing_metadata_t",
-            "metadata": false
-        },
-        {
-            "name": "snapshot",
-            "id": 5,
-            "header_type": "snapshot_debug_t",
-            "metadata": false
+            "header_type": "routing_metadata_t",
+            "metadata": true
         }
     ],
     "header_stacks": [],
@@ -359,112 +235,6 @@
                             ]
                         }
                     ],
-                    "transition_key": [
-                        {
-                            "type": "field",
-                            "value": [
-                                "ipv4",
-                                "protocol"
-                            ]
-                        }
-                    ],
-                    "transitions": [
-                        {
-                            "type": "hexstr",
-                            "value": "0x11",
-                            "mask": null,
-                            "next_state": "parse_udp"
-                        },
-                        {
-                            "type": "default",
-                            "value": null,
-                            "mask": null,
-                            "next_state": null
-                        }
-                    ]
-                },
-                {
-                    "name": "parse_udp",
-                    "id": 3,
-                    "parser_ops": [
-                        {
-                            "op": "extract",
-                            "parameters": [
-                                {
-                                    "type": "regular",
-                                    "value": "udp"
-                                }
-                            ]
-                        }
-                    ],
-                    "transition_key": [
-                        {
-                            "type": "field",
-                            "value": [
-                                "udp",
-                                "dstPort"
-                            ]
-                        }
-                    ],
-                    "transitions": [
-                        {
-                            "type": "hexstr",
-                            "value": "0x1e61",
-                            "mask": null,
-                            "next_state": "parse_q_meta"
-                        },
-                        {
-                            "type": "hexstr",
-                            "value": "0x22b8",
-                            "mask": null,
-                            "next_state": "parse_snapshot_debug"
-                        },
-                        {
-                            "type": "default",
-                            "value": null,
-                            "mask": null,
-                            "next_state": null
-                        }
-                    ]
-                },
-                {
-                    "name": "parse_q_meta",
-                    "id": 4,
-                    "parser_ops": [
-                        {
-                            "op": "extract",
-                            "parameters": [
-                                {
-                                    "type": "regular",
-                                    "value": "q_meta"
-                                }
-                            ]
-                        }
-                    ],
-                    "transition_key": [],
-                    "transitions": [
-                        {
-                            "type": "default",
-                            "value": null,
-                            "mask": null,
-                            "next_state": null
-                        }
-                    ]
-                },
-                {
-                    "name": "parse_snapshot_debug",
-                    "id": 5,
-                    "parser_ops": [
-                        {
-                            "op": "extract",
-                            "parameters": [
-                                {
-                                    "type": "regular",
-                                    "value": "snapshot"
-                                }
-                            ]
-                        }
-                    ],
                     "transition_key": [],
                     "transitions": [
                         {
@@ -485,22 +255,30 @@
             "id": 0,
             "order": [
                 "ethernet",
-                "ipv4",
-                "udp",
-                "snapshot",
-                "q_meta"
+                "ipv4"
             ]
         }
     ],
     "meter_arrays": [],
     "actions": [
         {
-            "name": "srcReWrite",
+            "name": "_drop",
             "id": 0,
+            "runtime_data": [],
+            "primitives": [
+                {
+                    "op": "drop",
+                    "parameters": []
+                }
+            ]
+        },
+        {
+            "name": "rewrite_mac",
+            "id": 1,
             "runtime_data": [
                 {
-                    "name": "newSrcIP",
-                    "bitwidth": 32
+                    "name": "smac",
+                    "bitwidth": 48
                 }
             ],
             "primitives": [
@@ -510,7 +288,7 @@
                         {
                             "type": "field",
                             "value": [
-                                "ipv4",
+                                "ethernet",
                                 "srcAddr"
                             ]
                         },
@@ -523,22 +301,16 @@
             ]
         },
         {
-            "name": "nop",
-            "id": 1,
-            "runtime_data": [],
-            "primitives": []
-        },
-        {
-            "name": "forward",
+            "name": "set_nhop",
             "id": 2,
             "runtime_data": [
                 {
-                    "name": "newSrcMAC",
-                    "bitwidth": 48
+                    "name": "nhop_ipv4",
+                    "bitwidth": 32
                 },
                 {
-                    "name": "newDstMAC",
-                    "bitwidth": 48
+                    "name": "port",
+                    "bitwidth": 9
                 }
             ],
             "primitives": [
@@ -548,13 +320,13 @@
                         {
                             "type": "field",
                             "value": [
-                                "ethernet",
-                                "dstAddr"
+                                "routing_metadata",
+                                "nhop_ipv4"
                             ]
                         },
                         {
                             "type": "runtime_data",
-                            "value": 1
+                            "value": 0
                         }
                     ]
                 },
@@ -564,13 +336,13 @@
                         {
                             "type": "field",
                             "value": [
-                                "ethernet",
-                                "srcAddr"
+                                "standard_metadata",
+                                "egress_port"
                             ]
                         },
                         {
                             "type": "runtime_data",
-                            "value": 0
+                            "value": 1
                         }
                     ]
                 },
@@ -593,12 +365,12 @@
             ]
         },
         {
-            "name": "dstReWrite",
+            "name": "set_dmac",
             "id": 3,
             "runtime_data": [
                 {
-                    "name": "newDstIP",
-                    "bitwidth": 32
+                    "name": "dmac",
+                    "bitwidth": 48
                 }
             ],
             "primitives": [
@@ -608,7 +380,7 @@
                         {
                             "type": "field",
                             "value": [
-                                "ipv4",
+                                "ethernet",
                                 "dstAddr"
                             ]
                         },
@@ -625,28 +397,20 @@
         {
             "name": "ingress",
             "id": 0,
-            "init_table": "src_rewrite",
+            "init_table": "_condition_0",
             "tables": [
                 {
-                    "name": "src_rewrite",
+                    "name": "ipv4_lpm",
                     "id": 0,
-                    "match_type": "exact",
+                    "match_type": "lpm",
                     "type": "simple",
-                    "max_size": 16384,
+                    "max_size": 1024,
                     "with_counters": false,
                     "direct_meters": null,
                     "support_timeout": false,
                     "key": [
                         {
-                            "match_type": "exact",
-                            "target": [
-                                "ipv4",
-                                "srcAddr"
-                            ],
-                            "mask": null
-                        },
-                        {
-                            "match_type": "exact",
+                            "match_type": "lpm",
                             "target": [
                                 "ipv4",
                                 "dstAddr"
@@ -655,21 +419,21 @@
                         }
                     ],
                     "actions": [
-                        "srcReWrite",
-                        "nop"
+                        "set_nhop",
+                        "_drop"
                     ],
                     "next_tables": {
-                        "srcReWrite": "dst_rewrite",
-                        "nop": "dst_rewrite"
+                        "set_nhop": "forward",
+                        "_drop": "forward"
                     },
-                    "base_default_next": "dst_rewrite"
+                    "base_default_next": "forward"
                 },
                 {
-                    "name": "dst_rewrite",
+                    "name": "forward",
                     "id": 1,
                     "match_type": "exact",
                     "type": "simple",
-                    "max_size": 16384,
+                    "max_size": 512,
                     "with_counters": false,
                     "direct_meters": null,
                     "support_timeout": false,
@@ -677,28 +441,78 @@
                         {
                             "match_type": "exact",
                             "target": [
-                                "ipv4",
-                                "dstAddr"
+                                "routing_metadata",
+                                "nhop_ipv4"
                             ],
                             "mask": null
                         }
                     ],
                     "actions": [
-                        "dstReWrite",
-                        "nop"
+                        "set_dmac",
+                        "_drop"
                     ],
                     "next_tables": {
-                        "dstReWrite": "ipv4_forward",
-                        "nop": "ipv4_forward"
+                        "set_dmac": null,
+                        "_drop": null
                     },
-                    "base_default_next": "ipv4_forward"
-                },
+                    "base_default_next": null
+                }
+            ],
+            "action_profiles": [],
+            "conditionals": [
                 {
-                    "name": "ipv4_forward",
+                    "name": "_condition_0",
+                    "id": 0,
+                    "expression": {
+                        "type": "expression",
+                        "value": {
+                            "op": "and",
+                            "left": {
+                                "type": "expression",
+                                "value": {
+                                    "op": "valid",
+                                    "left": null,
+                                    "right": {
+                                        "type": "header",
+                                        "value": "ipv4"
+                                    }
+                                }
+                            },
+                            "right": {
+                                "type": "expression",
+                                "value": {
+                                    "op": ">",
+                                    "left": {
+                                        "type": "field",
+                                        "value": [
+                                            "ipv4",
+                                            "ttl"
+                                        ]
+                                    },
+                                    "right": {
+                                        "type": "hexstr",
+                                        "value": "0x0"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "true_next": "ipv4_lpm",
+                    "false_next": null
+                }
+            ]
+        },
+        {
+            "name": "egress",
+            "id": 1,
+            "init_table": "send_frame",
+            "tables": [
+                {
+                    "name": "send_frame",
                     "id": 2,
                     "match_type": "exact",
                     "type": "simple",
-                    "max_size": 16384,
+                    "max_size": 256,
                     "with_counters": false,
                     "direct_meters": null,
                     "support_timeout": false,
@@ -706,38 +520,30 @@
                         {
                             "match_type": "exact",
                             "target": [
-                                "ipv4",
-                                "dstAddr"
+                                "standard_metadata",
+                                "egress_port"
                             ],
                             "mask": null
                         }
                     ],
                     "actions": [
-                        "forward",
-                        "nop"
+                        "rewrite_mac",
+                        "_drop"
                     ],
                     "next_tables": {
-                        "forward": null,
-                        "nop": null
+                        "rewrite_mac": null,
+                        "_drop": null
                     },
                     "base_default_next": null
                 }
             ],
             "action_profiles": [],
             "conditionals": []
-        },
-        {
-            "name": "egress",
-            "id": 1,
-            "init_table": null,
-            "tables": [],
-            "action_profiles": [],
-            "conditionals": []
         }
     ],
     "calculations": [
         {
-            "name": "ipv4_chksum_calc",
+            "name": "ipv4_checksum",
             "id": 0,
             "input": [
                 {
@@ -823,14 +629,14 @@
     ],
     "checksums": [
         {
-            "name": "ipv4.hdrChecksum|ipv4_chksum_calc",
+            "name": "ipv4.hdrChecksum|ipv4_checksum",
             "id": 0,
             "target": [
                 "ipv4",
                 "hdrChecksum"
             ],
             "type": "generic",
-            "calculation": "ipv4_chksum_calc",
+            "calculation": "ipv4_checksum",
             "if_cond": null
         }
     ],
