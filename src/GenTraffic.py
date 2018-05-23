@@ -1,7 +1,13 @@
 import json
 import sys
+
 MAX_PATH_LENGTH = 10
-DESTINATION = "foo"
+
+ETHER_DETECT = False
+IPv4_DETECT = False
+IPv6_DETECT = False
+TCP_DETECT = False
+UDP_DETECT = False
 
 try:
     data = json.load(open(sys.argv[1]))
@@ -44,24 +50,67 @@ def possible_paths(init, control_graph, length_till_now):
         paths.append([init] + i)
     return paths
 
+def capitalise(s):
+    return (s[:1].upper() + s[1:])
+
+def make_header(header_data, header_id, fout):
+    fout.write("class %s(Packet):\n" %(capitalise(data["headers"][header_id]['name'])))
+    fout.write("\tname = '%s'\n" %(data["headers"][header_id]['name']))
+    fout.write("\tfields_desc = [\n")
+    for field in data["header_types"][header_id]['fields'][:-1]:
+        fout.write("\t\tBitField('%s',0,%d),\n" % (field[0], field[1]))
+    fout.write("\t\tBitField('%s',0,%d)\n" % (field[0], field[1]))
+    fout.write("\t]\n\n")
 
 def make_classes(header_data, fout):
+    global ETHER_DETECT
+    global IPv4_DETECT
+    global IPv6_DETECT
+    global TCP_DETECT
+    global UDP_DETECT
+
     header_ports = []
     for header_id in range(len(data["header_types"])):
         if (data["headers"][header_id]['metadata']) == False:
             header_ports.append(data["headers"][header_id]['name'])
-            fout.write("class %s(Packet):\n" %
-                       (data["headers"][header_id]['name'].capitalize()))
-            fout.write("\tname = '%s'\n" %
-                       (data["headers"][header_id]['name']))
+            if (data["headers"][header_id]['name']=='ethernet'):
+                print("\n Ethernet header detected, would you like the standard ethernet header to be used(y/n) \n")
+                temp = raw_input().strip()
+                if (temp == 'y'):
+                    ETHER_DETECT = True
+                else:
+                    make_header(header_data, header_id, fout)
+            elif (data["headers"][header_id]['name']=='ipv4'):
+                print("\n IPv4 header detected, would you like the standard ethernet header to be used(y/n) \n")
+                temp = raw_input().strip()
+                if (temp == 'y'):
+                    IPv4_DETECT = True
+                else:
+                    make_header(header_data, header_id, fout)
+            elif (data["headers"][header_id]['name']=='ipv6'):
+                print("\n IPv6 header detected, would you like the standard ethernet header to be used(y/n) \n")
+                temp = raw_input().strip()
+                if (temp == 'y'):
+                    IPv6_DETECT = True
+                else:
+                    make_header(header_data, header_id, fout)
+            elif (data["headers"][header_id]['name']=='tcp'):
+                print("\n TCP header detected, would you like the standard ethernet header to be used(y/n) \n")
+                temp = raw_input().strip()
+                if (temp == 'y'):
+                    TCP_DETECT = True
+                else:
+                    make_header(header_data, header_id, fout)
+            elif (data["headers"][header_id]['name']=='udp'):
+                print("\n UDP header detected, would you like the standard ethernet header to be used(y/n) \n")
+                temp = raw_input().strip()
+                if (temp == 'y'):
+                    UDP_DETECT = True
+                else:
+                    make_header(header_data, header_id, fout)
+            else:
+                make_header(header_data, header_id, fout)
 
-            fout.write("\tfields_desc = [\n")
-            for field in data["header_types"][header_id]['fields'][:-1]:
-                fout.write("\t\tBitField('%s',0,%d),\n" % (field[0], field[1]))
-            fout.write("\t\tBitField('%s',0,%d)\n" % (field[0], field[1]))
-            fout.write("\t]\n\n")
-    # for i in header_ports:
-    #     print (i)
     return header_ports
 
 
@@ -96,14 +145,14 @@ def make_parsers(control_graph, header_ports, fout):
     for edge in control_graph:
         if (edge[0] in header_ports) and (edge[-1] in header_ports):
             fout.write("bind_layers(%s, %s, %s = %s)\n" % (
-                edge[0].capitalize(), edge[-1].capitalize(), edge[1], edge[2]))
+                capitalise(edge[0]), capitalise(edge[-1]), edge[1], edge[2]))
 
 
 def string_packet(header_ports,packet):
     s = ""
     for i in packet:
         if i in header_ports:
-            s += i.capitalize() + "()/"
+            s += capitalise(i) + "()/"
     return s[:-2]
 
 def make_packets(header_ports, init_states, control_graph, fout):
@@ -120,6 +169,32 @@ def make_packets(header_ports, init_states, control_graph, fout):
     fout.write("\t(%s))\n" % (string_packet(header_ports,paths[-1])))
     fout.write("]\n")
 
+def change_names(header_ports, control_graph, init_states, old, new):
+    for i in range(len(header_ports)):
+        if (header_ports[i]==old):
+            header_ports[i]=new
+    for i in range(len(control_graph)):
+        if (control_graph[i][0]==old):
+            control_graph[i][0]=new
+        if (control_graph[i][-1]==old):
+            control_graph[i][-1]=new
+    for i in range(len(init_states)):
+        if (init_states[i]==old):
+            init_states[i]=new
+    return (header_ports,control_graph,init_states)                
+
+def correct_metadata(header_ports, control_graph, init_states):
+    if (ETHER_DETECT):
+        (header_ports,control_graph,init_states) = change_names(header_ports, control_graph, init_states, "ethernet", "Ether")
+    if (IPv4_DETECT):
+        (header_ports,control_graph,init_states) = change_names(header_ports, control_graph, init_states, "ipv4", "IP")
+    if (IPv6_DETECT):
+        (header_ports,control_graph,init_states) = change_names(header_ports, control_graph, init_states, "ipv6", "IPv6")
+    if (TCP_DETECT):
+        (header_ports,control_graph,init_states) = change_names(header_ports, control_graph, init_states, "tcp", "TCP")
+    if (UDP_DETECT):
+        (header_ports,control_graph,init_states) = change_names(header_ports, control_graph, init_states, "udp", "UDP")
+    return (header_ports,control_graph,init_states) 
 
 def make_template(json_data, destination):
     try:
@@ -129,14 +204,18 @@ def make_template(json_data, destination):
         fout.write("\n ##class definitions\n")
         header_ports = make_classes(json_data, fout)
 
-        fout.write("\n##bindings\n")
+        #building metadata
         control_graph = make_control_graph(json_data["parsers"])
-        make_parsers(control_graph, header_ports, fout)
-
-        fout.write("\n##packet_list\n")
         init_states = []
         for parser in json_data["parsers"]:
             init_states.append(search_state(parser,parser["init_state"]))
+        (header_ports,control_graph,init_states) = correct_metadata(header_ports,control_graph,init_states) 
+            
+
+        fout.write("\n##bindings\n")
+        make_parsers(control_graph, header_ports, fout)
+
+        fout.write("\n##packet_list\n")
         make_packets(header_ports, init_states, control_graph, fout)
 
     except IOError:
