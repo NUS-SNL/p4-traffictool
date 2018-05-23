@@ -14,6 +14,11 @@ Firstly, you need the json description of your P4 program. To generate this from
 ```
 p4c-bmv2 --json <desired name for json output> <path to p4 source>
 ```
+You can also use 
+```
+p4c <path to p4 source>
+```
+if your code has dependencies on p4 libraries or header files like *core.h* or *v1model.h*
 
 Now run the code:
 ```
@@ -26,4 +31,4 @@ To generate packets import the generate code using:
 ```
 from <source> import *
 ```
-To access the list of all possible packets simply use the identifier *_possible_packets*
+To access the list of all possible packets simply use the identifier *_possible_packets_*
