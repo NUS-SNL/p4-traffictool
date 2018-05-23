@@ -17,7 +17,6 @@ class Ethernet(Packet):
 		BitField('srcAddr',0,32),
 		BitField('srcAddr',0,32)
 	]
-
 class Ipv4(Packet):
 	name = 'ipv4'
 	fields_desc = [
@@ -43,6 +42,7 @@ class Ipv4(Packet):
 		BitField('recirculate_flag',0,32),
 		BitField('recirculate_flag',0,32)
 	]
+	#update hdrChecksum over [[u'ipv4', u'version'], [u'ipv4', u'ihl'], [u'ipv4', u'diffserv'], [u'ipv4', u'totalLen'], [u'ipv4', u'identification'], [u'ipv4', u'flags'], [u'ipv4', u'fragOffset'], [u'ipv4', u'ttl'], [u'ipv4', u'protocol'], [u'ipv4', u'srcAddr'], [u'ipv4', u'dstAddr']] using csum16 in post_build method
 
 
 ##bindings
@@ -50,6 +50,6 @@ bind_layers(Ethernet, Ipv4, etherType = 0x0800)
 
 ##packet_list
 _possible_packets_ = [
-	(Ethernet()/Ipv4()),
-	(Ethernet())
+	(Ethernet()),
+	(Ethernet()/Ipv4())
 ]

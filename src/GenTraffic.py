@@ -53,6 +53,17 @@ def possible_paths(init, control_graph, length_till_now):
 def capitalise(s):
     return (s[:1].upper() + s[1:])
 
+def check_checksum_fields(header_data, name):
+    for chksum in (header_data["checksums"]):
+        if (chksum["target"][0]==name):
+            for calc in (header_data["calculations"]):
+                if (calc["name"] == chksum["calculation"]):
+                    fields = []
+                    for i in calc["input"]:
+                        fields.append(i["value"])
+                    return(True, chksum["target"][1], fields, calc["algo"])
+    return(False, None, None, None)
+        
 def make_header(header_data, header_id, fout):
     fout.write("class %s(Packet):\n" %(capitalise(data["headers"][header_id]['name'])))
     fout.write("\tname = '%s'\n" %(data["headers"][header_id]['name']))
@@ -60,7 +71,10 @@ def make_header(header_data, header_id, fout):
     for field in data["header_types"][header_id]['fields'][:-1]:
         fout.write("\t\tBitField('%s',0,%d),\n" % (field[0], field[1]))
     fout.write("\t\tBitField('%s',0,%d)\n" % (field[0], field[1]))
-    fout.write("\t]\n\n")
+    fout.write("\t]\n")
+    chksum,target,fields,algo = check_checksum_fields(header_data,data["headers"][header_id]['name'])
+    if (chksum):
+        fout.write("\t#update %s over %s using %s in post_build method\n\n" %(target,fields,algo))
 
 def make_classes(header_data, fout):
     global ETHER_DETECT
@@ -159,6 +173,8 @@ def make_packets(header_ports, init_states, control_graph, fout):
     paths = []
     for i in init_states:
         paths += possible_paths(i, control_graph, 0)
+    paths = set(map(tuple,paths))
+    paths = map(list,paths)
     if (len(paths) == 0):
         fout.write(
             "\n#No possible packets which can be parsed to the final state")
@@ -201,7 +217,7 @@ def make_template(json_data, destination):
         fout = open(destination, 'w')
         fout.write("from scapy import *\n")
 
-        fout.write("\n ##class definitions\n")
+        fout.write("\n##class definitions\n")
         header_ports = make_classes(json_data, fout)
 
         #building metadata

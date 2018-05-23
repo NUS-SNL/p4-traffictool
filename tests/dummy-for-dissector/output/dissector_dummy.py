@@ -1,23 +1,6 @@
 from scapy import *
 
  ##class definitions
-class Ipv4(Packet):
-	name = 'ipv4'
-	fields_desc = [
-		BitField('version',0,4),
-		BitField('ihl',0,4),
-		BitField('diffserv',0,8),
-		BitField('totalLen',0,16),
-		BitField('identification',0,16),
-		BitField('flags',0,3),
-		BitField('fragOffset',0,13),
-		BitField('ttl',0,8),
-		BitField('protocol',0,8),
-		BitField('hdrChecksum',0,16),
-		BitField('srcAddr',0,32),
-		BitField('srcAddr',0,32)
-	]
-
 class Q_meta(Packet):
 	name = 'q_meta'
 	fields_desc = [
@@ -51,16 +34,16 @@ class Snapshot(Packet):
 
 
 ##bindings
-bind_layers(Ether, Ipv4, etherType = 0x0800)
-bind_layers(Ipv4, UDP, protocol = 0x11)
+bind_layers(Ether, IP, etherType = 0x0800)
+bind_layers(IP, UDP, protocol = 0x11)
 bind_layers(UDP, Q_meta, dstPort = 0x1e61)
 bind_layers(UDP, Snapshot, dstPort = 0x22b8)
 
 ##packet_list
 _possible_packets_ = [
-	(Ether()/Ipv4()/UDP()/Q_meta()),
-	(Ether()/Ipv4()/UDP()/Snapshot()),
-	(Ether()/Ipv4()/UDP()),
-	(Ether()/Ipv4()),
-	(Ether())
+	(Ether()/IP()/UDP()/Q_meta()),
+	(Ether()/IP()/UDP()),
+	(Ether()),
+	(Ether()/IP()),
+	(Ether()/IP()/UDP()/Snapshot())
 ]

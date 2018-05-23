@@ -1,6 +1,10 @@
 # P4-TrafficGen
 
-This is a tool to generate a [Scapy](https://scapy.net/) based packet generator for any given P4 program. The program accepts the json output of the p4c-bmv2 compiler for a p4 program as input and produces a python code which can be imported and instanciated to generate packets.
+This is a tool to generate a [Scapy](https://scapy.net/) based packet generator for any given P4 program. The program accepts the json output of the p4c-bmv2 compiler for a p4 program as input and produces a python code which can be imported and instantiated to generate packets.
+
+If some field requires post_build calculation then it needs to be added by the user making use of the *post_build* menthod in Scapy.
+
+For checksums, the fields over which checksum has to be computed and the algorithm to be followed are obtained from the P4 program and mentioned in a comment.
 
 ## Requirements
 There are no dependencies as such required to run the code. The code can be run with both python2 as well as python3, though to make it compatible with python3 the python2 version would be a little (unnoticably) slower.
@@ -31,4 +35,4 @@ To generate packets import the generate code using:
 ```
 from <source> import *
 ```
-To access the list of all possible packets simply use the identifier *_possible_packets_*
+To access the list of all possible packets simply use the identifier *possible_packets*
