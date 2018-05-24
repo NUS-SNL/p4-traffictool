@@ -1,4 +1,4 @@
-from scapy import *
+from scapy.all import *
 
 ##class definitions
 class Ethernet(Packet):
@@ -31,7 +31,7 @@ class Ipv4(Packet):
 bind_layers(Ethernet, Ipv4, etherType = 0x0800)
 
 ##packet_list
-_possible_packets_ = [
-	(Ethernet()/Ipv4()),
-	(Ethernet())
+possible_packets = [
+	(Ethernet()),
+	(Ethernet()/Ipv4())
 ]

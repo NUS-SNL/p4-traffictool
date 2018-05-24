@@ -1,4 +1,4 @@
-from scapy import *
+from scapy.all import *
 
 ##class definitions
 class Ethernet(Packet):
@@ -91,15 +91,15 @@ bind_layers(Ipv4, Ipv4_option, ihl = default)
 bind_layers(Ipv4_option, Mri, option = 0x1f)
 
 ##packet_list
-_possible_packets_ = [
-	(Ethernet()/Ipv4()/Ipv4_option()/Mri()),
-	(Ethernet()/Ipv4()/Ipv4_option()/Mri()/Swids_0()/Swids_1()/Swids_2()/Swids_3()),
-	(Ethernet()/Ipv4()/Ipv4_option()/Mri()),
+possible_packets = [
 	(Ethernet()),
-	(Ethernet()/Ipv4()/Ipv4_option()/Mri()/Swids_0()/Swids_1()/Swids_2()/Swids_3()/Swids_4()),
-	(Ethernet()/Ipv4()/Ipv4_option()/Mri()/Swids_0()/Swids_1()),
-	(Ethernet()/Ipv4()/Ipv4_option()/Mri()/Swids_0()/Swids_1()/Swids_2()/Swids_3()/Swids_4()/Swids_5()),
-	(Ethernet()/Ipv4()/Ipv4_option()/Mri()/Swids_0()/Swids_1()/Swids_2()),
 	(Ethernet()/Ipv4()),
-	(Ethernet()/Ipv4()/Ipv4_option())
+	(Ethernet()/Ipv4()/Ipv4_option()),
+	(Ethernet()/Ipv4()/Ipv4_option()/Mri()),
+	(Ethernet()/Ipv4()/Ipv4_option()/Mri()/Swids_0()),
+	(Ethernet()/Ipv4()/Ipv4_option()/Mri()/Swids_0()/Swids_1()),
+	(Ethernet()/Ipv4()/Ipv4_option()/Mri()/Swids_0()/Swids_1()/Swids_2()),
+	(Ethernet()/Ipv4()/Ipv4_option()/Mri()/Swids_0()/Swids_1()/Swids_2()/Swids_3()),
+	(Ethernet()/Ipv4()/Ipv4_option()/Mri()/Swids_0()/Swids_1()/Swids_2()/Swids_3()/Swids_4()),
+	(Ethernet()/Ipv4()/Ipv4_option()/Mri()/Swids_0()/Swids_1()/Swids_2()/Swids_3()/Swids_4()/Swids_5())
 ]

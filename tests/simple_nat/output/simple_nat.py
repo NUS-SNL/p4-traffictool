@@ -1,4 +1,4 @@
-from scapy import *
+from scapy.all import *
 
 ##class definitions
 class Cpu_header(Packet):
@@ -52,16 +52,15 @@ class Tcp(Packet):
 
 
 ##bindings
-bind_layers(Cpu_header, Ethernet, None = None)
 bind_layers(Ethernet, Ipv4, etherType = 0x0800)
 bind_layers(Ipv4, Tcp, protocol = 0x06)
 
 ##packet_list
-_possible_packets_ = [
+possible_packets = [
 	(Ethernet()),
-	(Ethernet()/Ipv4()/Tcp()),
-	(Cpu_header()/Ethernet()/Ipv4()),
 	(Cpu_header()/Ethernet()),
 	(Ethernet()/Ipv4()),
+	(Ethernet()/Ipv4()/Tcp()),
+	(Cpu_header()/Ethernet()/Ipv4()),
 	(Cpu_header()/Ethernet()/Ipv4()/Tcp())
 ]

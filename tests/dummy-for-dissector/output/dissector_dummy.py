@@ -1,4 +1,4 @@
-from scapy import *
+from scapy.all import *
 
 ##class definitions
 class Ethernet(Packet):
@@ -71,10 +71,10 @@ bind_layers(Udp, Q_meta, dstPort = 0x1e61)
 bind_layers(Udp, Snapshot, dstPort = 0x22b8)
 
 ##packet_list
-_possible_packets_ = [
-	(Ethernet()/Ipv4()/Udp()/Q_meta()),
-	(Ethernet()/Ipv4()/Udp()),
-	(Ethernet()/Ipv4()),
+possible_packets = [
 	(Ethernet()),
+	(Ethernet()/Ipv4()),
+	(Ethernet()/Ipv4()/Udp()),
+	(Ethernet()/Ipv4()/Udp()/Q_meta()),
 	(Ethernet()/Ipv4()/Udp()/Snapshot())
 ]

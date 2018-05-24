@@ -1,4 +1,4 @@
-from scapy import *
+from scapy.all import *
 
 ##class definitions
 class Ethernet(Packet):
@@ -82,7 +82,7 @@ class SrcRoutes_8(Packet):
 ##bindings
 
 ##packet_list
-_possible_packets_ = [
+possible_packets = [
 	(Ethernet()),
 	(Ethernet()/SrcRoutes_0()/Ipv4()),
 	(Ethernet()/SrcRoutes_0()/SrcRoutes_1()/Ipv4()),
