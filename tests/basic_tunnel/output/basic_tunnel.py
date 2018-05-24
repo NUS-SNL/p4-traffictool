@@ -8,22 +8,11 @@ class Ethernet(Packet):
 		BitField('srcAddr',0,48),
 		BitField('etherType',0,16)
 	]
-class Arp(Packet):
-	name = 'arp'
+class MyTunnel(Packet):
+	name = 'myTunnel'
 	fields_desc = [
-		BitField('htype',0,16),
-		BitField('ptype',0,16),
-		BitField('hlen',0,8),
-		BitField('plen',0,8),
-		BitField('oper',0,16)
-	]
-class Arp_ipv4(Packet):
-	name = 'arp_ipv4'
-	fields_desc = [
-		BitField('sha',0,48),
-		BitField('spa',0,32),
-		BitField('tha',0,48),
-		BitField('tpa',0,32)
+		BitField('proto_id',0,16),
+		BitField('dst_id',0,16)
 	]
 class Ipv4(Packet):
 	name = 'ipv4'
@@ -41,25 +30,18 @@ class Ipv4(Packet):
 		BitField('srcAddr',0,32),
 		BitField('dstAddr',0,32)
 	]
-class Icmp(Packet):
-	name = 'icmp'
-	fields_desc = [
-		BitField('type',0,8),
-		BitField('code',0,8),
-		BitField('checksum',0,16)
-	]
+	#update hdrChecksum over [[u'ipv4', u'version'], [u'ipv4', u'ihl'], [u'ipv4', u'diffserv'], [u'ipv4', u'totalLen'], [u'ipv4', u'identification'], [u'ipv4', u'flags'], [u'ipv4', u'fragOffset'], [u'ipv4', u'ttl'], [u'ipv4', u'protocol'], [u'ipv4', u'srcAddr'], [u'ipv4', u'dstAddr']] using csum16 in post_build method
+
 
 ##bindings
+bind_layers(Ethernet, MyTunnel, etherType = 0x1212)
 bind_layers(Ethernet, Ipv4, etherType = 0x0800)
-bind_layers(Ethernet, Arp, etherType = 0x0806)
-bind_layers(Arp, Arp_ipv4, htype = 0x000108000604)
-bind_layers(Ipv4, Icmp, protocol = 0x01)
+bind_layers(MyTunnel, Ipv4, proto_id = 0x0800)
 
 ##packet_list
 _possible_packets_ = [
 	(Ethernet()),
 	(Ethernet()/Ipv4()),
-	(Ethernet()/Arp()),
-	(Ethernet()/Arp()/Arp_ipv4()),
-	(Ethernet()/Ipv4()/Icmp())
+	(Ethernet()/MyTunnel()/Ipv4()),
+	(Ethernet()/MyTunnel())
 ]

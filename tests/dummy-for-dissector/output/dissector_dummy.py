@@ -1,6 +1,39 @@
 from scapy import *
 
- ##class definitions
+##class definitions
+class Ethernet(Packet):
+	name = 'ethernet'
+	fields_desc = [
+		BitField('dstAddr',0,48),
+		BitField('srcAddr',0,48),
+		BitField('etherType',0,16)
+	]
+class Ipv4(Packet):
+	name = 'ipv4'
+	fields_desc = [
+		BitField('version',0,4),
+		BitField('ihl',0,4),
+		BitField('diffserv',0,8),
+		BitField('totalLen',0,16),
+		BitField('identification',0,16),
+		BitField('flags',0,3),
+		BitField('fragOffset',0,13),
+		BitField('ttl',0,8),
+		BitField('protocol',0,8),
+		BitField('hdrChecksum',0,16),
+		BitField('srcAddr',0,32),
+		BitField('dstAddr',0,32)
+	]
+	#update hdrChecksum over [[u'ipv4', u'version'], [u'ipv4', u'ihl'], [u'ipv4', u'diffserv'], [u'ipv4', u'totalLen'], [u'ipv4', u'identification'], [u'ipv4', u'flags'], [u'ipv4', u'fragOffset'], [u'ipv4', u'ttl'], [u'ipv4', u'protocol'], [u'ipv4', u'srcAddr'], [u'ipv4', u'dstAddr']] using csum16 in post_build method
+
+class Udp(Packet):
+	name = 'udp'
+	fields_desc = [
+		BitField('srcPort',0,16),
+		BitField('dstPort',0,16),
+		BitField('hdr_length',0,16),
+		BitField('checksum',0,16)
+	]
 class Q_meta(Packet):
 	name = 'q_meta'
 	fields_desc = [
@@ -14,9 +47,8 @@ class Q_meta(Packet):
 		BitField('_pad2',0,13),
 		BitField('enq_qdepth',0,19),
 		BitField('_pad3',0,13),
-		BitField('_pad3',0,13)
+		BitField('deq_qdepth',0,19)
 	]
-
 class Snapshot(Packet):
 	name = 'snapshot'
 	fields_desc = [
@@ -29,21 +61,20 @@ class Snapshot(Packet):
 		BitField('orig_egress_global_tstamp',0,48),
 		BitField('_pad1',0,16),
 		BitField('new_egress_global_tstamp',0,48),
-		BitField('new_egress_global_tstamp',0,48)
+		BitField('new_enq_tstamp',0,32)
 	]
 
-
 ##bindings
-bind_layers(Ether, IP, etherType = 0x0800)
-bind_layers(IP, UDP, protocol = 0x11)
-bind_layers(UDP, Q_meta, dstPort = 0x1e61)
-bind_layers(UDP, Snapshot, dstPort = 0x22b8)
+bind_layers(Ethernet, Ipv4, etherType = 0x0800)
+bind_layers(Ipv4, Udp, protocol = 0x11)
+bind_layers(Udp, Q_meta, dstPort = 0x1e61)
+bind_layers(Udp, Snapshot, dstPort = 0x22b8)
 
 ##packet_list
 _possible_packets_ = [
-	(Ether()/IP()/UDP()/Q_meta()),
-	(Ether()/IP()/UDP()),
-	(Ether()),
-	(Ether()/IP()),
-	(Ether()/IP()/UDP()/Snapshot())
+	(Ethernet()/Ipv4()/Udp()/Q_meta()),
+	(Ethernet()/Ipv4()/Udp()),
+	(Ethernet()/Ipv4()),
+	(Ethernet()),
+	(Ethernet()/Ipv4()/Udp()/Snapshot())
 ]

@@ -26,12 +26,29 @@ class Ipv4(Packet):
 	]
 	#update hdrChecksum over [[u'ipv4', u'version'], [u'ipv4', u'ihl'], [u'ipv4', u'diffserv'], [u'ipv4', u'totalLen'], [u'ipv4', u'identification'], [u'ipv4', u'flags'], [u'ipv4', u'fragOffset'], [u'ipv4', u'ttl'], [u'ipv4', u'protocol'], [u'ipv4', u'srcAddr'], [u'ipv4', u'dstAddr']] using csum16 in post_build method
 
+class Tcp(Packet):
+	name = 'tcp'
+	fields_desc = [
+		BitField('srcPort',0,16),
+		BitField('dstPort',0,16),
+		BitField('seqNo',0,32),
+		BitField('ackNo',0,32),
+		BitField('dataOffset',0,4),
+		BitField('res',0,3),
+		BitField('ecn',0,3),
+		BitField('ctrl',0,6),
+		BitField('window',0,16),
+		BitField('checksum',0,16),
+		BitField('urgentPtr',0,16)
+	]
 
 ##bindings
 bind_layers(Ethernet, Ipv4, etherType = 0x0800)
+bind_layers(Ipv4, Tcp, protocol = 0x06)
 
 ##packet_list
 _possible_packets_ = [
+	(Ethernet()/Ipv4()),
 	(Ethernet()),
-	(Ethernet()/Ipv4())
+	(Ethernet()/Ipv4()/Tcp())
 ]
