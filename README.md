@@ -40,3 +40,12 @@ from <source> import *
 To access the list of all possible packets simply use the identifier *possible_packets*
 
 To run the code in debug mode such that all the metadata gets printed on the console give flag *-d* as last argument.
+
+To set default values modify the second argument of field definition.
+
+To set the values for packet fields on the fly use the standard Scapy method as:
+```
+Suppose you have a protocol Foo and you wish to modify the foobar field to a random number between 1 and 100.
+
+a = Ether()/Foo(foobar = randint(1,100))/Bar() 
+```
