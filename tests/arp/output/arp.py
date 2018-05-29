@@ -4,49 +4,49 @@ from scapy.all import *
 class Ethernet(Packet):
 	name = 'ethernet'
 	fields_desc = [
-		BitField('dstAddr',0,48),
-		BitField('srcAddr',0,48),
-		BitField('etherType',0,16)
+		XBitField('dstAddr',0,48),
+		XBitField('srcAddr',0,48),
+		XBitField('etherType',0,16)
 	]
 class Arp(Packet):
 	name = 'arp'
 	fields_desc = [
-		BitField('htype',0,16),
-		BitField('ptype',0,16),
-		BitField('hlen',0,8),
-		BitField('plen',0,8),
-		BitField('oper',0,16)
+		XBitField('htype',0,16),
+		XBitField('ptype',0,16),
+		XBitField('hlen',0,8),
+		XBitField('plen',0,8),
+		XBitField('oper',0,16)
 	]
 class Arp_ipv4(Packet):
 	name = 'arp_ipv4'
 	fields_desc = [
-		BitField('sha',0,48),
-		BitField('spa',0,32),
-		BitField('tha',0,48),
-		BitField('tpa',0,32)
+		XBitField('sha',0,48),
+		XBitField('spa',0,32),
+		XBitField('tha',0,48),
+		XBitField('tpa',0,32)
 	]
 class Ipv4(Packet):
 	name = 'ipv4'
 	fields_desc = [
-		BitField('version',0,4),
-		BitField('ihl',0,4),
-		BitField('diffserv',0,8),
-		BitField('totalLen',0,16),
-		BitField('identification',0,16),
-		BitField('flags',0,3),
-		BitField('fragOffset',0,13),
-		BitField('ttl',0,8),
-		BitField('protocol',0,8),
-		BitField('hdrChecksum',0,16),
-		BitField('srcAddr',0,32),
-		BitField('dstAddr',0,32)
+		XBitField('version',0,4),
+		XBitField('ihl',0,4),
+		XBitField('diffserv',0,8),
+		XBitField('totalLen',0,16),
+		XBitField('identification',0,16),
+		XBitField('flags',0,3),
+		XBitField('fragOffset',0,13),
+		XBitField('ttl',0,8),
+		XBitField('protocol',0,8),
+		XBitField('hdrChecksum',0,16),
+		XBitField('srcAddr',0,32),
+		XBitField('dstAddr',0,32)
 	]
 class Icmp(Packet):
 	name = 'icmp'
 	fields_desc = [
-		BitField('type',0,8),
-		BitField('code',0,8),
-		BitField('checksum',0,16)
+		XBitField('type',0,8),
+		XBitField('code',0,8),
+		XBitField('checksum',0,16)
 	]
 
 ##bindings

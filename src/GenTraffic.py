@@ -100,16 +100,16 @@ def make_header(headers, header_types, header_id, checksums, calculations, fout)
     header_type = search_header_type(header_types, headers[header_id]["header_type"])
     for field in header_type['fields'][:-1]:
         try:
-            fout.write("\t\tBitField('%s',0,%d),\n" % (field[0], field[1]))
+            fout.write("\t\tXBitField('%s',0,%d),\n" % (field[0], field[1]))
         except TypeError:
             print("Variable length field '%s' detected in header type '%s', fill in the template suitably\n" %(field[0], header_type['name']))
-            fout.write("\t\tBitField('%s',0,<insert length for variable field here or handle it in post_build>),\n" % (field[0]))
+            fout.write("\t\tXBitField('%s',0,<insert length for variable field here or handle it in post_build>),\n" % (field[0]))
     if (len(header_type['fields'])>0):
         try:
-            fout.write("\t\tBitField('%s',0,%d)\n" % (header_type['fields'][-1][0], header_type['fields'][-1][1]))
+            fout.write("\t\tXBitField('%s',0,%d)\n" % (header_type['fields'][-1][0], header_type['fields'][-1][1]))
         except TypeError:
             print("Variable length field '%s' detected in header type '%s', fill in the template suitably\n" %(header_type['fields'][-1][0], header_type['name']))
-            fout.write("\t\tBitField('%s',0,<insert length for variable field here or handle it in post_build>)\n" % (header_type['fields'][-1][0]))
+            fout.write("\t\tXBitField('%s',0,<insert length for variable field here or handle it in post_build>)\n" % (header_type['fields'][-1][0]))
     fout.write("\t]\n")
     chksum,target,fields,algo = check_checksum_fields(checksums, calculations, data["headers"][header_id]['name'])
     if (chksum):
