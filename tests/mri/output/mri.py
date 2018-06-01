@@ -87,7 +87,7 @@ class Swids_8(Packet):
 
 ##bindings
 bind_layers(Ethernet, Ipv4, etherType = 0x0800)
-bind_layers(Ipv4, Ipv4_option, ihl = default)
+bind_layers(Ipv4,Ipv4_option)
 bind_layers(Ipv4_option, Mri, option = 0x1f)
 
 ##packet_list

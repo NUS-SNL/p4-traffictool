@@ -8,6 +8,6 @@ python src/GenTraffic.py tests/mri/mri.json tests/mri/output/mri.py
 python src/GenTraffic.py tests/simple_nat/simple_nat.json tests/simple_nat/output/simple_nat.py
 python src/GenTraffic.py tests/simple_router/simple_router.json tests/simple_router/output/simple_router.py
 python src/GenTraffic.py tests/src_routing/src_routing.json tests/src_routing/output/src_routing.py
-python src/GenTraffic.py tests/tlv_parsing/tlv_parsing.json tests/tlv_parsing/output/tlv_parsing.py
+# python src/GenTraffic.py tests/tlv_parsing/tlv_parsing.json tests/tlv_parsing/output/tlv_parsing.py
 
 # test cases picked from https://github.com/jafingerhut/p4lang-tests and https://github.com/p4lang/tutorials

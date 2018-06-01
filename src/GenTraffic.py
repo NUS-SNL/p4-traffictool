@@ -2,8 +2,10 @@ import json
 import sys
 import re
 
+# Maximum possible headers within a packet, hyperparameter with default value as 10
 MAX_PATH_LENGTH = 10
 
+# global variables for common header types detection
 ETHER_DETECT = False
 IPv4_DETECT = False
 IPv6_DETECT = False
@@ -12,9 +14,12 @@ UDP_DETECT = False
 
 DEBUG = False
 
+# multi-headers stores headers that appear in the form of array 
+# array_match is the regex to match for arrays
 multi_headers = []
 array_match = re.compile('[a-z A-Z 0-9 _ -]+''[''[0-9]+'']')
 
+# open file to load json data
 try:
     data = json.load(open(sys.argv[1]))
     DESTINATION = sys.argv[2]
@@ -24,17 +29,20 @@ except IndexError:
 except IOError:
     print ("Incorrect file specification")
     exit(0)
-    
+
+# check if max path length has been set
 if (len(sys.argv)>3):
     try:
         MAX_PATH_LENGTH = int(sys.argv[3])
     except ValueError:
         pass
 
+# check if debug mode activated or not
 if (len(sys.argv)>3):
     if (sys.argv[-1]=='-d'):
         DEBUG = True
 
+# assign valid name to state depending on which header it extracts
 def valid_name(state):
     if len(state["parser_ops"]) > 0:
         if type(state["parser_ops"][0]["parameters"][0]["value"]) is list:
@@ -44,17 +52,19 @@ def valid_name(state):
     else:
         return state["name"]
 
-
+# search for valid state name in the parse states
 def search_state(parser, name):
     for state in parser["parse_states"]:
         if (state["name"] == name):
             return valid_name(state)
 
+# search for header type given the header_type_name specified in header definition
 def search_header_type(header_types, name):
     for header_type in header_types:
         if (header_type["name"] == name):
             return header_type
 
+# find all possible header orderings that are valid
 def possible_paths(init, control_graph, length_till_now):
     if (init == 'final'):
         return [['final']]
@@ -69,16 +79,20 @@ def possible_paths(init, control_graph, length_till_now):
         paths.append([init] + i)
     return paths
 
+# correct names in case the header is of array form (instead of [X] replaces it with _X)
 def correct_name(s):
     if (array_match.match(s)!=None):
         multi_headers.append(s[:s.find('[')])
         s = s[:s.find('[')]+ "_" + s[s.find('[')+1:s.rfind(']')]
     return s
 
+# capitalise the first letter of name
 def capitalise(s):
     s = correct_name(s)
     return (s[:1].upper() + s[1:])
 
+# check if there any checksums fields, returns a tuple 
+# (whether a checksum field exists, the target fields, fields over which checksum has to be calculated, checksum algorithm to use)
 def check_checksum_fields(checksums, calculations, name):
     for chksum in (checksums):
         if (chksum["target"][0]==name):
@@ -93,6 +107,8 @@ def check_checksum_fields(checksums, calculations, name):
                     return(True, chksum["target"][1], fields, calc["algo"])
     return(False, None, None, None)
 
+# declares header fields and initialises them with default value zero, also specifies if there is any checksum fields which needs to be post-build
+# other post-build fields need to be added manually
 def make_header(headers, header_types, header_id, checksums, calculations, fout):
     fout.write("class %s(Packet):\n" %(capitalise(headers[header_id]['name'])))
     fout.write("\tname = '%s'\n" %(headers[header_id]['name']))
@@ -115,10 +131,7 @@ def make_header(headers, header_types, header_id, checksums, calculations, fout)
     if (chksum):
         fout.write("\t#update %s over %s using %s in post_build method\n\n" %(target,fields,algo))
 
-    # fout.write("\tdef __str__(self):\n")
-    # fout.write("\t\treturn '%s' \n\n" %(capitalise(headers[header_id]['name'])))
-
-
+# defines various header types and check if any common header type can be substituted in its place, calls make_header function
 def make_classes(data, fout):
     global ETHER_DETECT
     global IPv4_DETECT
@@ -188,7 +201,8 @@ def make_classes(data, fout):
 
     return header_ports
 
-
+# make a control graph for all possible state transitions
+# returns the list of edges in graph
 def make_control_graph(parsers):
     graph = []
     for parser in parsers:
@@ -216,13 +230,16 @@ def make_control_graph(parsers):
             print(i)
     return graph
 
-
+# defines bindings based on control graph
 def make_parsers(control_graph, header_ports, fout):
     for edge in control_graph:
         if (edge[0] in header_ports) and (edge[-1] in header_ports) and (edge[1]!=None) and (edge[2]!=None):
-            fout.write("bind_layers(%s, %s, %s = %s)\n" % (capitalise(edge[0]), capitalise(edge[-1]), edge[1], edge[2]))
+            if (edge[2]!='default'): 
+                fout.write("bind_layers(%s, %s, %s = %s)\n" % (capitalise(edge[0]), capitalise(edge[-1]), edge[1], edge[2]))
+            else:
+                fout.write("bind_layers(%s,%s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))
 
-
+# creates a string of the headers in a packet in a way that Scapy expects
 def string_packet(header_ports,packet):
     s = ""
     for i in packet:
@@ -230,6 +247,7 @@ def string_packet(header_ports,packet):
             s += capitalise(i) + "()/"
     return s[:-2]
 
+# rectifies header names which are of array form
 def rectify_paths(paths):
     for path_id in range(len(paths)):
         path = paths[path_id]
@@ -246,7 +264,7 @@ def rectify_paths(paths):
     paths.sort(key=len)
     return paths
 
-
+# prints the possible packet list into the file
 def make_packets(header_ports, init_states, control_graph, fout):
     paths = []
     for i in init_states:
@@ -271,6 +289,7 @@ def make_packets(header_ports, init_states, control_graph, fout):
     fout.write("\t(%s))\n" % (string_packet(header_ports,paths[-1])))
     fout.write("]\n")
 
+# rectifies array names for inbuilt header types
 def change_names(header_ports, control_graph, init_states, old, new):
     for i in range(len(header_ports)):
         if (header_ports[i]==old):
@@ -298,6 +317,7 @@ def correct_metadata(header_ports, control_graph, init_states):
         (header_ports,control_graph,init_states) = change_names(header_ports, control_graph, init_states, "udp", "UDP")
     return (header_ports,control_graph,init_states) 
 
+# top level module that calls other functions, accepts the json_data and the file destination as input
 def make_template(json_data, destination):
     try:
         fout = open(destination, 'w')

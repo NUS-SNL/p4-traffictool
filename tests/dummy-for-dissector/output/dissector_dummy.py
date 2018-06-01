@@ -1,5 +1,4 @@
 from scapy.all import *
-import random
 
 ##class definitions
 class Ethernet(Packet):
@@ -74,8 +73,8 @@ bind_layers(Udp, Snapshot, dstPort = 0x22b8)
 ##packet_list
 possible_packets = [
 	(Ethernet()),
-	(Ethernet()/Ipv4(version = 0x4)),
-	(Ethernet()/Ipv4(version = 0x4)/Udp()),
-	(Ethernet()/Ipv4(version = 0x4)/Udp()/Q_meta(egress_global_tstamp = 40)),
-	(Ethernet()/Ipv4(version = 0x4)/Udp()/Snapshot())
+	(Ethernet()/Ipv4()),
+	(Ethernet()/Ipv4()/Udp()),
+	(Ethernet()/Ipv4()/Udp()/Q_meta()),
+	(Ethernet()/Ipv4()/Udp()/Snapshot())
 ]
