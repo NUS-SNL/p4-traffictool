@@ -6,7 +6,12 @@ If some field requires post_build calculation then it needs to be added by the u
 
 For checksums, the fields over which checksum has to be computed and the algorithm to be followed are obtained from the P4 program and mentioned in a comment.
 
-To get better idea, see the sample input P4 programs and corresponding outputs in the tests directory.
+To get better idea, see the sample input P4 programs and corresponding outputs in the samples directory.
+
+P4-TrafficGen and [p4pktgen](https://github.com/p4pktgen/p4pktgen) are closely related in their models however their applications are completely different.
+
+p4pktgen is a tool that is focused more towards testing of all possible packet header combinations
+whereas P4-TrafficGen is a tool which provides an interface to the user using which one can generate network traffic based on the headers defined in the P4 program
 
 ## Requirements
 There are no dependencies as such required to run the code. The code can be run with both python2 as well as python3, though to make it compatible with python3 the python2 version would be a little (unnoticably) slower.
