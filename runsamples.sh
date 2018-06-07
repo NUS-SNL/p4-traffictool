@@ -8,6 +8,6 @@ python src/GenTraffic.py samples/mri/mri.json samples/mri/output/mri.py
 python src/GenTraffic.py samples/simple_nat/simple_nat.json samples/simple_nat/output/simple_nat.py
 python src/GenTraffic.py samples/simple_router/simple_router.json samples/simple_router/output/simple_router.py
 python src/GenTraffic.py samples/src_routing/src_routing.json samples/src_routing/output/src_routing.py
-# python src/GenTraffic.py samples/tlv_parsing/tlv_parsing.json samples/tlv_parsing/output/tlv_parsing.py
+python src/GenTraffic.py samples/tlv_parsing/tlv_parsing.json samples/tlv_parsing/output/tlv_parsing.py
 
 # test cases picked from https://github.com/jafingerhut/p4lang-samples and https://github.com/p4lang/tutorials
