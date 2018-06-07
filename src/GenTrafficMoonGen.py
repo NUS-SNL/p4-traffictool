@@ -167,7 +167,22 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     
     variable_fields = []
     fout.write("%s.headerFormat = [[\n" %(header.upper()))
-    fout.write("\t")
+    for field in header_type["fields"][:-1]:
+        try:
+            fout.write("\t%d \t %s;\n" %(field[1],field[0]))
+        except TypeError:
+            variable_fields.append(field[0])
+    field = header_type["fields"][-1]
+    try:
+        fout.write("\t%d \t %s;\n" %(field[1],field[0]))
+    except TypeError:
+        variable_fields.append(field[0])
+    fout.write("]]\n")
+    fout.write("\n\n-- variable length fields\n")
+    for variable_field in variable_fields:
+        fout.write("%s.headerVariableMember = '%s'\n" %(header.upper(),variable_field))
+    if len(variable_fields)==0:
+        fout.write("%s.headerVariableMember = nil\n" %(header.upper()))
     fout.close()
 
 
