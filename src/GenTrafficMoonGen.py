@@ -235,16 +235,32 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 
     default_next_transition = None
     transition_key = None
-    next_transitions = {}
-    fout.write("-- Dictionary for next level headers")
-    fout.write("local nextHeaderResolve = {\n")
+    next_transitions = []
     for edge in control_graph:
-    	if (header==edge[0]):
-    		if (edge[1]!=None):
-    			
+        if (header==edge[0]):
+            if (edge[-1] in header_ports):
+                if (edge[1]!=None):
+                    transition_key = edge[1]
+                    next_transitions.append((edge[-1],edge[-2]))
+                else:
+                    default_next_transition = edge[-1]
+    fout.write("-- Dictionary for next level headers\n")
+    fout.write("local nextHeaderResolve = {\n")
+    for transition in next_transitions:
+        fout.write("\t%s = %s,\n" %(transition[0],transition[1]))
+    fout.write("}\n")
+
+
 
     fout.write("function %sHeader:resolveNextHeader()\n" %(headerUpper))
-    fout.write("\treturn nil\n")
+    if (len(next_transitions)>0):
+        fout.write("\tlocal key = self:get%s()\n" %(transition_key.upper()))
+        fout.write("\tfor name, value in pairs(nextHeaderResolve) do\n")
+        fout.write("\t\tif key == value then\n\t\t\treturn name\n\t\tend\n\tend\n")
+    if (default_next_transition!= None):
+        fout.write("\t return %s\n" %(default_next_transition))
+    else:
+        fout.write("\treturn nil\n")
     fout.write("end\n\n")
 
     fout.write("\n-----------------------------------------------------\n")
