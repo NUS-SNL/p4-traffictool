@@ -159,7 +159,8 @@ def make_control_graph(parsers):
 
 # copies template file contents 
 def copy_template(fout):
-    fin  = open("../templates/templateMoonGen.lua","r")
+    pathname = os.path.abspath(os.path.dirname(sys.argv[0]))
+    fin  = open(pathname + "/../templates/templateMoonGen.lua","r")
     l = fin.readlines()
     for i in l:
         fout.write(i)

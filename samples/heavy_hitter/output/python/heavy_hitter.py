@@ -1,14 +1,6 @@
 from scapy.all import *
 
 ##class definitions
-class Cpu_header(Packet):
-	name = 'cpu_header'
-	fields_desc = [
-		XBitField('preamble',0,64),
-		XBitField('device',0,8),
-		XBitField('reason',0,8),
-		XBitField('if_index',0,8)
-	]
 class Ethernet(Packet):
 	name = 'ethernet'
 	fields_desc = [
@@ -42,14 +34,13 @@ class Tcp(Packet):
 		XBitField('seqNo',0,32),
 		XBitField('ackNo',0,32),
 		XBitField('dataOffset',0,4),
-		XBitField('res',0,4),
-		XBitField('flags',0,8),
+		XBitField('res',0,3),
+		XBitField('ecn',0,3),
+		XBitField('ctrl',0,6),
 		XBitField('window',0,16),
 		XBitField('checksum',0,16),
 		XBitField('urgentPtr',0,16)
 	]
-	#update checksum over [[u'ipv4', u'srcAddr'], [u'ipv4', u'dstAddr'], u'0x00', [u'ipv4', u'protocol'], [u'meta', u'tcpLength'], [u'tcp', u'srcPort'], [u'tcp', u'dstPort'], [u'tcp', u'seqNo'], [u'tcp', u'ackNo'], [u'tcp', u'dataOffset'], [u'tcp', u'res'], [u'tcp', u'flags'], [u'tcp', u'window'], [u'tcp', u'urgentPtr'], u'payload'] using csum16 in post_build method
-
 
 ##bindings
 bind_layers(Ethernet, Ipv4, etherType = 0x0800)
@@ -58,9 +49,6 @@ bind_layers(Ipv4, Tcp, protocol = 0x06)
 ##packet_list
 possible_packets = [
 	(Ethernet()),
-	(Cpu_header()/Ethernet()),
 	(Ethernet()/Ipv4()),
-	(Ethernet()/Ipv4()/Tcp()),
-	(Cpu_header()/Ethernet()/Ipv4()),
-	(Cpu_header()/Ethernet()/Ipv4()/Tcp())
+	(Ethernet()/Ipv4()/Tcp())
 ]
