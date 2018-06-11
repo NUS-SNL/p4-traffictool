@@ -166,105 +166,123 @@ def copy_template(fout):
 
 # makes the actual lua script given the relevant header type and next and previous state transition information
 def make_template(control_graph, header, header_type, destination, header_ports):
-    if ((ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT) == False):
+    if (((header == "ethernet" and ETHER_DETECT) or (header == "ipv4" and IPv4_DETECT) or (header == "ipv6" and IPv6_DETECT) or (header == "tcp" and TCP_DETECT) or (header == "udp" and UDP_DETECT)) == False):
     
-	    headerUpper = header.upper()
-	    fout = open(destination,"w")
-	    fout.write("--Template for addition of new protocol '%s'\n\n" %(header))
-	    copy_template(fout)
-	    fout.write("\n\n-----------------------------------------------------\n")
-	    fout.write("---- %s header and constants \n" %(headerUpper))
-	    fout.write("-----------------------------------------------------\n")
-	    fout.write("local %s = {}\n\n" %(headerUpper))
-	    
-	    variable_fields = []
-	    fout.write("%s.headerFormat = [[\n" %(headerUpper))
-	    for field in header_type["fields"][:-1]:
-	        try:
-	            fout.write("\t%d \t %s;\n" %(field[1],field[0]))
-	        except TypeError:
-	            variable_fields.append(field[0])
-	    field = header_type["fields"][-1]
-	    try:
-	        fout.write("\t%d \t %s;\n" %(field[1],field[0]))
-	    except TypeError:
-	        variable_fields.append(field[0])
-	    fout.write("]]\n")
-	    fout.write("\n\n-- variable length fields\n")
-	    for variable_field in variable_fields:
-	        fout.write("%s.headerVariableMember = '%s'\n" %(headerUpper,variable_field))
-	    if len(variable_fields)==0:
-	        fout.write("%s.headerVariableMember = nil\n" %(headerUpper))
+        headerUpper = header.upper()
+        fout = open(destination,"w")
+        fout.write("--Template for addition of new protocol '%s'\n\n" %(header))
+        copy_template(fout)
+        fout.write("\n\n-----------------------------------------------------\n")
+        fout.write("---- %s header and constants \n" %(headerUpper))
+        fout.write("-----------------------------------------------------\n")
+        fout.write("local %s = {}\n\n" %(headerUpper))
+        
+        variable_fields = []
+        fout.write("%s.headerFormat = [[\n" %(headerUpper))
+        for field in header_type["fields"][:-1]:
+            try:
+                fout.write("\t%d \t %s;\n" %(field[1],field[0]))
+            except TypeError:
+                variable_fields.append(field[0])
+        field = header_type["fields"][-1]
+        try:
+            fout.write("\t%d \t %s;\n" %(field[1],field[0]))
+        except TypeError:
+            variable_fields.append(field[0])
+        fout.write("]]\n")
+        fout.write("\n\n-- variable length fields\n")
+        for variable_field in variable_fields:
+            fout.write("%s.headerVariableMember = '%s'\n" %(headerUpper,variable_field))
+        if len(variable_fields)==0:
+            fout.write("%s.headerVariableMember = nil\n" %(headerUpper))
 
-	    fout.write("\n-- Module for %s_address struct\n" %(headerUpper))
-	    fout.write("local %sHeader = initHeader()\n" % (headerUpper))
-	    fout.write("%sHeader.__index = %sHeader\n\n" %(headerUpper,headerUpper))
-	    fout.write("\n-----------------------------------------------------\n")
-	    fout.write("---- Getters, Setters and String functions for fields")
-	    fout.write("\n-----------------------------------------------------\n")
+        fout.write("\n-- Module for %s_address struct\n" %(headerUpper))
+        fout.write("local %sHeader = initHeader()\n" % (headerUpper))
+        fout.write("%sHeader.__index = %sHeader\n\n" %(headerUpper,headerUpper))
+        fout.write("\n-----------------------------------------------------\n")
+        fout.write("---- Getters, Setters and String functions for fields")
+        fout.write("\n-----------------------------------------------------\n")
 
-	    for field in header_type["fields"][:-1]:
-	        
-	        fout.write("function %sHeader:get%s()\n" %(headerUpper, field[0].upper()))
-	        fout.write("\treturn hton(self.%s)\n" %(field[0]))
-	        fout.write("end\n\n")
+        for field in header_type["fields"][:-1]:
+            
+            fout.write("function %sHeader:get%s()\n" %(headerUpper, field[0].upper()))
+            fout.write("\treturn hton(self.%s)\n" %(field[0]))
+            fout.write("end\n\n")
 
-	        fout.write("function %sHeader:get%sstring()\n" %(headerUpper, field[0].upper()))
-	        fout.write("\treturn self:get%s()\n" %(field[0].upper()))
-	        fout.write("end\n\n")
+            fout.write("function %sHeader:get%sstring()\n" %(headerUpper, field[0].upper()))
+            fout.write("\treturn self:get%s()\n" %(field[0].upper()))
+            fout.write("end\n\n")
 
-	        fout.write("function %sHeader:set%s(int)\n" %(headerUpper, field[0].upper()))
-	        fout.write("\tint = int or 0\n")
-	        fout.write("\tself.%s = hton(int)\n" %(field[0]))
-	        fout.write("end\n\n\n")
+            fout.write("function %sHeader:set%s(int)\n" %(headerUpper, field[0].upper()))
+            fout.write("\tint = int or 0\n")
+            fout.write("\tself.%s = hton(int)\n" %(field[0]))
+            fout.write("end\n\n\n")
 
-	    fout.write("\n-----------------------------------------------------\n")
-	    fout.write("---- Functions for full header")
-	    fout.write("\n-----------------------------------------------------\n")
-	    fout.write("-- Set all members of the PROTO header\n")
-	    fout.write("function %sHeader:fill(args,pre)\n" %(headerUpper))
-	    fout.write("\targs = args or {}\n")
-	    fout.write("\tpre = pre or '%s'\n\n" %(headerUpper))
+        fout.write("\n-----------------------------------------------------\n")
+        fout.write("---- Functions for full header")
+        fout.write("\n-----------------------------------------------------\n")
+        fout.write("-- Set all members of the PROTO header\n")
+        fout.write("function %sHeader:fill(args,pre)\n" %(headerUpper))
+        fout.write("\targs = args or {}\n")
+        fout.write("\tpre = pre or '%s'\n\n" %(headerUpper))
 
-	    for field in header_type["fields"]:
-	    	fout.write("\tself:set%s(args[pre .. '%s'])\n" %(field[0].upper(), field[0].upper()))
-	    fout.write("end\n\n")
+        for field in header_type["fields"]:
+            fout.write("\tself:set%s(args[pre .. '%s'])\n" %(field[0].upper(), field[0].upper()))
+        fout.write("end\n\n")
 
-	    fout.write("-- Retrieve the values of all members\n")
-	    fout.write("function %sHeader:get(pre)\n" %(headerUpper))
-	    fout.write("\tpre = pre or '%s'\n\n" %(headerUpper))
-	    fout.write("\tlocal args = {}\n")
-	    for field in header_type["fields"]:
-	    	fout.write("\targs[pre .. '%s'] = self:get%s()\n" %(field[0].upper(), field[0].upper()))
-	    fout.write("\n\treturn args\nend\n\n")
+        fout.write("-- Retrieve the values of all members\n")
+        fout.write("function %sHeader:get(pre)\n" %(headerUpper))
+        fout.write("\tpre = pre or '%s'\n\n" %(headerUpper))
+        fout.write("\tlocal args = {}\n")
+        for field in header_type["fields"]:
+            fout.write("\targs[pre .. '%s'] = self:get%s()\n" %(field[0].upper(), field[0].upper()))
+        fout.write("\n\treturn args\nend\n\n")
 
-	    fout.write("function %sHeader:getString()\n" %(headerUpper))
-	    fout.write("\treturn '%s \\n'\n" %(headerUpper))
-	    for field in header_type["fields"]:
-	    	fout.write("\t\t.. '%s' .. self:get%sString() .. '\\n'\n" %(field[0].upper(), field[0].upper()))
-	    fout.write("end\n\n")
+        fout.write("function %sHeader:getString()\n" %(headerUpper))
+        fout.write("\treturn '%s \\n'\n" %(headerUpper))
+        for field in header_type["fields"]:
+            fout.write("\t\t.. '%s' .. self:get%sString() .. '\\n'\n" %(field[0].upper(), field[0].upper()))
+        fout.write("end\n\n")
 
-	    default_next_transition = None
-	    transition_key = None
-	    next_transitions = {}
-	    fout.write("-- Dictionary for next level headers")
-	    fout.write("local nextHeaderResolve = {\n")
-	    for edge in control_graph:
-	    	if (header==edge[0]):
-	    		if (edge[1]!=None):
+        default_next_transition = None
+        transition_key = None
+        next_transitions = []
+        fout.write("-- Dictionary for next level headers")
+        fout.write("local nextHeaderResolve = {\n")
+        for edge in control_graph:
+            if (header==edge[0]):
+                if (edge[1]!=None):
+                    transition_key = edge[1]
+                    next_transitions.append((edge[-1],edge[-2]))
+                else:
+                    default_next_transition = edge[-1]
+        fout.write("-- Dictionary for next level headers\n")
+        fout.write("local nextHeaderResolve = {\n")
+        for transition in next_transitions:
+            fout.write("\t%s = %s,\n" %(transition[0],transition[1]))
+        fout.write("}\n")
 
 
-	    fout.write("function %sHeader:resolveNextHeader()\n" %(headerUpper))
-	    fout.write("\treturn nil\n")
-	    fout.write("end\n\n")
 
-	    fout.write("\n-----------------------------------------------------\n")
-	    fout.write("---- Metatypes")
-	    fout.write("\n-----------------------------------------------------\n")
-	    fout.write("%s.metatype = %sHeader\n" %(headerUpper, headerUpper))
-	    fout.write("\nreturn %s" %(headerUpper))
+        fout.write("function %sHeader:resolveNextHeader()\n" %(headerUpper))
+        if (len(next_transitions)>0):
+            fout.write("\tlocal key = self:get%s()\n" %(transition_key.upper()))
+            fout.write("\tfor name, value in pairs(nextHeaderResolve) do\n")
+            fout.write("\t\tif key == value then\n\t\t\treturn name\n\t\tend\n\tend\n")
+        if (default_next_transition!= None):
+            fout.write("\t return %s\n" %(default_next_transition))
+        else:
+            fout.write("\treturn nil\n")
+        fout.write("end\n\n")
 
-	    fout.close()
+        fout.write("\n-----------------------------------------------------\n")
+        fout.write("---- Metatypes")
+        fout.write("\n-----------------------------------------------------\n")
+        fout.write("%s.metatype = %sHeader\n" %(headerUpper, headerUpper))
+        fout.write("\nreturn %s" %(headerUpper))
+
+        fout.close()
+
 
 
 control_graph = make_control_graph(data["parsers"])
