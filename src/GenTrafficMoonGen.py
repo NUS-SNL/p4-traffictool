@@ -250,10 +250,10 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         next_transitions = []
         for edge in control_graph:
             if (header==edge[0]):
-                if (edge[1]!=None):
+                if (edge[1]!=None ):
                     transition_key = edge[1]
                     next_transitions.append((edge[-1],edge[-2]))
-                else:
+                elif (str(edge[-1])!='final'):
                     default_next_transition = edge[-1]
         fout.write("-- Dictionary for next level headers\n")
         fout.write("local nextHeaderResolve = {\n")
@@ -269,7 +269,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
             fout.write("\tfor name, value in pairs(nextHeaderResolve) do\n")
             fout.write("\t\tif key == value then\n\t\t\treturn name\n\t\tend\n\tend\n")
         if (default_next_transition!= None):
-            fout.write("\t return %s\n" %(default_next_transition))
+            fout.write("\treturn %s\n" %(default_next_transition))
         else:
             fout.write("\treturn nil\n")
         fout.write("end\n\n")
@@ -291,7 +291,7 @@ header_ports, header_types = find_data_headers(
 local_name = sys.argv[1][sys.argv[1].rfind('/')+1:-5]
 for i in range(len(header_ports)):
     destination = DESTINATION + local_name + "_" + \
-        str(i) + "_" + header_ports[i] + ".lua"
+        header_ports[i] + ".lua"
     # fout.write("dofile('%s')\n" % (os.path.abspath(destination)))
     make_template(
         control_graph, header_ports[i], header_types[i], destination, header_ports)
