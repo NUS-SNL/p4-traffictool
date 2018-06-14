@@ -70,6 +70,20 @@ function ETHERNETHeader:setSRCADDR(int)
 end
 
 
+function ETHERNETHeader:getETHERTYPE()
+	return hton(self.etherType)
+end
+
+function ETHERNETHeader:getETHERTYPEstring()
+	return self:getETHERTYPE()
+end
+
+function ETHERNETHeader:setETHERTYPE(int)
+	int = int or 0
+	self.etherType = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

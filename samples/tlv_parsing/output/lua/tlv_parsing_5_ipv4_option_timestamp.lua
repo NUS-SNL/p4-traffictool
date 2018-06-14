@@ -69,6 +69,20 @@ function IPV4_OPTION_TIMESTAMPHeader:setLEN(int)
 end
 
 
+function IPV4_OPTION_TIMESTAMPHeader:getDATA()
+	return hton(self.data)
+end
+
+function IPV4_OPTION_TIMESTAMPHeader:getDATAstring()
+	return self:getDATA()
+end
+
+function IPV4_OPTION_TIMESTAMPHeader:setDATA(int)
+	int = int or 0
+	self.data = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

@@ -40,6 +40,20 @@ SWIDSHeader.__index = SWIDSHeader
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
+function SWIDSHeader:getSWID()
+	return hton(self.swid)
+end
+
+function SWIDSHeader:getSWIDstring()
+	return self:getSWID()
+end
+
+function SWIDSHeader:setSWID(int)
+	int = int or 0
+	self.swid = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

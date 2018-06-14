@@ -30,9 +30,8 @@ TCP.headerFormat = [[
 	32 	 seqNo;
 	32 	 ackNo;
 	4 	 dataOffset;
-	3 	 res;
-	3 	 ecn;
-	6 	 ctrl;
+	4 	 res;
+	8 	 flags;
 	16 	 window;
 	16 	 checksum;
 	16 	 urgentPtr;
@@ -134,31 +133,17 @@ function TCPHeader:setRES(int)
 end
 
 
-function TCPHeader:getECN()
-	return hton(self.ecn)
+function TCPHeader:getFLAGS()
+	return hton(self.flags)
 end
 
-function TCPHeader:getECNstring()
-	return self:getECN()
+function TCPHeader:getFLAGSstring()
+	return self:getFLAGS()
 end
 
-function TCPHeader:setECN(int)
+function TCPHeader:setFLAGS(int)
 	int = int or 0
-	self.ecn = hton(int)
-end
-
-
-function TCPHeader:getCTRL()
-	return hton(self.ctrl)
-end
-
-function TCPHeader:getCTRLstring()
-	return self:getCTRL()
-end
-
-function TCPHeader:setCTRL(int)
-	int = int or 0
-	self.ctrl = hton(int)
+	self.flags = hton(int)
 end
 
 
@@ -219,8 +204,7 @@ function TCPHeader:fill(args,pre)
 	self:setACKNO(args[pre .. 'ACKNO'])
 	self:setDATAOFFSET(args[pre .. 'DATAOFFSET'])
 	self:setRES(args[pre .. 'RES'])
-	self:setECN(args[pre .. 'ECN'])
-	self:setCTRL(args[pre .. 'CTRL'])
+	self:setFLAGS(args[pre .. 'FLAGS'])
 	self:setWINDOW(args[pre .. 'WINDOW'])
 	self:setCHECKSUM(args[pre .. 'CHECKSUM'])
 	self:setURGENTPTR(args[pre .. 'URGENTPTR'])
@@ -237,8 +221,7 @@ function TCPHeader:get(pre)
 	args[pre .. 'ACKNO'] = self:getACKNO()
 	args[pre .. 'DATAOFFSET'] = self:getDATAOFFSET()
 	args[pre .. 'RES'] = self:getRES()
-	args[pre .. 'ECN'] = self:getECN()
-	args[pre .. 'CTRL'] = self:getCTRL()
+	args[pre .. 'FLAGS'] = self:getFLAGS()
 	args[pre .. 'WINDOW'] = self:getWINDOW()
 	args[pre .. 'CHECKSUM'] = self:getCHECKSUM()
 	args[pre .. 'URGENTPTR'] = self:getURGENTPTR()
@@ -254,8 +237,7 @@ function TCPHeader:getString()
 		.. 'ACKNO' .. self:getACKNOString() .. '\n'
 		.. 'DATAOFFSET' .. self:getDATAOFFSETString() .. '\n'
 		.. 'RES' .. self:getRESString() .. '\n'
-		.. 'ECN' .. self:getECNString() .. '\n'
-		.. 'CTRL' .. self:getCTRLString() .. '\n'
+		.. 'FLAGS' .. self:getFLAGSString() .. '\n'
 		.. 'WINDOW' .. self:getWINDOWString() .. '\n'
 		.. 'CHECKSUM' .. self:getCHECKSUMString() .. '\n'
 		.. 'URGENTPTR' .. self:getURGENTPTRString() .. '\n'

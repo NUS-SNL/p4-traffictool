@@ -55,6 +55,20 @@ function MYTUNNELHeader:setPROTO_ID(int)
 end
 
 
+function MYTUNNELHeader:getDST_ID()
+	return hton(self.dst_id)
+end
+
+function MYTUNNELHeader:getDST_IDstring()
+	return self:getDST_ID()
+end
+
+function MYTUNNELHeader:setDST_ID(int)
+	int = int or 0
+	self.dst_id = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

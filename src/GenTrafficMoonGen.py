@@ -204,7 +204,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         fout.write("---- Getters, Setters and String functions for fields")
         fout.write("\n-----------------------------------------------------\n")
 
-        for field in header_type["fields"][:-1]:
+        for field in header_type["fields"]:
             
             fout.write("function %sHeader:get%s()\n" %(headerUpper, field[0].upper()))
             fout.write("\treturn hton(self.%s)\n" %(field[0]))
@@ -248,8 +248,6 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         default_next_transition = None
         transition_key = None
         next_transitions = []
-        fout.write("-- Dictionary for next level headers")
-        fout.write("local nextHeaderResolve = {\n")
         for edge in control_graph:
             if (header==edge[0]):
                 if (edge[1]!=None):

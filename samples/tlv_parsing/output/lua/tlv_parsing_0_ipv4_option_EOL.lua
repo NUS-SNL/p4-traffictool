@@ -40,6 +40,20 @@ IPV4_OPTION_EOLHeader.__index = IPV4_OPTION_EOLHeader
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
+function IPV4_OPTION_EOLHeader:getVALUE()
+	return hton(self.value)
+end
+
+function IPV4_OPTION_EOLHeader:getVALUEstring()
+	return self:getVALUE()
+end
+
+function IPV4_OPTION_EOLHeader:setVALUE(int)
+	int = int or 0
+	self.value = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

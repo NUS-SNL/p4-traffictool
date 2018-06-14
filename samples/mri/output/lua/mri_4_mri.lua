@@ -40,6 +40,20 @@ MRIHeader.__index = MRIHeader
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
+function MRIHeader:getCOUNT()
+	return hton(self.count)
+end
+
+function MRIHeader:getCOUNTstring()
+	return self:getCOUNT()
+end
+
+function MRIHeader:setCOUNT(int)
+	int = int or 0
+	self.count = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

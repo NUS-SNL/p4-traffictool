@@ -85,6 +85,20 @@ function IPV4_OPTIONHeader:setOPTION(int)
 end
 
 
+function IPV4_OPTIONHeader:getOPTIONLENGTH()
+	return hton(self.optionLength)
+end
+
+function IPV4_OPTIONHeader:getOPTIONLENGTHstring()
+	return self:getOPTIONLENGTH()
+end
+
+function IPV4_OPTIONHeader:setOPTIONLENGTH(int)
+	int = int or 0
+	self.optionLength = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

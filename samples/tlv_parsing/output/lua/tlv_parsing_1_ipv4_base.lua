@@ -205,6 +205,20 @@ function IPV4_BASEHeader:setSRCADDR(int)
 end
 
 
+function IPV4_BASEHeader:getDSTADDR()
+	return hton(self.dstAddr)
+end
+
+function IPV4_BASEHeader:getDSTADDRstring()
+	return self:getDSTADDR()
+end
+
+function IPV4_BASEHeader:setDSTADDR(int)
+	int = int or 0
+	self.dstAddr = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

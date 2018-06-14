@@ -70,6 +70,20 @@ function ICMPHeader:setCODE(int)
 end
 
 
+function ICMPHeader:getCHECKSUM()
+	return hton(self.checksum)
+end
+
+function ICMPHeader:getCHECKSUMstring()
+	return self:getCHECKSUM()
+end
+
+function ICMPHeader:setCHECKSUM(int)
+	int = int or 0
+	self.checksum = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

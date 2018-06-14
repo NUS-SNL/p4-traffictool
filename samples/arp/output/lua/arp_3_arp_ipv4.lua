@@ -85,6 +85,20 @@ function ARP_IPV4Header:setTHA(int)
 end
 
 
+function ARP_IPV4Header:getTPA()
+	return hton(self.tpa)
+end
+
+function ARP_IPV4Header:getTPAstring()
+	return self:getTPA()
+end
+
+function ARP_IPV4Header:setTPA(int)
+	int = int or 0
+	self.tpa = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

@@ -55,6 +55,20 @@ function SRCROUTESHeader:setBOS(int)
 end
 
 
+function SRCROUTESHeader:getPORT()
+	return hton(self.port)
+end
+
+function SRCROUTESHeader:getPORTstring()
+	return self:getPORT()
+end
+
+function SRCROUTESHeader:setPORT(int)
+	int = int or 0
+	self.port = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

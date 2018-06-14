@@ -175,6 +175,20 @@ function SNAPSHOTHeader:setNEW_EGRESS_GLOBAL_TSTAMP(int)
 end
 
 
+function SNAPSHOTHeader:getNEW_ENQ_TSTAMP()
+	return hton(self.new_enq_tstamp)
+end
+
+function SNAPSHOTHeader:getNEW_ENQ_TSTAMPstring()
+	return self:getNEW_ENQ_TSTAMP()
+end
+
+function SNAPSHOTHeader:setNEW_ENQ_TSTAMP(int)
+	int = int or 0
+	self.new_enq_tstamp = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

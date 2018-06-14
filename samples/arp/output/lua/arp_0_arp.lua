@@ -100,6 +100,20 @@ function ARPHeader:setPLEN(int)
 end
 
 
+function ARPHeader:getOPER()
+	return hton(self.oper)
+end
+
+function ARPHeader:getOPERstring()
+	return self:getOPER()
+end
+
+function ARPHeader:setOPER(int)
+	int = int or 0
+	self.oper = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

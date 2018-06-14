@@ -40,6 +40,20 @@ IPV4_OPTION_NOPHeader.__index = IPV4_OPTION_NOPHeader
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
+function IPV4_OPTION_NOPHeader:getVALUE()
+	return hton(self.value)
+end
+
+function IPV4_OPTION_NOPHeader:getVALUEstring()
+	return self:getVALUE()
+end
+
+function IPV4_OPTION_NOPHeader:setVALUE(int)
+	int = int or 0
+	self.value = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

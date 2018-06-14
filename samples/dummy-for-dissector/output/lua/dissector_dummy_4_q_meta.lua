@@ -190,6 +190,20 @@ function Q_METAHeader:set_PAD3(int)
 end
 
 
+function Q_METAHeader:getDEQ_QDEPTH()
+	return hton(self.deq_qdepth)
+end
+
+function Q_METAHeader:getDEQ_QDEPTHstring()
+	return self:getDEQ_QDEPTH()
+end
+
+function Q_METAHeader:setDEQ_QDEPTH(int)
+	int = int or 0
+	self.deq_qdepth = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

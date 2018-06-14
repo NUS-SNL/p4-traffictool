@@ -85,6 +85,20 @@ function UDPHeader:setHDR_LENGTH(int)
 end
 
 
+function UDPHeader:getCHECKSUM()
+	return hton(self.checksum)
+end
+
+function UDPHeader:getCHECKSUMstring()
+	return self:getCHECKSUM()
+end
+
+function UDPHeader:setCHECKSUM(int)
+	int = int or 0
+	self.checksum = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header

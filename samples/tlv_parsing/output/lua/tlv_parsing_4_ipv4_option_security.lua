@@ -70,6 +70,20 @@ function IPV4_OPTION_SECURITYHeader:setLEN(int)
 end
 
 
+function IPV4_OPTION_SECURITYHeader:getSECURITY()
+	return hton(self.security)
+end
+
+function IPV4_OPTION_SECURITYHeader:getSECURITYstring()
+	return self:getSECURITY()
+end
+
+function IPV4_OPTION_SECURITYHeader:setSECURITY(int)
+	int = int or 0
+	self.security = hton(int)
+end
+
+
 
 -----------------------------------------------------
 ---- Functions for full header
