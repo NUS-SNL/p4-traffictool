@@ -11,8 +11,6 @@ require "utils"
 require "proto.template"
 local initHeader = initHeader
 
-local ntoh, hton = ntoh, hton
-local ntoh16, hton16 = ntoh16, hton16
 local bor, band, bnot, rshift, lshift= bit.bor, bit.band, bit.bnot, bit.rshift, bit.lshift
 local istype = ffi.istype
 local format = string.format
