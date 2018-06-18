@@ -18,6 +18,8 @@ try:
     DESTINATION = sys.argv[2]
     if (DESTINATION[-1] != '/'):
         DESTINATION += '/'
+    print ("Generating MoonGen traffic generator for %s\n" %(sys.argv[1]))
+
 except IndexError:
     print ("Incorrect argument specification")
     exit(0)
@@ -29,9 +31,6 @@ except IOError:
 if (len(sys.argv) > 3):
     if (sys.argv[-1] == '-d'):
         DEBUG = True
-
-# variable to store the list of tables created by the scripts
-tables_created = []
 
 # assign valid name to state depending on which header it extracts
 def valid_state_name(state):
@@ -165,6 +164,45 @@ def copy_template(fout):
     for i in l:
         fout.write(i)
 
+def predict_type(field):
+    if (field[1]<=8):
+        return "uint8_t"
+    if (field[1]<=16):
+        return "uint16_t"
+    if (field[1]<=24):
+        return "union bitfield_24"
+    if (field[1]<=32):
+        return "uint32_t"
+    if (field[1]<=40):
+        return "union bitfield_40"
+    if (field[1]<=48):
+        return "union bitfield_48"
+    if (field[1]<=64):
+        return "uint64_t"
+    return "-- fill blank here " + str(field[1])
+
+def network_host_conversion(field):
+    if (field[1]<=8):
+        return ""
+    if (field[1]<=16):
+        return "ntoh16"
+    if (field[1]<=32):
+        return "ntoh"
+    if (field[1]<=64):
+        return "ntoh64"
+    return "-- fill blank here"
+
+def host_network_conversion(field):
+    if (field[1]<=8):
+        return ""
+    if (field[1]<=16):
+        return "hton16"
+    if (field[1]<=32):
+        return "hton"
+    if (field[1]<=64):
+        return "hton64"
+    return "-- fill blank here"
+
 # makes the actual lua script given the relevant header type and next and previous state transition information
 def make_template(control_graph, header, header_type, destination, header_ports):
     if (((header == "ethernet" and ETHER_DETECT) or (header == "ipv4" and IPv4_DETECT) or (header == "ipv6" and IPv6_DETECT) or (header == "tcp" and TCP_DETECT) or (header == "udp" and UDP_DETECT)) == False):
@@ -182,12 +220,12 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         fout.write("%s.headerFormat = [[\n" %(headerUpper))
         for field in header_type["fields"][:-1]:
             try:
-                fout.write("\t%d \t %s;\n" %(field[1],field[0]))
+                fout.write("\t%s \t %s;\n" %(predict_type(field),field[0]))
             except TypeError:
                 variable_fields.append(field[0])
         field = header_type["fields"][-1]
         try:
-            fout.write("\t%d \t %s;\n" %(field[1],field[0]))
+            fout.write("\t%s \t %s;\n" %(predict_type(field),field[0]))
         except TypeError:
             variable_fields.append(field[0])
         fout.write("]]\n")
@@ -207,7 +245,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         for field in header_type["fields"]:
             
             fout.write("function %sHeader:get%s()\n" %(headerUpper, field[0].upper()))
-            fout.write("\treturn hton(self.%s)\n" %(field[0]))
+            fout.write("\treturn %s(self.%s)\n" %(host_network_conversion(field),field[0]))
             fout.write("end\n\n")
 
             fout.write("function %sHeader:get%sstring()\n" %(headerUpper, field[0].upper()))
@@ -216,7 +254,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 
             fout.write("function %sHeader:set%s(int)\n" %(headerUpper, field[0].upper()))
             fout.write("\tint = int or 0\n")
-            fout.write("\tself.%s = hton(int)\n" %(field[0]))
+            fout.write("\tself.%s = %s(int)\n" %(field[0],host_network_conversion(field)))
             fout.write("end\n\n\n")
 
         fout.write("\n-----------------------------------------------------\n")
@@ -295,12 +333,6 @@ for i in range(len(header_ports)):
         header_ports[i] + ".lua"
     make_template(
         control_graph, header_ports[i], header_types[i], destination, header_ports)
-
-
-if (DEBUG):
-    print ("\nTables created\n")
-    for i in tables_created:
-        print (i)
 
 
 # if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT):

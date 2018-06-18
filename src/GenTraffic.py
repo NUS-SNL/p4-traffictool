@@ -23,6 +23,7 @@ array_match = re.compile('[a-z A-Z 0-9 _ -]+''[''[0-9]+'']')
 try:
     data = json.load(open(sys.argv[1]))
     DESTINATION = sys.argv[2]
+    print ("Generating Scapy traffic generator for %s\n" %(sys.argv[1]))
 except IndexError:
     print ("Incorrect argument specification")
     exit(0)
