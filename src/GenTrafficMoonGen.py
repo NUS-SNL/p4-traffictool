@@ -197,8 +197,14 @@ def host_network_conversion(field):
         return ""
     if (field[1]<=16):
         return "hton16"
+    if (field[1]<=24):
+        return ""
     if (field[1]<=32):
         return "hton"
+    if (field[1]<=40):
+        return ""
+    if (field[1]<=48):
+        return ""
     if (field[1]<=64):
         return "hton64"
     return "-- fill blank here"
@@ -243,19 +249,32 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         fout.write("\n-----------------------------------------------------\n")
 
         for field in header_type["fields"]:
-            
-            fout.write("function %sHeader:get%s()\n" %(headerUpper, field[0].upper()))
-            fout.write("\treturn %s(self.%s)\n" %(host_network_conversion(field),field[0]))
-            fout.write("end\n\n")
+            if (bin(field[1]).count('1')==1 and field[1]<65):
+                fout.write("function %sHeader:get%s()\n" %(headerUpper, field[0].upper()))
+                fout.write("\treturn %s(self.%s)\n" %(host_network_conversion(field),field[0]))
+                fout.write("end\n\n")
 
-            fout.write("function %sHeader:get%sstring()\n" %(headerUpper, field[0].upper()))
-            fout.write("\treturn self:get%s()\n" %(field[0].upper()))
-            fout.write("end\n\n")
+                fout.write("function %sHeader:get%sstring()\n" %(headerUpper, field[0].upper()))
+                fout.write("\treturn self:get%s()\n" %(field[0].upper()))
+                fout.write("end\n\n")
 
-            fout.write("function %sHeader:set%s(int)\n" %(headerUpper, field[0].upper()))
-            fout.write("\tint = int or 0\n")
-            fout.write("\tself.%s = %s(int)\n" %(field[0],host_network_conversion(field)))
-            fout.write("end\n\n\n")
+                fout.write("function %sHeader:set%s(int)\n" %(headerUpper, field[0].upper()))
+                fout.write("\tint = int or 0\n")
+                fout.write("\tself.%s = %s(int)\n" %(field[0],host_network_conversion(field)))
+                fout.write("end\n\n\n")
+            else:
+                fout.write("function %sHeader:get%s()\n" %(headerUpper, field[0].upper()))
+                fout.write("\treturn %s(self.%s:get())\n" %(host_network_conversion(field),field[0]))
+                fout.write("end\n\n")
+
+                fout.write("function %sHeader:get%sstring()\n" %(headerUpper, field[0].upper()))
+                fout.write("\treturn self:get%s()\n" %(field[0].upper()))
+                fout.write("end\n\n")
+
+                fout.write("function %sHeader:set%s(int)\n" %(headerUpper, field[0].upper()))
+                fout.write("\tint = int or 0\n")
+                fout.write("\tself.%s:set%s(int)\n" %(field[0],host_network_conversion(field)))
+                fout.write("end\n\n\n")                
 
         fout.write("\n-----------------------------------------------------\n")
         fout.write("---- Functions for full header")
@@ -315,6 +334,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         fout.write("\n-----------------------------------------------------\n")
         fout.write("---- Metatypes")
         fout.write("\n-----------------------------------------------------\n")
+        fout.write("ffi.metatype('union bitfield_24',bitfield24)\nffi.metatype('union bitfield_40',bitfield40)\nffi.metatype('union bitfield_48',bitfield48)")
         fout.write("%s.metatype = %sHeader\n" %(headerUpper, headerUpper))
         fout.write("\nreturn %s" %(headerUpper))
 
@@ -335,27 +355,27 @@ for i in range(len(header_ports)):
         control_graph, header_ports[i], header_types[i], destination, header_ports)
 
 
-# if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT):
-#     next_layer = {}
-#     for edge in control_graph:
-#         if (edge[-1]!='final'):
-#             if (edge[0] in next_layer):
-#                 next_layer[edge[0]].append(edge[-1])
-#             else:
-#                 next_layer[edge[0]]=[edge[-1]]
+if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT):
+    next_layer = {}
+    for edge in control_graph:
+        if (edge[-1]!='final'):
+            if (edge[0] in next_layer):
+                next_layer[edge[0]].append(edge[-1])
+            else:
+                next_layer[edge[0]]=[edge[-1]]
 
-#     print("\nHeaders to be added to default header layers\n")
-#     print("    Default Header Layer    Headers to be added")
-#     if (ETHER_DETECT):
-#         print ("    Ethernet             ",list(map(str,next_layer['ethernet'])))
-#     if (IPv4_DETECT):
-#         print ("    IPv4                 ",list(map(str,next_layer['ipv4'])))
-#     if (IPv6_DETECT):
-#         print ("    IPv6                 ",list(map(str,next_layer['ipv6'])))
-#     if (TCP_DETECT):
-#         print ("    TCP                  ",list(map(str,next_layer['tcp'])))
-#     if (UDP_DETECT):
-#         print ("    UDP                  ",list(map(str,next_layer['udp'])))
+    print("\nHeaders to be added to default header layers(unless the next layer is also default)\n")
+    print("    Default Header Layer    Headers to be added")
+    if (ETHER_DETECT):
+        print ("    Ethernet             ",list(map(str,next_layer['ethernet'])))
+    if (IPv4_DETECT):
+        print ("    IPv4                 ",list(map(str,next_layer['ipv4'])))
+    if (IPv6_DETECT):
+        print ("    IPv6                 ",list(map(str,next_layer['ipv6'])))
+    if (TCP_DETECT):
+        print ("    TCP                  ",list(map(str,next_layer['tcp'])))
+    if (UDP_DETECT):
+        print ("    UDP                  ",list(map(str,next_layer['udp'])))
 
 
 
