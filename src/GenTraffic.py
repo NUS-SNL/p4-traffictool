@@ -23,7 +23,9 @@ array_match = re.compile('[a-z A-Z 0-9 _ -]+''[''[0-9]+'']')
 try:
     data = json.load(open(sys.argv[1]))
     DESTINATION = sys.argv[2]
-    print ("Generating Scapy traffic generator for %s\n" %(sys.argv[1]))
+    if DESTINATION[-1]!='/':
+        DESTINATION+='/'
+    print ("Generating Scapy traffic generator for %s at %s\n" %(sys.argv[1], DESTINATION))
 except IndexError:
     print ("Incorrect argument specification")
     exit(0)
@@ -344,4 +346,4 @@ def make_template(json_data, destination):
         print("Destination file cannot be created\n")
         exit(0)
 
-make_template(data, DESTINATION)
+make_template(data, DESTINATION+sys.argv[1][sys.argv[1].rfind('/')+1:-5]+".py")
