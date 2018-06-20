@@ -18,7 +18,7 @@ try:
     DESTINATION = sys.argv[2]
     if (DESTINATION[-1] != '/'):
         DESTINATION += '/'
-    print ("Generating MoonGen traffic generator for %s\n" %(sys.argv[1]))
+    print ("Generating MoonGen traffic generator for %s at %s\n" %(sys.argv[1],DESTINATION))
 
 except IndexError:
     print ("Incorrect argument specification")
@@ -345,7 +345,8 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 control_graph = make_control_graph(data["parsers"])
 header_ports, header_types = find_data_headers(
     data["headers"], data["header_types"])
-local_name = sys.argv[1][sys.argv[1].rfind('/')+1:-5]
+local_name = data["program"][data["program"].rfind('/')+1:data["program"].rfind('.')]
+
 for i in range(len(header_ports)):
     if ((ETHER_DETECT and header_ports[i]=='ethernet') or (IPv4_DETECT and header_ports[i]=='ipv4') or (IPv6_DETECT and header_ports[i]=='ipv6') or (TCP_DETECT and header_ports[i]=='tcp') or (UDP_DETECT and header_ports[i]=='udp')):
         continue
