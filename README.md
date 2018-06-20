@@ -5,13 +5,13 @@ P4-SupportToolsCodeGen is a tool designed to aid P4-programming by easing the pr
 To get better undersanding of the purpose of tool, see the sample input P4 programs and corresponding outputs in the samples directory.
 
 ## Contents
-* [Scapy as backend](#Scapy\ as\ backend)
-* [PCapPlusPlus as backend](#PCapPlusPlus\ as\ backend)
-* [MoonGen as backend](#MoonGen\ as\ backend)
-* [Lua with Wireshark as backend](#Lua\ with\ Wireshark\ as\ backend)
-* [Similar tools](#Similar\ tools)
-* [Requirements](#Requirements)
-* [Usage](#Usage)
+* [Scapy as backend](#scapy-as-backend)
+* [PCapPlusPlus as backend](#pcapplusplus-as-backend)
+* [MoonGen as backend](#moongen-as-backend)
+* [Lua with Wireshark as backend](#lua-with-wireshark-as-backend)
+* [Similar tools](#similar-tools)
+* [Requirements](#requirements)
+* [Usage](#usage)
 
 ## Scapy as backend
 
@@ -90,9 +90,9 @@ To run the individual scripts to backend code generation:
 python <path to the appropriate script> <path to json output of p4 program> <path to destination directory> [-d for debug mode]
 ```
 
-Scapy backend &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : [GenTrafficScapy.py](src/GenTrafficScapy.py) <br>
-PcapPlusPlus backend &nbsp; : [DissectTraffic.py](src/DissectTraffic.py) <br>
-MoonGen backend &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; : [GenTrafficMoonGen.py](src/GenTrafficMoonGen.py) <br>
+Scapy backend &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; : [GenTrafficScapy.py](src/GenTrafficScapy.py) <br>
+PcapPlusPlus backend &nbsp;: [DissectTraffic.py](src/DissectTraffic.py) <br>
+MoonGen backend &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; : [GenTrafficMoonGen.py](src/GenTrafficMoonGen.py) <br>
 Lua Wireshark backend : [DissectTrafficLua.py](src/DissectTrafficLua.py) <br>
 
 Usage of the generated code for different backends can be found in [UsageWithBackend.md](UsageWithBackend.md)
