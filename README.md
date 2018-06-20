@@ -90,11 +90,11 @@ To run the individual scripts to backend code generation:
 python <path to the appropriate script> <path to json output of p4 program> <path to destination directory> [-d for debug mode]
 ```
 
-Scapy backend &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : GenTrafficScapy.py <br>
-PcapPlusPlus backend &nbsp;: DissectTraffic.py <br>
-MoonGen backend &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; : GenTrafficMoonGen.py <br>
-Lua Wireshark backend : DissectTrafficLua.py <br>
+Scapy backend &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : [GenTrafficScapy.py](GenTrafficScapy.py) <br>
+PcapPlusPlus backend &nbsp; : [DissectTraffic.py](DissectTraffic.py) <br>
+MoonGen backend &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; : [GenTrafficMoonGen.py](GenTrafficMoonGen.py) <br>
+Lua Wireshark backend : [DissectTrafficLua.py](DissectTrafficLua.py) <br>
 
-Usage of the generated code for different backends can be found in UsageWithBackends.md
+Usage of the generated code for different backends can be found in [UsageWithBackends.md](UsageWithBackends.md)
 
 \* common standard headers include Ethernet, IPv4, IPv6, TCP, UDP. These are detected by the tool only if their name in P4 code is amongst {ethernet, ipv4, ipv6, tcp, udp}.
