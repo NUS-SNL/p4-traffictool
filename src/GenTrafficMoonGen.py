@@ -211,7 +211,6 @@ def host_network_conversion(field):
 
 # makes the actual lua script given the relevant header type and next and previous state transition information
 def make_template(control_graph, header, header_type, destination, header_ports):
-    if (((header == "ethernet" and ETHER_DETECT) or (header == "ipv4" and IPv4_DETECT) or (header == "ipv6" and IPv6_DETECT) or (header == "tcp" and TCP_DETECT) or (header == "udp" and UDP_DETECT)) == False):
     
         headerUpper = header.upper()
         fout = open(destination,"w")

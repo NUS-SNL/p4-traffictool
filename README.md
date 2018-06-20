@@ -1,56 +1,100 @@
-# P4-TrafficGen
+# P4-SupportToolsCodeGen
 
-This is a tool to generate a [Scapy](https://scapy.net/) based packet generator for any given P4 program. The program accepts the json output of the p4c-bmv2 compiler for a p4 program as input and produces a python code which can be imported and instantiated to generate packets.
+P4-SupportToolsCodeGen is a tool designed to aid P4-programming by easing the process of testing the code using packet generation, parsing and dissection tools. P4-SupportToolsCodeGen supports code generation for Scapy, PCapPlusPlus, MoonGen and Lua dissector for Wireshark.
 
-If some field requires post_build calculation then it needs to be added by the user making use of the *post_build* menthod in Scapy.
+To get better undersanding of the purpose of tool, see the sample input P4 programs and corresponding outputs in the samples directory.
 
-For checksums, the fields over which checksum has to be computed and the algorithm to be followed are obtained from the P4 program and mentioned in a comment.
+## Contents
+* [Scapy as backend](#Scapy\ as\ backend)
+* [PCapPlusPlus as backend](#PCapPlusPlus\ as\ backend)
+* [MoonGen as backend](#MoonGen\ as\ backend)
+* [Lua with Wireshark as backend](#Lua\ with\ Wireshark\ as\ backend)
+* [Similar tools](#Similar\ tools)
+* [Requirements](#Requirements)
+* [Usage](#Usage)
 
-To get better idea, see the sample input P4 programs and corresponding outputs in the samples directory.
+## Scapy as backend
 
-P4-TrafficGen and [p4pktgen](https://github.com/p4pktgen/p4pktgen) are closely related in their models however their applications are completely different.
+[Scapy](https://scapy.net/) is a powerful Python-based interactive packet manipulation program and library. The code generated for Scapy can be used for packet generation, dumping packets to pcap file or simply sending them on wire, as well as parsing and dissecting packets.
+
+### What the generated code provides
+* Creates Scapy classes for the headers defined in the p4 program
+* Provides functionality for using _common standard headers_*
+* Detects variable length fields and points user to fill them suitably in class definition
+* Lastly, it produces a list of all possible packet combinations possible using the defined headers
+
+### What it doesn't
+* Post build fields like length and checksums need to be defined by the user himself/herself in the post build method
+* All fields are treated as bitfields, user can modify them according to ones need to support types such as int, short or any other suitable fields
+
+## PCapPlusPlus as backend
+[PcapPlusPlus](http://seladb.github.io/PcapPlusPlus-Doc) is a multiplatform C++ network sniffing and packet parsing and crafting framework. It provides a very fast and efficient method for crafting and parsing network packets.
+
+### What the generated code provides
+* Creates files correponding to each protocol defining the header struct, and getter and setter functions.
+* Provides functionality for using _common standard headers_*
+* Detects variable length fields and prompts user to mention the size required for the current testbench
+
+### What it doesn't
+* Post build fields like length and checksums need to be calculated in the setter function by the user
+* Field lengths which are not amongst {8, 16, 32, 64} shall be promoted to the next higher power of 2. If the user needs a field to be strictly of a particular size other than these then a proper struct needs to be defined and corresponding _ntoh_ and _hton_ functions need to be defined
+* If using default headers then user need to modify the parseNextLayer of the default header layer to include next layers.
+* User needs to modify the ProtocolType.h file to include the new layers
+
+## MoonGen as backend
+[MoonGen](https://github.com/emmericp/MoonGen) is a scriptable high-speed packet generator built on libmoon. The whole load generator is controlled by a Lua script: all packets that are sent are crafted by a user-provided script. 
+
+### What the generated code provides
+* Creates files correponding to each protocol defining the header struct, and getter and setter functions.
+* Provides functionality for using _common standard headers_*
+* Detects variable length fields and prompts user to mention the size required for the current testbench
+
+### What it doesn't
+* Post build fields like length and checksums need to be calculated in the setter function by the user
+* Field lengths which are not amongst {8, 16, 24, 32, 40, 48, 64} shall be promoted to the next higher power of 2. If the user needs a field to be strictly of a particular size other than these then a proper struct needs to be defined and corresponding _ntoh_ and _hton_ functions need to be defined
+* If using default headers then user need to modify the resolveNextHeader of the default header layer to include next layers.
+
+## Lua with Wireshark as backend
+### What the generated code provides
+* Creates files correponding to each protocol defining the header struct
+* Detects variable length fields and prompts user to mention the size required for the current testbench
+* Generates an init file specifying the order in which to load the scripts
+
+### What it doesn't
+* For parsing the packet correctly, user may need to disable the standard parsers of Wireshark
+
+
+## Similar tools
+P4-SupportToolsCodeGen and [p4pktgen](https://github.com/p4pktgen/p4pktgen) are closely related in their models however their applications are completely different.
 
 p4pktgen is a tool that is focused more towards testing of all possible packet header combinations
-whereas P4-TrafficGen is a tool which provides an interface to the user using which one can generate network traffic based on the headers defined in the P4 program
+whereas P4-SupportToolsCodeGen is a tool which provides an interface to the user using which one can generate and parse network traffic based on the headers defined in the P4 program
 
 ## Requirements
-There are no dependencies as such required to run the code. The code can be run with both python2 as well as python3, though to make it compatible with python3 the python2 version would be a little (unnoticably) slower.
+The code compiles the p4 code to generate the json output which it uses to generate codes for different backends.
+For compiling the p4 code user needs the [p4c](https://github.com/p4lang/p4c) compiler, specifically the _p4c-bm2-ss_ backend.
 
-However to run the output python code you would need the Scapy package.
+The scripts to generate code can work both with python2 as well as python3.
 
-Also to generate the json file for the P4 program as expected by P4-TrafficGen you need [p4c](https://github.com/p4lang/p4c) compiler, specifically the [bmv2](https://github.com/p4lang/p4c/tree/master/backends/bmv2) backend.
+Lastly, to make use of the generated codes user needs the suitable backends.
 
 ## Usage
-Firstly, you need the json description of your P4 program. To generate this from a P4 program:
-```
-p4c-bmv2 --json <desired name for json output> <path to p4 source>
-```
-You can also use 
-```
-p4c <path to p4 source>
-```
-if your code has dependencies on p4 libraries or header files like *core.h* or *v1model.h*
 
-Now run the code:
+To run the toplevel script:
 ```
-python GenTraffic.py <path to json source> <destination> [-n max headers in packet]
+./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> <specify destination directory path> [-scapy] [-lua] [-moongen] [-pcpp] [--d for debug mode]
 ```
-The last argument is particularly useful in the cases of recurring states in the parser.
-The output will be produced as
 
-To generate packets import the generate code using:
+To run the individual scripts to backend code generation:
 ```
-from <source> import *
+python <path to the appropriate script> <path to json output of p4 program> <path to destination directory> [-d for debug mode]
 ```
-To access the list of all possible packets simply use the identifier *possible_packets*
 
-To run the code in debug mode such that all the metadata gets printed on the console give flag *-d* as last argument.
+Scapy backend &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : GenTrafficScapy.py
+PcapPlusPlus backend &nbsp;&nbsp; : DissectTraffic.py
+MoonGen backend &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; : GenTrafficMoonGen.py
+Lua Wireshark backend : DissectTrafficLua.py
 
-To set default values modify the second argument of field definition.
+Usage of the generated code for different backends can be found in UsageWithBackends.md
 
-To set the values for packet fields on the fly use the standard Scapy method as:
-```
-Suppose you have a protocol Foo and you wish to modify the foobar field to a random number between 1 and 100.
-
-a = Ether()/Foo(foobar = randint(1,100))/Bar() 
-```
+\* common standard headers include Ethernet, IPv4, IPv6, TCP, UDP. These are detected by the tool only if their name in P4 code is amongst {ethernet, ipv4, ipv6, tcp, udp}.
