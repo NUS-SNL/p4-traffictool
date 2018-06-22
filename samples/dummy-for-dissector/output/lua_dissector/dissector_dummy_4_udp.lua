@@ -9,7 +9,9 @@ function p4_proto.dissector(buffer,pinfo,tree)
 		subtree:add(buffer(2,2), 'dstPort (16 bits):' .. string.format('%X', tostring(buffer(2,2):bitfield(0,16))))
 		subtree:add(buffer(4,2), 'hdr_length (16 bits):' .. string.format('%X', tostring(buffer(4,2):bitfield(0,16))))
 		subtree:add(buffer(6,2), 'checksum (16 bits):' .. string.format('%X', tostring(buffer(6,2):bitfield(0,16))))
-	 mydissectortable:try(buffer(2,2):bitfield(0,16), buffer:range(8):tvb(),pinfo,tree)
+	local newdissectortable = DissectorTable.get('p4_udp.dstPort')
+
+	newdissectortable:try(buffer(2,2):bitfield(0,16), buffer:range(8):tvb(),pinfo,tree)
 
 end
 
