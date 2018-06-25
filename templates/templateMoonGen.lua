@@ -42,7 +42,7 @@ end
 
 ----- 40 bit address -----
 ffi.cdef[[
-	union __attribute__((__packed__)) bitfield_24{
+	union __attribute__((__packed__)) bitfield_40{
 		uint64_t intequiv;
 	};
 ]]

@@ -201,8 +201,8 @@ end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	q_meta = 0x1e61,
-	snapshot = 0x22b8,
+	Q_META = 0x1e61,
+	SNAPSHOT = 0x22b8,
 }
 function UDPHeader:resolveNextHeader()
 	local key = self:getDSTPORT()

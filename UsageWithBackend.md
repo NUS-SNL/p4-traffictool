@@ -41,3 +41,8 @@ Copy the header files of new protocols to packet++/header and the cpp files to P
 If you used any default headers then add the corresponding next layer headers to the resolveNextHeader function of the default header.
 
 Add the new protocols to MoonGen/libmoon/lua/proto
+
+Necessary changes to other files:
+-- - packet.lua: if the header has a length member, adapt packetSetLength; 
+-- 				 if the packet has a checksum, adapt createStack (loop at end of function) and packetCalculateChecksums
+-- - proto/proto.lua: add PROTO.lua to the list so it gets loaded

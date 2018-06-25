@@ -248,7 +248,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         fout.write("\n-----------------------------------------------------\n")
 
         for field in header_type["fields"]:
-            if (bin(field[1]).count('1')==1 and field[1]<65):
+            if (not(predict_type(field).startswith("union")) and field[1]<65):
                 fout.write("function %sHeader:get%s()\n" %(headerUpper, field[0].upper()))
                 fout.write("\treturn %s(self.%s)\n" %(host_network_conversion(field),field[0]))
                 fout.write("end\n\n")
@@ -263,7 +263,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
                 fout.write("end\n\n\n")
             else:
                 fout.write("function %sHeader:get%s()\n" %(headerUpper, field[0].upper()))
-                fout.write("\treturn %s(self.%s:get())\n" %(host_network_conversion(field),field[0]))
+                fout.write("\treturn (self.%s:get())\n" %(field[0]))
                 fout.write("end\n\n")
 
                 fout.write("function %sHeader:get%sstring()\n" %(headerUpper, field[0].upper()))
@@ -272,7 +272,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 
                 fout.write("function %sHeader:set%s(int)\n" %(headerUpper, field[0].upper()))
                 fout.write("\tint = int or 0\n")
-                fout.write("\tself.%s:set%s(int)\n" %(field[0],host_network_conversion(field)))
+                fout.write("\tself.%s:set(int)\n" %(field[0]))
                 fout.write("end\n\n\n")                
 
         fout.write("\n-----------------------------------------------------\n")
@@ -314,7 +314,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         fout.write("-- Dictionary for next level headers\n")
         fout.write("local nextHeaderResolve = {\n")
         for transition in next_transitions:
-            fout.write("\t%s = %s,\n" %(transition[0],transition[1]))
+            fout.write("\t%s = %s,\n" %(transition[0].upper(),transition[1]))
         fout.write("}\n")
 
 
@@ -344,7 +344,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 control_graph = make_control_graph(data["parsers"])
 header_ports, header_types = find_data_headers(
     data["headers"], data["header_types"])
-local_name = data["program"][data["program"].rfind('/')+1:data["program"].rfind('.')]
+local_name = sys.argv[1][sys.argv[1].rfind('/')+1:sys.argv[1].rfind('.')]
 
 for i in range(len(header_ports)):
     if ((ETHER_DETECT and header_ports[i]=='ethernet') or (IPv4_DETECT and header_ports[i]=='ipv4') or (IPv6_DETECT and header_ports[i]=='ipv6') or (TCP_DETECT and header_ports[i]=='tcp') or (UDP_DETECT and header_ports[i]=='udp')):

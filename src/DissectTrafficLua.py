@@ -37,12 +37,12 @@ tables_created = []
 
 # to remove duplicates while maintaining the same list order
 def remove_duplicates(li):
-    my_set = set()
+    my_set = set(li)
     res = []
     for e in li:
         if e not in my_set:
             res.append(e)
-            my_set.add(e)
+            
     return res
 
 
@@ -208,7 +208,8 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 
     if (next_state_key!='' and next_state_key!=None):
         try:
-            fout.write("\t mydissectortable:try(buffer(%d,%d):bitfield(%d,%d), buffer:range(%d):tvb(),pinfo,tree)\n" % (
+        	fout.write("\tlocal mydissectortable = DissectorTable.get('%s.%s')\n" %("p4_"+header, next_state_key,"P4_"+header.upper()))
+            fout.write("\tmydissectortable:try(buffer(%d,%d):bitfield(%d,%d), buffer:range(%d):tvb(),pinfo,tree)\n" % (
                 transition_param[0], transition_param[1], transition_param[2], transition_param[3], byte_count))
         except IndexError:
             fout.write("\t Could not detect suitable parameters\n")
@@ -235,7 +236,8 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 control_graph = make_control_graph(data["parsers"])
 header_ports, header_types = find_data_headers(data["headers"], data["header_types"])
 fout = open(DESTINATION+"init.lua",'w')
-local_name = data["program"][data["program"].rfind('/')+1:data["program"].rfind('.')]
+local_name = sys.argv[1][sys.argv[1].rfind('/')+1:sys.argv[1].rfind('.')]
+
 for i in range(len(header_ports)):
     if (header_ports[i]=='ethernet'):
         continue

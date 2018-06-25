@@ -186,7 +186,7 @@ end
 
 
 function IPV4Header:getFLAGS()
-	return (self.flags:get())
+	return (self.flags)
 end
 
 function IPV4Header:getFLAGSstring()
@@ -195,12 +195,12 @@ end
 
 function IPV4Header:setFLAGS(int)
 	int = int or 0
-	self.flags:set(int)
+	self.flags = (int)
 end
 
 
 function IPV4Header:getFRAGOFFSET()
-	return hton16(self.fragOffset:get())
+	return hton16(self.fragOffset)
 end
 
 function IPV4Header:getFRAGOFFSETstring()
@@ -209,7 +209,7 @@ end
 
 function IPV4Header:setFRAGOFFSET(int)
 	int = int or 0
-	self.fragOffset:sethton16(int)
+	self.fragOffset = hton16(int)
 end
 
 
@@ -345,7 +345,7 @@ end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	udp = 0x11,
+	UDP = 0x11,
 }
 function IPV4Header:resolveNextHeader()
 	local key = self:getPROTOCOL()

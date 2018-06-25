@@ -44,7 +44,7 @@ end
 
 ----- 40 bit address -----
 ffi.cdef[[
-	union __attribute__((__packed__)) bitfield_24{
+	union __attribute__((__packed__)) bitfield_40{
 		uint64_t intequiv;
 	};
 ]]
@@ -185,7 +185,7 @@ end
 
 
 function Q_METAHeader:get_SPARE_PAD_BITS()
-	return hton16(self._spare_pad_bits:get())
+	return hton16(self._spare_pad_bits)
 end
 
 function Q_METAHeader:get_SPARE_PAD_BITSstring()
@@ -194,7 +194,7 @@ end
 
 function Q_METAHeader:set_SPARE_PAD_BITS(int)
 	int = int or 0
-	self._spare_pad_bits:sethton16(int)
+	self._spare_pad_bits = hton16(int)
 end
 
 
@@ -213,7 +213,7 @@ end
 
 
 function Q_METAHeader:get_PAD2()
-	return hton16(self._pad2:get())
+	return hton16(self._pad2)
 end
 
 function Q_METAHeader:get_PAD2string()
@@ -222,7 +222,7 @@ end
 
 function Q_METAHeader:set_PAD2(int)
 	int = int or 0
-	self._pad2:sethton16(int)
+	self._pad2 = hton16(int)
 end
 
 
@@ -241,7 +241,7 @@ end
 
 
 function Q_METAHeader:get_PAD3()
-	return hton16(self._pad3:get())
+	return hton16(self._pad3)
 end
 
 function Q_METAHeader:get_PAD3string()
@@ -250,7 +250,7 @@ end
 
 function Q_METAHeader:set_PAD3(int)
 	int = int or 0
-	self._pad3:sethton16(int)
+	self._pad3 = hton16(int)
 end
 
 

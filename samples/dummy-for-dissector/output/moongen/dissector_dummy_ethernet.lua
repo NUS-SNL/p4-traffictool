@@ -183,7 +183,7 @@ end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	ipv4 = 0x0800,
+	IPV4 = 0x0800,
 }
 function ETHERNETHeader:resolveNextHeader()
 	local key = self:getETHERTYPE()
