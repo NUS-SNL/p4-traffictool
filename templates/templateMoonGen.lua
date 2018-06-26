@@ -20,8 +20,13 @@ local format = string.format
 
 function hton64(int)
 	int = int or 0
+	endianness = string.dump(function() end):byte(7)
+	if endianness==0 then
+		return int
+	end
 	low_int = lshift(hton(band(int,0xFFFFFFFFULL)),32)
 	high_int = rshift(hton(band(int,0xFFFFFFFF00000000ULL)),32)
+	endianness = string.dump(function() end):byte(7)
 	return (high_int+low_int)
 end
 
