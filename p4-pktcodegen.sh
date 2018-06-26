@@ -10,6 +10,7 @@ if ([ $2 == "p4-14" ] || [ $2 == "p4-16" ]); then
     standard="$2"
 else
     echo "Incorrect Usage"
+    rm -r $foldername
     exit 1
 fi
 
@@ -21,6 +22,7 @@ if [ $? != "0" ]; then
     p4c --std $standard $source_path > foo
     if [ $? != "0" ]; then
         echo "Compilation with p4c failed.. exiting"
+        rm -r $foldername
         exit 2
     fi
 fi

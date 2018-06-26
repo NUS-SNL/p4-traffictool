@@ -16,10 +16,19 @@ local initHeader = initHeader
 
 local ntoh, hton = ntoh, hton
 local ntoh16, hton16 = ntoh16, hton16
-local ntoh64, hton64 = ntoh64, hton64
 local bor, band, bnot, rshift, lshift= bit.bor, bit.band, bit.bnot, bit.rshift, bit.lshift
 local istype = ffi.istype
 local format = string.format
+
+function hton64(int)
+	int = int or 0
+	low_int = lshift(hton(band(int,0xFFFFFFFFULL)),32)
+	high_int = rshift(hton(band(int,0xFFFFFFFF00000000ULL)),32)
+	return (high_int+low_int)
+end
+
+
+local ntoh64, hton64 = ntoh64, hton64
 
 ----- 24 bit address -----
 ffi.cdef[[
@@ -33,12 +42,12 @@ bitfield24.__index = bitfield24
 local bitfield24Type = ffi.typeof("union bitfield_24")
 
 function bitfield24:get()
-	return hton32(self.intequiv)
+	return hton(self.intequiv)
 end
 
 function bitfield24:set(addr)
 	addr = addr or 0
-	self.intequiv = hton32(tonumber(band(addr,0xFFFFFFFFULL)))
+	self.intequiv = hton(tonumber(band(addr,0xFFFFFFFFULL)))
 
 end
 
