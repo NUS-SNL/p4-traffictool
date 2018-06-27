@@ -1,4 +1,4 @@
---Template for addition of new protocol 'swids'
+--Template for addition of new protocol 'ethernet'
 
 --[[ Necessary changes to other files:
 -- - packet.lua: if the header has a length member, adapt packetSetLength; 
@@ -98,37 +98,67 @@ end
 
 
 -----------------------------------------------------
----- SWIDS header and constants 
+---- ETHERNET header and constants 
 -----------------------------------------------------
-local SWIDS = {}
+local ETHERNET = {}
 
-SWIDS.headerFormat = [[
-	uint32_t 	 swid;
+ETHERNET.headerFormat = [[
+	union bitfield_48 	 dstAddr;
+	union bitfield_48 	 srcAddr;
+	uint16_t 	 etherType;
 ]]
 
 
 -- variable length fields
-SWIDS.headerVariableMember = nil
+ETHERNET.headerVariableMember = nil
 
--- Module for SWIDS_address struct
-local SWIDSHeader = initHeader()
-SWIDSHeader.__index = SWIDSHeader
+-- Module for ETHERNET_address struct
+local ETHERNETHeader = initHeader()
+ETHERNETHeader.__index = ETHERNETHeader
 
 
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
-function SWIDSHeader:getSWID()
-	return hton(self.swid)
+function ETHERNETHeader:getDSTADDR()
+	return (self.dstAddr:get())
 end
 
-function SWIDSHeader:getSWIDstring()
-	return self:getSWID()
+function ETHERNETHeader:getDSTADDRstring()
+	return self:getDSTADDR()
 end
 
-function SWIDSHeader:setSWID(int)
+function ETHERNETHeader:setDSTADDR(int)
 	int = int or 0
-	self.swid = hton(int)
+	self.dstAddr:set(int)
+end
+
+
+function ETHERNETHeader:getSRCADDR()
+	return (self.srcAddr:get())
+end
+
+function ETHERNETHeader:getSRCADDRstring()
+	return self:getSRCADDR()
+end
+
+function ETHERNETHeader:setSRCADDR(int)
+	int = int or 0
+	self.srcAddr:set(int)
+end
+
+
+function ETHERNETHeader:getETHERTYPE()
+	return hton16(self.etherType)
+end
+
+function ETHERNETHeader:getETHERTYPEstring()
+	return self:getETHERTYPE()
+end
+
+function ETHERNETHeader:setETHERTYPE(int)
+	int = int or 0
+	self.etherType = hton16(int)
 end
 
 
@@ -137,34 +167,40 @@ end
 ---- Functions for full header
 -----------------------------------------------------
 -- Set all members of the PROTO header
-function SWIDSHeader:fill(args,pre)
+function ETHERNETHeader:fill(args,pre)
 	args = args or {}
-	pre = pre or 'SWIDS'
+	pre = pre or 'ETHERNET'
 
-	self:setSWID(args[pre .. 'SWID'])
+	self:setDSTADDR(args[pre .. 'DSTADDR'])
+	self:setSRCADDR(args[pre .. 'SRCADDR'])
+	self:setETHERTYPE(args[pre .. 'ETHERTYPE'])
 end
 
 -- Retrieve the values of all members
-function SWIDSHeader:get(pre)
-	pre = pre or 'SWIDS'
+function ETHERNETHeader:get(pre)
+	pre = pre or 'ETHERNET'
 
 	local args = {}
-	args[pre .. 'SWID'] = self:getSWID()
+	args[pre .. 'DSTADDR'] = self:getDSTADDR()
+	args[pre .. 'SRCADDR'] = self:getSRCADDR()
+	args[pre .. 'ETHERTYPE'] = self:getETHERTYPE()
 
 	return args
 end
 
-function SWIDSHeader:getString()
-	return 'SWIDS \n'
-		.. 'SWID' .. self:getSWIDString() .. '\n'
+function ETHERNETHeader:getString()
+	return 'ETHERNET \n'
+		.. 'DSTADDR' .. self:getDSTADDRString() .. '\n'
+		.. 'SRCADDR' .. self:getSRCADDRString() .. '\n'
+		.. 'ETHERTYPE' .. self:getETHERTYPEString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	SWIDS = default,
+	IPV4_BASE = 0x0800,
 }
-function SWIDSHeader:resolveNextHeader()
-	local key = self:getREMAINING()
+function ETHERNETHeader:resolveNextHeader()
+	local key = self:getETHERTYPE()
 	for name, value in pairs(nextHeaderResolve) do
 		if key == value then
 			return name
@@ -179,6 +215,6 @@ end
 -----------------------------------------------------
 ffi.metatype('union bitfield_24',bitfield24)
 ffi.metatype('union bitfield_40',bitfield40)
-ffi.metatype('union bitfield_48',bitfield48)SWIDS.metatype = SWIDSHeader
+ffi.metatype('union bitfield_48',bitfield48)ETHERNET.metatype = ETHERNETHeader
 
-return SWIDS
+return ETHERNET

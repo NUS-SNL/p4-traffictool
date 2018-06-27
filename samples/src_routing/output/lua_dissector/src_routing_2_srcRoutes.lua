@@ -7,7 +7,8 @@ function p4_proto.dissector(buffer,pinfo,tree)
 	local subtree = tree:add(p4_proto,buffer(),'P4_SRCROUTES Protocol Data')
 		subtree:add(buffer(0,1), 'bos (1 bits):' .. string.format('%X', tostring(buffer(0,1):bitfield(0,1))))
 		subtree:add(buffer(0,3), 'port (15 bits):' .. string.format('%X', tostring(buffer(0,3):bitfield(1,15))))
-	 mydissectortable:try(buffer(0,0):bitfield(0,1), buffer:range(2):tvb(),pinfo,tree)
+	local mydissectortable = DissectorTable.get('p4_srcRoutes.bos')
+	mydissectortable:try(buffer(0,0):bitfield(0,1), buffer:range(2):tvb(),pinfo,tree)
 
 end
 

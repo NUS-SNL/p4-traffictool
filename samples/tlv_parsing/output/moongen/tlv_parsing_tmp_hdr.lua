@@ -1,4 +1,4 @@
---Template for addition of new protocol 'swids'
+--Template for addition of new protocol 'tmp_hdr'
 
 --[[ Necessary changes to other files:
 -- - packet.lua: if the header has a length member, adapt packetSetLength; 
@@ -98,37 +98,52 @@ end
 
 
 -----------------------------------------------------
----- SWIDS header and constants 
+---- TMP_HDR header and constants 
 -----------------------------------------------------
-local SWIDS = {}
+local TMP_HDR = {}
 
-SWIDS.headerFormat = [[
-	uint32_t 	 swid;
+TMP_HDR.headerFormat = [[
+	uint8_t 	 value;
+	uint8_t 	 len;
 ]]
 
 
 -- variable length fields
-SWIDS.headerVariableMember = nil
+TMP_HDR.headerVariableMember = nil
 
--- Module for SWIDS_address struct
-local SWIDSHeader = initHeader()
-SWIDSHeader.__index = SWIDSHeader
+-- Module for TMP_HDR_address struct
+local TMP_HDRHeader = initHeader()
+TMP_HDRHeader.__index = TMP_HDRHeader
 
 
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
-function SWIDSHeader:getSWID()
-	return hton(self.swid)
+function TMP_HDRHeader:getVALUE()
+	return (self.value)
 end
 
-function SWIDSHeader:getSWIDstring()
-	return self:getSWID()
+function TMP_HDRHeader:getVALUEstring()
+	return self:getVALUE()
 end
 
-function SWIDSHeader:setSWID(int)
+function TMP_HDRHeader:setVALUE(int)
 	int = int or 0
-	self.swid = hton(int)
+	self.value = (int)
+end
+
+
+function TMP_HDRHeader:getLEN()
+	return (self.len)
+end
+
+function TMP_HDRHeader:getLENstring()
+	return self:getLEN()
+end
+
+function TMP_HDRHeader:setLEN(int)
+	int = int or 0
+	self.len = (int)
 end
 
 
@@ -137,40 +152,36 @@ end
 ---- Functions for full header
 -----------------------------------------------------
 -- Set all members of the PROTO header
-function SWIDSHeader:fill(args,pre)
+function TMP_HDRHeader:fill(args,pre)
 	args = args or {}
-	pre = pre or 'SWIDS'
+	pre = pre or 'TMP_HDR'
 
-	self:setSWID(args[pre .. 'SWID'])
+	self:setVALUE(args[pre .. 'VALUE'])
+	self:setLEN(args[pre .. 'LEN'])
 end
 
 -- Retrieve the values of all members
-function SWIDSHeader:get(pre)
-	pre = pre or 'SWIDS'
+function TMP_HDRHeader:get(pre)
+	pre = pre or 'TMP_HDR'
 
 	local args = {}
-	args[pre .. 'SWID'] = self:getSWID()
+	args[pre .. 'VALUE'] = self:getVALUE()
+	args[pre .. 'LEN'] = self:getLEN()
 
 	return args
 end
 
-function SWIDSHeader:getString()
-	return 'SWIDS \n'
-		.. 'SWID' .. self:getSWIDString() .. '\n'
+function TMP_HDRHeader:getString()
+	return 'TMP_HDR \n'
+		.. 'VALUE' .. self:getVALUEString() .. '\n'
+		.. 'LEN' .. self:getLENString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	SWIDS = default,
 }
-function SWIDSHeader:resolveNextHeader()
-	local key = self:getREMAINING()
-	for name, value in pairs(nextHeaderResolve) do
-		if key == value then
-			return name
-		end
-	end
-	return nil
+function TMP_HDRHeader:resolveNextHeader()
+	return scalars
 end
 
 
@@ -179,6 +190,6 @@ end
 -----------------------------------------------------
 ffi.metatype('union bitfield_24',bitfield24)
 ffi.metatype('union bitfield_40',bitfield40)
-ffi.metatype('union bitfield_48',bitfield48)SWIDS.metatype = SWIDSHeader
+ffi.metatype('union bitfield_48',bitfield48)TMP_HDR.metatype = TMP_HDRHeader
 
-return SWIDS
+return TMP_HDR

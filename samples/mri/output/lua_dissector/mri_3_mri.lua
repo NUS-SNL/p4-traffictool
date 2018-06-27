@@ -6,6 +6,7 @@ function p4_proto.dissector(buffer,pinfo,tree)
 	pinfo.cols.protocol = 'P4_MRI'
 	local subtree = tree:add(p4_proto,buffer(),'P4_MRI Protocol Data')
 		subtree:add(buffer(0,2), 'count (16 bits):' .. string.format('%X', tostring(buffer(0,2):bitfield(0,16))))
+	local mydissectortable = DissectorTable.get('p4_mri.remaining')
 	 Could not detect suitable parameters
 
 end

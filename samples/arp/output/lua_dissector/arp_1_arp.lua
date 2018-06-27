@@ -10,7 +10,8 @@ function p4_proto.dissector(buffer,pinfo,tree)
 		subtree:add(buffer(4,1), 'hlen (8 bits):' .. string.format('%X', tostring(buffer(4,1):bitfield(0,8))))
 		subtree:add(buffer(5,1), 'plen (8 bits):' .. string.format('%X', tostring(buffer(5,1):bitfield(0,8))))
 		subtree:add(buffer(6,2), 'oper (16 bits):' .. string.format('%X', tostring(buffer(6,2):bitfield(0,16))))
-	 mydissectortable:try(buffer(0,2):bitfield(0,16), buffer:range(8):tvb(),pinfo,tree)
+	local mydissectortable = DissectorTable.get('p4_arp.htype')
+	mydissectortable:try(buffer(0,2):bitfield(0,16), buffer:range(8):tvb(),pinfo,tree)
 
 end
 
