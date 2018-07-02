@@ -1,4 +1,4 @@
---Template for addition of new protocol 'swids'
+--Template for addition of new protocol 'ipv4_option_NOP'
 
 --[[ Necessary changes to other files:
 -- - packet.lua: if the header has a length member, adapt packetSetLength; 
@@ -98,37 +98,37 @@ end
 
 
 -----------------------------------------------------
----- SWIDS header and constants 
+---- IPV4_OPTION_NOP header and constants 
 -----------------------------------------------------
-local SWIDS = {}
+local IPV4_OPTION_NOP = {}
 
-SWIDS.headerFormat = [[
-	uint32_t 	 swid;
+IPV4_OPTION_NOP.headerFormat = [[
+	uint8_t 	 value;
 ]]
 
 
 -- variable length fields
-SWIDS.headerVariableMember = nil
+IPV4_OPTION_NOP.headerVariableMember = nil
 
--- Module for SWIDS_address struct
-local SWIDSHeader = initHeader()
-SWIDSHeader.__index = SWIDSHeader
+-- Module for IPV4_OPTION_NOP_address struct
+local IPV4_OPTION_NOPHeader = initHeader()
+IPV4_OPTION_NOPHeader.__index = IPV4_OPTION_NOPHeader
 
 
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
-function SWIDSHeader:getSWID()
-	return hton(self.swid)
+function IPV4_OPTION_NOPHeader:getVALUE()
+	return (self.value)
 end
 
-function SWIDSHeader:getSWIDstring()
-	return self:getSWID()
+function IPV4_OPTION_NOPHeader:getVALUEstring()
+	return self:getVALUE()
 end
 
-function SWIDSHeader:setSWID(int)
+function IPV4_OPTION_NOPHeader:setVALUE(int)
 	int = int or 0
-	self.swid = hton(int)
+	self.value = (int)
 end
 
 
@@ -137,40 +137,33 @@ end
 ---- Functions for full header
 -----------------------------------------------------
 -- Set all members of the PROTO header
-function SWIDSHeader:fill(args,pre)
+function IPV4_OPTION_NOPHeader:fill(args,pre)
 	args = args or {}
-	pre = pre or 'SWIDS'
+	pre = pre or 'IPV4_OPTION_NOP'
 
-	self:setSWID(args[pre .. 'SWID'])
+	self:setVALUE(args[pre .. 'VALUE'])
 end
 
 -- Retrieve the values of all members
-function SWIDSHeader:get(pre)
-	pre = pre or 'SWIDS'
+function IPV4_OPTION_NOPHeader:get(pre)
+	pre = pre or 'IPV4_OPTION_NOP'
 
 	local args = {}
-	args[pre .. 'SWID'] = self:getSWID()
+	args[pre .. 'VALUE'] = self:getVALUE()
 
 	return args
 end
 
-function SWIDSHeader:getString()
-	return 'SWIDS \n'
-		.. 'SWID' .. self:getSWIDString() .. '\n'
+function IPV4_OPTION_NOPHeader:getString()
+	return 'IPV4_OPTION_NOP \n'
+		.. 'VALUE' .. self:getVALUEString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	SWIDS = default,
 }
-function SWIDSHeader:resolveNextHeader()
-	local key = self:getREMAINING()
-	for name, value in pairs(nextHeaderResolve) do
-		if key == value then
-			return name
-		end
-	end
-	return nil
+function IPV4_OPTION_NOPHeader:resolveNextHeader()
+	return scalars
 end
 
 
@@ -179,6 +172,6 @@ end
 -----------------------------------------------------
 ffi.metatype('union bitfield_24',bitfield24)
 ffi.metatype('union bitfield_40',bitfield40)
-ffi.metatype('union bitfield_48',bitfield48)SWIDS.metatype = SWIDSHeader
+ffi.metatype('union bitfield_48',bitfield48)IPV4_OPTION_NOP.metatype = IPV4_OPTION_NOPHeader
 
-return SWIDS
+return IPV4_OPTION_NOP

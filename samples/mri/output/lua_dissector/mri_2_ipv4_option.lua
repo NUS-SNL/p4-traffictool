@@ -9,7 +9,8 @@ function p4_proto.dissector(buffer,pinfo,tree)
 		subtree:add(buffer(0,1), 'optClass (2 bits):' .. string.format('%X', tostring(buffer(0,1):bitfield(1,2))))
 		subtree:add(buffer(0,2), 'option (5 bits):' .. string.format('%X', tostring(buffer(0,2):bitfield(3,5))))
 		subtree:add(buffer(1,1), 'optionLength (8 bits):' .. string.format('%X', tostring(buffer(1,1):bitfield(0,8))))
-	 mydissectortable:try(buffer(0,1):bitfield(3,5), buffer:range(2):tvb(),pinfo,tree)
+	local mydissectortable = DissectorTable.get('p4_ipv4_option.option')
+	mydissectortable:try(buffer(0,1):bitfield(3,5), buffer:range(2):tvb(),pinfo,tree)
 
 end
 

@@ -173,27 +173,27 @@
                 ],
                 [
                     "_spare_pad_bits",
-                    15
+                    16
                 ],
                 [
                     "markbit",
-                    1
+                    8
                 ],
                 [
                     "_pad2",
-                    13
+                    16
                 ],
                 [
                     "enq_qdepth",
-                    19
+                    24
                 ],
                 [
                     "_pad3",
-                    13
+                    16
                 ],
                 [
                     "deq_qdepth",
-                    19
+                    24
                 ]
             ],
             "length_exp": null,

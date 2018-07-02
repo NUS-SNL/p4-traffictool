@@ -345,5 +345,10 @@ def make_template(json_data, destination):
     except IOError:
         print("Destination file cannot be created\n")
         exit(0)
+try:
+    local_name = data["program"]
+except KeyError:
+    local_name = sys.argv[1]
+local_name = local_name[local_name.rfind('/')+1:local_name.rfind('.')]
 
-make_template(data, DESTINATION+sys.argv[1][sys.argv[1].rfind('/')+1:sys.argv[1].rfind('.')]+".py")
+make_template(data, DESTINATION+local_name+".py")

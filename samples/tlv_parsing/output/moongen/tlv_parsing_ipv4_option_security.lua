@@ -1,4 +1,4 @@
---Template for addition of new protocol 'swids'
+--Template for addition of new protocol 'ipv4_option_security'
 
 --[[ Necessary changes to other files:
 -- - packet.lua: if the header has a length member, adapt packetSetLength; 
@@ -98,37 +98,67 @@ end
 
 
 -----------------------------------------------------
----- SWIDS header and constants 
+---- IPV4_OPTION_SECURITY header and constants 
 -----------------------------------------------------
-local SWIDS = {}
+local IPV4_OPTION_SECURITY = {}
 
-SWIDS.headerFormat = [[
-	uint32_t 	 swid;
+IPV4_OPTION_SECURITY.headerFormat = [[
+	uint8_t 	 value;
+	uint8_t 	 len;
+	-- fill blank here 72 	 security;
 ]]
 
 
 -- variable length fields
-SWIDS.headerVariableMember = nil
+IPV4_OPTION_SECURITY.headerVariableMember = nil
 
--- Module for SWIDS_address struct
-local SWIDSHeader = initHeader()
-SWIDSHeader.__index = SWIDSHeader
+-- Module for IPV4_OPTION_SECURITY_address struct
+local IPV4_OPTION_SECURITYHeader = initHeader()
+IPV4_OPTION_SECURITYHeader.__index = IPV4_OPTION_SECURITYHeader
 
 
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
-function SWIDSHeader:getSWID()
-	return hton(self.swid)
+function IPV4_OPTION_SECURITYHeader:getVALUE()
+	return (self.value)
 end
 
-function SWIDSHeader:getSWIDstring()
-	return self:getSWID()
+function IPV4_OPTION_SECURITYHeader:getVALUEstring()
+	return self:getVALUE()
 end
 
-function SWIDSHeader:setSWID(int)
+function IPV4_OPTION_SECURITYHeader:setVALUE(int)
 	int = int or 0
-	self.swid = hton(int)
+	self.value = (int)
+end
+
+
+function IPV4_OPTION_SECURITYHeader:getLEN()
+	return (self.len)
+end
+
+function IPV4_OPTION_SECURITYHeader:getLENstring()
+	return self:getLEN()
+end
+
+function IPV4_OPTION_SECURITYHeader:setLEN(int)
+	int = int or 0
+	self.len = (int)
+end
+
+
+function IPV4_OPTION_SECURITYHeader:getSECURITY()
+	return (self.security:get())
+end
+
+function IPV4_OPTION_SECURITYHeader:getSECURITYstring()
+	return self:getSECURITY()
+end
+
+function IPV4_OPTION_SECURITYHeader:setSECURITY(int)
+	int = int or 0
+	self.security:set(int)
 end
 
 
@@ -137,40 +167,39 @@ end
 ---- Functions for full header
 -----------------------------------------------------
 -- Set all members of the PROTO header
-function SWIDSHeader:fill(args,pre)
+function IPV4_OPTION_SECURITYHeader:fill(args,pre)
 	args = args or {}
-	pre = pre or 'SWIDS'
+	pre = pre or 'IPV4_OPTION_SECURITY'
 
-	self:setSWID(args[pre .. 'SWID'])
+	self:setVALUE(args[pre .. 'VALUE'])
+	self:setLEN(args[pre .. 'LEN'])
+	self:setSECURITY(args[pre .. 'SECURITY'])
 end
 
 -- Retrieve the values of all members
-function SWIDSHeader:get(pre)
-	pre = pre or 'SWIDS'
+function IPV4_OPTION_SECURITYHeader:get(pre)
+	pre = pre or 'IPV4_OPTION_SECURITY'
 
 	local args = {}
-	args[pre .. 'SWID'] = self:getSWID()
+	args[pre .. 'VALUE'] = self:getVALUE()
+	args[pre .. 'LEN'] = self:getLEN()
+	args[pre .. 'SECURITY'] = self:getSECURITY()
 
 	return args
 end
 
-function SWIDSHeader:getString()
-	return 'SWIDS \n'
-		.. 'SWID' .. self:getSWIDString() .. '\n'
+function IPV4_OPTION_SECURITYHeader:getString()
+	return 'IPV4_OPTION_SECURITY \n'
+		.. 'VALUE' .. self:getVALUEString() .. '\n'
+		.. 'LEN' .. self:getLENString() .. '\n'
+		.. 'SECURITY' .. self:getSECURITYString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	SWIDS = default,
 }
-function SWIDSHeader:resolveNextHeader()
-	local key = self:getREMAINING()
-	for name, value in pairs(nextHeaderResolve) do
-		if key == value then
-			return name
-		end
-	end
-	return nil
+function IPV4_OPTION_SECURITYHeader:resolveNextHeader()
+	return scalars
 end
 
 
@@ -179,6 +208,6 @@ end
 -----------------------------------------------------
 ffi.metatype('union bitfield_24',bitfield24)
 ffi.metatype('union bitfield_40',bitfield40)
-ffi.metatype('union bitfield_48',bitfield48)SWIDS.metatype = SWIDSHeader
+ffi.metatype('union bitfield_48',bitfield48)IPV4_OPTION_SECURITY.metatype = IPV4_OPTION_SECURITYHeader
 
-return SWIDS
+return IPV4_OPTION_SECURITY

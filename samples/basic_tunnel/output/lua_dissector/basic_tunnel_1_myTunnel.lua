@@ -7,7 +7,8 @@ function p4_proto.dissector(buffer,pinfo,tree)
 	local subtree = tree:add(p4_proto,buffer(),'P4_MYTUNNEL Protocol Data')
 		subtree:add(buffer(0,2), 'proto_id (16 bits):' .. string.format('%X', tostring(buffer(0,2):bitfield(0,16))))
 		subtree:add(buffer(2,2), 'dst_id (16 bits):' .. string.format('%X', tostring(buffer(2,2):bitfield(0,16))))
-	 mydissectortable:try(buffer(0,2):bitfield(0,16), buffer:range(4):tvb(),pinfo,tree)
+	local mydissectortable = DissectorTable.get('p4_myTunnel.proto_id')
+	mydissectortable:try(buffer(0,2):bitfield(0,16), buffer:range(4):tvb(),pinfo,tree)
 
 end
 

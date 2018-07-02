@@ -17,7 +17,8 @@ function p4_proto.dissector(buffer,pinfo,tree)
 		subtree:add(buffer(10,2), 'hdrChecksum (16 bits):' .. string.format('%X', tostring(buffer(10,2):bitfield(0,16))))
 		subtree:add(buffer(12,4), 'srcAddr (32 bits):' .. string.format('%X', tostring(buffer(12,4):bitfield(0,32))))
 		subtree:add(buffer(16,4), 'dstAddr (32 bits):' .. string.format('%X', tostring(buffer(16,4):bitfield(0,32))))
-	 mydissectortable:try(buffer(0,1):bitfield(4,4), buffer:range(20):tvb(),pinfo,tree)
+	local mydissectortable = DissectorTable.get('p4_ipv4.ihl')
+	mydissectortable:try(buffer(0,1):bitfield(4,4), buffer:range(20):tvb(),pinfo,tree)
 
 end
 

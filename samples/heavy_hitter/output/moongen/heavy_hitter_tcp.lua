@@ -16,10 +16,24 @@ local initHeader = initHeader
 
 local ntoh, hton = ntoh, hton
 local ntoh16, hton16 = ntoh16, hton16
-local ntoh64, hton64 = ntoh64, hton64
 local bor, band, bnot, rshift, lshift= bit.bor, bit.band, bit.bnot, bit.rshift, bit.lshift
 local istype = ffi.istype
 local format = string.format
+
+function hton64(int)
+	int = int or 0
+	endianness = string.dump(function() end):byte(7)
+	if endianness==0 then
+		return int
+	end
+	low_int = lshift(hton(band(int,0xFFFFFFFFULL)),32)
+	high_int = rshift(hton(band(int,0xFFFFFFFF00000000ULL)),32)
+	endianness = string.dump(function() end):byte(7)
+	return (high_int+low_int)
+end
+
+
+local ntoh64, hton64 = ntoh64, hton64
 
 ----- 24 bit address -----
 ffi.cdef[[
@@ -33,18 +47,18 @@ bitfield24.__index = bitfield24
 local bitfield24Type = ffi.typeof("union bitfield_24")
 
 function bitfield24:get()
-	return hton32(self.intequiv)
+	return hton(self.intequiv)
 end
 
 function bitfield24:set(addr)
 	addr = addr or 0
-	self.intequiv = hton32(tonumber(band(addr,0xFFFFFFFFULL)))
+	self.intequiv = hton(tonumber(band(addr,0xFFFFFFFFULL)))
 
 end
 
 ----- 40 bit address -----
 ffi.cdef[[
-	union __attribute__((__packed__)) bitfield_24{
+	union __attribute__((__packed__)) bitfield_40{
 		uint64_t intequiv;
 	};
 ]]
@@ -185,7 +199,7 @@ end
 
 
 function TCPHeader:getRES()
-	return (self.res:get())
+	return (self.res)
 end
 
 function TCPHeader:getRESstring()
@@ -194,12 +208,12 @@ end
 
 function TCPHeader:setRES(int)
 	int = int or 0
-	self.res:set(int)
+	self.res = (int)
 end
 
 
 function TCPHeader:getECN()
-	return (self.ecn:get())
+	return (self.ecn)
 end
 
 function TCPHeader:getECNstring()
@@ -208,12 +222,12 @@ end
 
 function TCPHeader:setECN(int)
 	int = int or 0
-	self.ecn:set(int)
+	self.ecn = (int)
 end
 
 
 function TCPHeader:getCTRL()
-	return (self.ctrl:get())
+	return (self.ctrl)
 end
 
 function TCPHeader:getCTRLstring()
@@ -222,7 +236,7 @@ end
 
 function TCPHeader:setCTRL(int)
 	int = int or 0
-	self.ctrl:set(int)
+	self.ctrl = (int)
 end
 
 

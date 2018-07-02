@@ -16,10 +16,24 @@ local initHeader = initHeader
 
 local ntoh, hton = ntoh, hton
 local ntoh16, hton16 = ntoh16, hton16
-local ntoh64, hton64 = ntoh64, hton64
 local bor, band, bnot, rshift, lshift= bit.bor, bit.band, bit.bnot, bit.rshift, bit.lshift
 local istype = ffi.istype
 local format = string.format
+
+function hton64(int)
+	int = int or 0
+	endianness = string.dump(function() end):byte(7)
+	if endianness==0 then
+		return int
+	end
+	low_int = lshift(hton(band(int,0xFFFFFFFFULL)),32)
+	high_int = rshift(hton(band(int,0xFFFFFFFF00000000ULL)),32)
+	endianness = string.dump(function() end):byte(7)
+	return (high_int+low_int)
+end
+
+
+local ntoh64, hton64 = ntoh64, hton64
 
 ----- 24 bit address -----
 ffi.cdef[[
@@ -33,18 +47,18 @@ bitfield24.__index = bitfield24
 local bitfield24Type = ffi.typeof("union bitfield_24")
 
 function bitfield24:get()
-	return hton32(self.intequiv)
+	return hton(self.intequiv)
 end
 
 function bitfield24:set(addr)
 	addr = addr or 0
-	self.intequiv = hton32(tonumber(band(addr,0xFFFFFFFFULL)))
+	self.intequiv = hton(tonumber(band(addr,0xFFFFFFFFULL)))
 
 end
 
 ----- 40 bit address -----
 ffi.cdef[[
-	union __attribute__((__packed__)) bitfield_24{
+	union __attribute__((__packed__)) bitfield_40{
 		uint64_t intequiv;
 	};
 ]]
@@ -186,7 +200,7 @@ end
 
 
 function IPV4Header:getFLAGS()
-	return (self.flags:get())
+	return (self.flags)
 end
 
 function IPV4Header:getFLAGSstring()
@@ -195,12 +209,12 @@ end
 
 function IPV4Header:setFLAGS(int)
 	int = int or 0
-	self.flags:set(int)
+	self.flags = (int)
 end
 
 
 function IPV4Header:getFRAGOFFSET()
-	return hton16(self.fragOffset:get())
+	return hton16(self.fragOffset)
 end
 
 function IPV4Header:getFRAGOFFSETstring()
@@ -209,7 +223,7 @@ end
 
 function IPV4Header:setFRAGOFFSET(int)
 	int = int or 0
-	self.fragOffset:sethton16(int)
+	self.fragOffset = hton16(int)
 end
 
 
@@ -345,7 +359,7 @@ end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	tcp = 0x06,
+	TCP = 0x06,
 }
 function IPV4Header:resolveNextHeader()
 	local key = self:getPROTOCOL()
