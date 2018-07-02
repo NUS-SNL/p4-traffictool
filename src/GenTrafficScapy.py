@@ -164,28 +164,28 @@ def make_classes(data, fout):
                 else:
                     make_header(headers, header_types, header_id, checksums, calculations, fout)
             elif (headers[header_id]['name']=='ipv4'):
-                print("\nIPv4 header detected, would you like the standard ethernet header to be used(y/n) : ")
+                print("\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ")
                 temp = input().strip()
                 if (temp == 'y'):
                     IPv4_DETECT = True
                 else:
                     make_header(headers, header_types, header_id, checksums, calculations, fout)
             elif (headers[header_id]['name']=='ipv6'):
-                print("\nIPv6 header detected, would you like the standard ethernet header to be used(y/n) : ")
+                print("\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ")
                 temp = input().strip()
                 if (temp == 'y'):
                     IPv6_DETECT = True
                 else:
                     make_header(headers, header_types, header_id, checksums, calculations, fout)
             elif (headers[header_id]['name']=='tcp'):
-                print("\nTCP header detected, would you like the standard ethernet header to be used(y/n) : ")
+                print("\nTCP header detected, would you like the standard TCP header to be used(y/n) : ")
                 temp = input().strip()
                 if (temp == 'y'):
                     TCP_DETECT = True
                 else:
                     make_header(headers, header_types, header_id, checksums, calculations, fout)
             elif (headers[header_id]['name']=='udp'):
-                print("\nUDP header detected, would you like the standard ethernet header to be used(y/n) :")
+                print("\nUDP header detected, would you like the standard UDP header to be used(y/n) :")
                 temp = input().strip()
                 if (temp == 'y'):
                     UDP_DETECT = True

@@ -87,28 +87,28 @@ def find_data_headers(headers, header_types):
                     ETHER_DETECT = True
                     print("\nAdd the next layers in the function resolveNextHeader of Ethernet (if they are not default)\n")
             elif (name=='ipv4'):
-                print("\nIPv4 header detected, would you like the standard ethernet header to be used(y/n) : ")
+                print("\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ")
                 temp = input().strip()
                 if (temp == 'y'):
                     IPv4_DETECT = True
                     print("\nAdd the next layers in the function resolveNextHeader of IPv4 (if they are not default)\n")
 
             elif (name=='ipv6'):
-                print("\nIPv6 header detected, would you like the standard ethernet header to be used(y/n) : ")
+                print("\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ")
                 temp = input().strip()
                 if (temp == 'y'):
                     IPv6_DETECT = True
                     print("\nAdd the next layers in the function resolveNextHeader of IPv6 (if they are not default)\n")
 
             elif (name=='tcp'):
-                print("\nTCP header detected, would you like the standard ethernet header to be used(y/n) : ")
+                print("\nTCP header detected, would you like the standard TCP header to be used(y/n) : ")
                 temp = input().strip()
                 if (temp == 'y'):
                     TCP_DETECT = True
                     print("\nAdd the next layers in the function resolveNextHeader of TCP (if they are not default)\n")
 
             elif (name=='udp'):
-                print("\nUDP header detected, would you like the standard ethernet header to be used(y/n) :")
+                print("\nUDP header detected, would you like the standard UDP header to be used(y/n) :")
                 temp = input().strip()
                 if (temp == 'y'):
                     UDP_DETECT = True
@@ -363,19 +363,4 @@ if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT):
                 next_layer[edge[0]].append(edge[-1])
             else:
                 next_layer[edge[0]]=[edge[-1]]
-
-    print("\nHeaders to be added to default header layers(unless the next layer is also default)\n")
-    print("    Default Header Layer    Headers to be added")
-    if (ETHER_DETECT):
-        print ("    Ethernet             ",list(map(str,next_layer['ethernet'])))
-    if (IPv4_DETECT):
-        print ("    IPv4                 ",list(map(str,next_layer['ipv4'])))
-    if (IPv6_DETECT):
-        print ("    IPv6                 ",list(map(str,next_layer['ipv6'])))
-    if (TCP_DETECT):
-        print ("    TCP                  ",list(map(str,next_layer['tcp'])))
-    if (UDP_DETECT):
-        print ("    UDP                  ",list(map(str,next_layer['udp'])))
-
-
 
