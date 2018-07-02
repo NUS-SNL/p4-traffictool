@@ -1,15 +1,16 @@
 #!/bin/bash
-mkdir samples/arp/output
-mkdir samples/basic_tunnel/output
-mkdir samples/dummy-for-dissector/output
-mkdir samples/heavy_hitter/output
-mkdir samples/ipv4/output
-mkdir samples/mri/output
-mkdir samples/simple_nat/output
-mkdir samples/simple_router/output
-mkdir samples/src_routing/output
-mkdir samples/tlv_parsing/output
+mkdir -p samples/arp/output
+mkdir -p samples/basic_tunnel/output
+mkdir -p samples/dummy-for-dissector/output
+mkdir -p samples/heavy_hitter/output
+mkdir -p samples/ipv4/output
+mkdir -p samples/mri/output
+mkdir -p samples/simple_nat/output
+mkdir -p samples/simple_router/output
+mkdir -p samples/src_routing/output
+mkdir -p samples/tlv_parsing/output
 
+# for running in debug mode
 # ./p4-pktcodegen.sh samples/arp/arp.p4 p4-16 samples/arp/output -scapy -lua -moongen -pcpp --d <responses
 # ./p4-pktcodegen.sh samples/basic_tunnel/basic_tunnel.p4 p4-16 samples/basic_tunnel/output -scapy -lua -moongen -pcpp --d <responses
 # ./p4-pktcodegen.sh samples/dummy-for-dissector/dissector_dummy.p4 p4-14 samples/dummy-for-dissector/output -scapy -lua -moongen -pcpp --d <responses
@@ -21,6 +22,7 @@ mkdir samples/tlv_parsing/output
 # ./p4-pktcodegen.sh samples/src_routing/src_routing.p4 p4-16 samples/src_routing/output -scapy -lua -moongen -pcpp --d <responses
 # ./p4-pktcodegen.sh samples/tlv_parsing/tlv_parsing.p4 p4-14 samples/tlv_parsing/output -scapy -lua -moongen -pcpp --d 
 
+# for running without debug flag
 ./p4-pktcodegen.sh samples/arp/arp.p4 p4-16 samples/arp/output -scapy -lua -moongen -pcpp  <responses
 ./p4-pktcodegen.sh samples/basic_tunnel/basic_tunnel.p4 p4-16 samples/basic_tunnel/output -scapy -lua -moongen -pcpp  <responses
 ./p4-pktcodegen.sh samples/dummy-for-dissector/dissector_dummy.p4 p4-14 samples/dummy-for-dissector/output -scapy -lua -moongen -pcpp  <responses

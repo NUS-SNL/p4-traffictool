@@ -1,11 +1,15 @@
 -- protocol naming
-p4_proto = Proto('p4_tmp_hdr_0','P4_TMP_HDR_0Protocol')
+p4_tmp_hdr_0 = Proto('p4_tmp_hdr_0','P4_TMP_HDR_0Protocol')
+-- protocol fields
+local p4_tmp_hdr_0_data = ProtoField.string('p4_tmp_hdr_0.data','data')
+p4_tmp_hdr_0.fields = {p4_tmp_hdr_0_data}
+
 
 -- protocol dissector function
-function p4_proto.dissector(buffer,pinfo,tree)
+function p4_tmp_hdr_0.dissector(buffer,pinfo,tree)
 	pinfo.cols.protocol = 'P4_TMP_HDR_0'
-	local subtree = tree:add(p4_proto,buffer(),'P4_TMP_HDR_0 Protocol Data')
-		subtree:add(buffer(0,1), 'data (8 bits):' .. string.format('%X', tostring(buffer(0,1):bitfield(0,8))))
+	local subtree = tree:add(p4_tmp_hdr_0,buffer(),'P4_TMP_HDR_0 Protocol Data')
+		subtree:add(p4_tmp_hdr_0_data,tostring(buffer(0,1):bitfield(0,8)))
 
 end
 

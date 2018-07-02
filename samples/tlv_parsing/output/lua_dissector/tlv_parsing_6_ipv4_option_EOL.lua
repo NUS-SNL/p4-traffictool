@@ -1,11 +1,15 @@
 -- protocol naming
-p4_proto = Proto('p4_ipv4_option_eol','P4_IPV4_OPTION_EOLProtocol')
+p4_ipv4_option_eol = Proto('p4_ipv4_option_eol','P4_IPV4_OPTION_EOLProtocol')
+-- protocol fields
+local p4_ipv4_option_eol_value = ProtoField.string('p4_ipv4_option_eol.value','value')
+p4_ipv4_option_eol.fields = {p4_ipv4_option_eol_value}
+
 
 -- protocol dissector function
-function p4_proto.dissector(buffer,pinfo,tree)
+function p4_ipv4_option_eol.dissector(buffer,pinfo,tree)
 	pinfo.cols.protocol = 'P4_IPV4_OPTION_EOL'
-	local subtree = tree:add(p4_proto,buffer(),'P4_IPV4_OPTION_EOL Protocol Data')
-		subtree:add(buffer(0,1), 'value (8 bits):' .. string.format('%X', tostring(buffer(0,1):bitfield(0,8))))
+	local subtree = tree:add(p4_ipv4_option_eol,buffer(),'P4_IPV4_OPTION_EOL Protocol Data')
+		subtree:add(p4_ipv4_option_eol_value,tostring(buffer(0,1):bitfield(0,8)))
 
 end
 

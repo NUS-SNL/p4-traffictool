@@ -18,7 +18,6 @@ try:
     DESTINATION = sys.argv[2]
     if (DESTINATION[-1] != '/'):
         DESTINATION += '/'
-    print ("Generating Lua packet dissector for %s at %s\n" %(sys.argv[1],DESTINATION))
 
 except IndexError:
     print ("Incorrect argument specification")
