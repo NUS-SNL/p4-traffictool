@@ -162,13 +162,26 @@ def make_control_graph(parsers):
 
 def make_template(control_graph, header, header_type, destination, header_ports):
     fout = open(destination, 'w')
+    header_lower = "p4_"+header.lower()
     fout.write("-- protocol naming\n")
-    fout.write("p4_proto = Proto('%s','%s')\n" %
-               ("p4_"+header.lower(), "P4_"+header.upper() + "Protocol"))
+    fout.write("%s = Proto('%s','%s')\n" %
+               (header_lower,header_lower, "P4_"+header.upper() + "Protocol"))
+
+    fout.write("-- protocol fields\n")
+    
+    for field in header_type["fields"]:
+        fout.write("local %s_%s = ProtoField.string('%s.%s','%s')\n" %(header_lower, field[0], header_lower, field[0], field[0]))
+
+    fout.write("%s.fields = {"%(header_lower))
+    for field in header_type["fields"][:-1]:
+        fout.write(header_lower+"_"+field[0]+", ")
+    fout.write(header_lower+"_"+header_type["fields"][-1][0]+"}\n\n")
+
+
     fout.write("\n-- protocol dissector function\n")
-    fout.write("function p4_proto.dissector(buffer,pinfo,tree)\n")
+    fout.write("function %s.dissector(buffer,pinfo,tree)\n"%(header_lower))
     fout.write("\tpinfo.cols.protocol = '%s'\n" % ("P4_" + header.upper()))
-    fout.write("\tlocal subtree = tree:add(p4_proto,buffer(),'%s Protocol Data')\n" % (
+    fout.write("\tlocal subtree = tree:add(%s,buffer(),'%s Protocol Data')\n" % (header_lower,
         "P4_" + header.upper()))
 
     next_state_key = ''
@@ -191,7 +204,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
                 bytefield2+=1
             bit_count = (bit_count + field[1])%8
 
-            fout.write("\t\tsubtree:add(buffer(%d,%d), '%s (%d bits):' .. string.format('%s', tostring(buffer(%d,%d):bitfield(%d,%d))))\n" %(bytefield1,bytefield2,field[0],field[1],"%X",bytefield1,bytefield2,bitfield1,bitfield2))
+            fout.write("\t\tsubtree:add(%s_%s,tostring(buffer(%d,%d):bitfield(%d,%d)))\n" %(header_lower,field[0],bytefield1,bytefield2,bitfield1,bitfield2))
         except TypeError:
             field[1] = int(input('Variable length field ' + field[0] + ' detected in ' + header + '. Enter its length\n'))
             bitfield1, bitfield2 = bit_count, field[1]      
@@ -203,7 +216,8 @@ def make_template(control_graph, header, header_type, destination, header_ports)
                 bytefield2+=1
             bit_count = (bit_count + field[1])%8
 
-            fout.write("\t\tsubtree:add(buffer(%d,%d), '%s (%d bits):' .. string.format('%s', tostring(buffer(%d,%d):bitfield(%d,%d))))\n" %(bytefield1,bytefield2,field[0],field[1],"%X",bytefield1,bytefield2,bitfield1,bitfield2))
+            fout.write("\t\tsubtree:add(%s_%s,tostring(buffer(%d,%d):bitfield(%d,%d)))\n" %(header_lower,field[0],bytefield1,bytefield2,bitfield1,bitfield2))
+            
     if (DEBUG):
         print (header,header_type["name"], next_state_key, transition_param)
 
@@ -223,10 +237,10 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         if (header==entry[-1] and entry[0] in header_ports and entry[1]!=None):
             if (entry[0]!='ethernet'):
                 fout.write("my_table = DissectorTable.get('%s.%s')\n" %("p4_"+entry[0], entry[1]))
-                fout.write("my_table:add(%s,p4_proto)\n" %(entry[2]))
+                fout.write("my_table:add(%s,%s)\n" %(entry[2],header_lower))
             else:
                 fout.write("my_table = DissectorTable.get('ethertype')\n")
-                fout.write("my_table:add(%s,p4_proto)\n" %(entry[2]))
+                fout.write("my_table:add(%s,%s)\n" %(entry[2],header_lower))
 
     fout.write("\n-- creation of table for next layer(if required)\n")
     if (next_state_key!='' and next_state_key!=None):

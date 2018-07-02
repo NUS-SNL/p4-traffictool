@@ -39,24 +39,26 @@ cd ..
 
 destination=$(realpath $3)
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" 
+
 if [[ $* == *-scapy* ]];then
     temp="$destination/scapy"
     mkdir $temp
-    python src/GenTrafficScapy.py $jsonsource $temp $debug_mode
+    python $DIR/src/GenTrafficScapy.py $jsonsource $temp $debug_mode
 fi
 if [[ $* == *-lua* ]];then
     temp="$destination/lua_dissector"
     mkdir $temp
-    python src/DissectTrafficLua.py $jsonsource $temp $debug_mode
+    python $DIR/src/DissectTrafficLua.py $jsonsource $temp $debug_mode
 fi
 if [[ $* == *-moongen* ]];then
     temp="$destination/moongen"
     mkdir $temp
-    python src/GenTrafficMoonGen.py $jsonsource $temp $debug_mode
+    python $DIR/src/GenTrafficMoonGen.py $jsonsource $temp $debug_mode
 fi
 if [[ $* == *-pcpp* ]];then
     temp="$destination/pcapplusplus"
     mkdir $temp
-    python src/DissectTrafficPcap.py $jsonsource $temp $debug_mode
+    python $DIR/src/DissectTrafficPcap.py $jsonsource $temp $debug_mode
 fi
 rm -r $foldername
