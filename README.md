@@ -23,9 +23,12 @@ To get better undersanding of the purpose of tool, see the sample input P4 progr
 * Detects variable length fields and points user to fill them suitably in class definition
 * Lastly, it produces a list of all possible packet combinations possible using the defined headers
 
+
 ### What it doesn't
 * Post build fields like length and checksums need to be defined by the user himself/herself in the post build method
 * All fields are treated as bitfields, user can modify them according to ones need to support types such as int, short or any other suitable fields
+
+Usage details for the tool with Scapy as backend can be found [here](UsageWithBackend.md#using-scapy-code).
 
 ## PCapPlusPlus as backend
 [PcapPlusPlus](http://seladb.github.io/PcapPlusPlus-Doc) is a multiplatform C++ network sniffing and packet parsing and crafting framework. It provides a very fast and efficient method for crafting and parsing network packets.
@@ -41,6 +44,8 @@ To get better undersanding of the purpose of tool, see the sample input P4 progr
 * If using default headers then user need to modify the parseNextLayer of the default header layer to include next layers.
 * User needs to modify the ProtocolType.h file to include the new layers
 
+Usage details for the tool with Scapy as backend can be found [here](UsageWithBackend.md#using-pcapplusplus-code).
+
 ## MoonGen as backend
 [MoonGen](https://github.com/emmericp/MoonGen) is a scriptable high-speed packet generator built on libmoon. The whole load generator is controlled by a Lua script: all packets that are sent are crafted by a user-provided script. 
 
@@ -54,6 +59,8 @@ To get better undersanding of the purpose of tool, see the sample input P4 progr
 * Field lengths which are not amongst {8, 16, 24, 32, 40, 48, 64} shall be promoted to the next higher power of 2. If the user needs a field to be strictly of a particular size other than these then a proper struct needs to be defined and corresponding _ntoh_ and _hton_ functions need to be defined
 * If using default headers then user need to modify the resolveNextHeader of the default header layer to include next layers.
 
+Usage details for the tool with Scapy as backend can be found [here](UsageWithBackend.md#using-moongen-code).
+
 ## Lua with Wireshark as backend
 ### What the generated code provides
 * Creates files correponding to each protocol defining the header struct
@@ -62,6 +69,8 @@ To get better undersanding of the purpose of tool, see the sample input P4 progr
 
 ### What it doesn't
 * For parsing the packet correctly, user may need to disable the standard parsers of Wireshark
+
+Usage details for the tool with Scapy as backend can be found [here](UsageWithBackend.md#using-lua-dissectors-for-wireshark-or-tshark).
 
 
 ## Similar tools
