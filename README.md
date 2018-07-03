@@ -1,6 +1,6 @@
-# p4-trafficgen-tools
+# p4-traffictools
 
-p4-trafficgen-tools is a tool designed to aid P4-programming by easing the process of testing the code using packet generation, parsing and dissection tools. p4-trafficgen-tools supports code generation for Scapy, PCapPlusPlus, MoonGen and Lua dissector for Wireshark.
+p4-traffictools is a tool designed to aid P4-programming by easing the process of testing the code using packet generation, parsing and dissection tools. p4-traffictools supports code generation for Scapy, PCapPlusPlus, MoonGen and Lua dissector for Wireshark.
 
 To get better undersanding of the purpose of tool, see the sample input P4 programs and corresponding outputs in the samples directory.
 
@@ -74,10 +74,10 @@ Usage details for the tool with Scapy as backend can be found [here](UsageWithBa
 
 
 ## Similar tools
-p4-trafficgen-tools and [p4pktgen](https://github.com/p4pktgen/p4pktgen) are closely related in their models however their applications are completely different.
+p4-traffictools and [p4pktgen](https://github.com/p4pktgen/p4pktgen) are closely related in their models however their applications are completely different.
 
 p4pktgen is a tool that is focused more towards testing of all possible packet header combinations
-whereas p4-trafficgen-tools is a tool which provides an interface to the user using which one can generate and parse network traffic based on the headers defined in the P4 program
+whereas p4-traffictools is a tool which provides an interface to the user using which one can generate and parse network traffic based on the headers defined in the P4 program
 
 ## Requirements
 The code compiles the p4 code to generate the json output which it uses to generate codes for different backends.
