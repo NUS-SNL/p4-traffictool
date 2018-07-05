@@ -3,7 +3,7 @@
 
 # if no arguments are specified then show usage
 if ([[ $* == *--help* ]] || [[ "$#" == "0" ]]); then
-    echo "Usage: p4-pktcodegen.sh <path to p4 source> [p4-14/p4-16] [-scapy] [-lua] [-moongen] [-pcpp] [--d]"
+    echo "Usage: p4-pktcodegen.sh <path to p4 source> [p4-14/p4-16] <path to destination dir> [-scapy] [-lua] [-moongen] [-pcpp] [--d]"
     exit 0
 fi
 
@@ -58,14 +58,14 @@ cd ..
 # check if destination directory is specified
 if ([[ $# < 3 ]]);then
     echo "Destination not specified"
-    echo "Usage: p4-pktcodegen.sh <path to p4 source> [p4-14/p4-16] [-scapy] [-lua] [-moongen] [-pcpp] [--d]"
+    echo "Usage: p4-pktcodegen.sh <path to p4 source> [p4-14/p4-16] <path to destination dir> [-scapy] [-lua] [-moongen] [-pcpp] [--d]"
     rm -r $foldername
     exit 3
 fi
 destination=$(realpath -q $3)
 if [[ $? != "0" ]]; then
     echo "Destination not specified correctly"
-    echo "Usage: p4-pktcodegen.sh <path to p4 source> [p4-14/p4-16] [-scapy] [-lua] [-moongen] [-pcpp] [--d]"
+    echo "Usage: p4-pktcodegen.sh <path to p4 source> [p4-14/p4-16] <path to destination dir> [-scapy] [-lua] [-moongen] [-pcpp] [--d]"
 fi
 
 # DIR stores the path to p4-pktcodegen script, this is required for calling backend scripts
