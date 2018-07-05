@@ -30,7 +30,7 @@
 
 ## Using Lua dissectors for Wireshark or Tshark
 
-1. Generate code for Scapy backend
+1. Generate code for Wireshark Lua dissector backend
     * From P4 code
     ```
     ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> <specify destination directory path> -lua [--d for debug mode]
@@ -55,7 +55,7 @@ That's it! Your plugins are ready to work. Restart Wireshark and open the pcap f
 
 ## Using PCapPlusPlus Code
 
-1. Generate code for Scapy backend
+1. Generate code for PcapPlusPlus backend
     * From P4 code
     ```
     ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> <specify destination directory path> -lua [--d for debug mode]
@@ -63,7 +63,7 @@ That's it! Your plugins are ready to work. Restart Wireshark and open the pcap f
 
     * From json output of P4C 
     ```
-    python DissectTrafficLua.py <path to json output of p4 program> <path to destination directory> [-d for debug mode]
+    python DissectTrafficPcap.py <path to json output of p4 program> <path to destination directory> [-d for debug mode]
     ```
 
 2. Add the new protocols generated to Packet++/header/ProtocolType.h
@@ -74,7 +74,7 @@ That's it! Your plugins are ready to work. Restart Wireshark and open the pcap f
 
 ## Using MoonGen Code
 
-1. Generate code for Scapy backend
+1. Generate code for MoonGen backend
     * From P4 code
     ```
     ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> <specify destination directory path> -lua [--d for debug mode]
@@ -82,19 +82,31 @@ That's it! Your plugins are ready to work. Restart Wireshark and open the pcap f
 
     * From json output of P4C 
     ```
-    python DissectTrafficLua.py <path to json output of p4 program> <path to destination directory> [-d for debug mode]
+    python GenTafficMoonGen.py <path to json output of p4 program> <path to destination directory> [-d for debug mode]
+    ```
+
+2. Copy the new protocol files to MoonGen/libmoon/lua/proto/    
+
+3. If you used any default headers then add the corresponding next layer headers to the resolveNextHeader function of the default header.
+    ```
+    Let's say you wanted to add protocol 'foo' on top of standard UDP layer. 
+    Then you need to modify MoonGen/libmoon/lua/proto/udp.lua so that foo gets recognised while parsing udp packet.
+    Search for the function resolveNextHeader within udp.lua. Over that you will find a map mapNamePort, 
+    add FOO and the corresponding port number to this list.
     ```
     
-2. If you used any default headers then add the corresponding next layer headers to the resolveNextHeader function of the default header.
-
-3. Add the new protocols to MoonGen/libmoon/lua/proto
-
+    
 4. Necessary changes to other files:
     - MoonGen/libmoon/lua/packet.lua: register the packet header combinations using createStack function
-        Search for getArpPacket to get an idea of what to do.
+        ```
+        Say you want to add layer foo over UDP. 
+        Then inside packet.lua you need to define a getFooPacket function to generate a packet of foo protocol.
+        
+        pkt.getFooPacket = createStack("eth","ip4","udp","FOO")
+        ```
         Apart from this you may need to incorporate following changes as well:
         -  if the header has a length member, adapt packetSetLength; 
-		- if the packet has a checksum, adapt createStack (loop at end of function) and packetCalculateChecksums
+        - if the packet has a checksum, adapt createStack (loop at end of function) and packetCalculateChecksums
 
      - MoonGen/libmoon/lua/proto/proto.lua: add PROTO.lua to the list so it gets loaded
      ```

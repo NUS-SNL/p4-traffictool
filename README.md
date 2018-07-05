@@ -44,7 +44,7 @@ Usage details for the tool with Scapy as backend can be found [here](UsageWithBa
 * If using default headers then user need to modify the parseNextLayer of the default header layer to include next layers.
 * User needs to modify the ProtocolType.h file to include the new layers
 
-Usage details for the tool with Scapy as backend can be found [here](UsageWithBackend.md#using-pcapplusplus-code).
+Usage details for the tool with PcapPlusPlus as backend can be found [here](UsageWithBackend.md#using-pcapplusplus-code).
 
 ## MoonGen as backend
 [MoonGen](https://github.com/emmericp/MoonGen) is a scriptable high-speed packet generator built on libmoon. The whole load generator is controlled by a Lua script: all packets that are sent are crafted by a user-provided script. 
@@ -59,7 +59,7 @@ Usage details for the tool with Scapy as backend can be found [here](UsageWithBa
 * Field lengths which are not amongst {8, 16, 24, 32, 40, 48, 64} shall be promoted to the next higher power of 2. If the user needs a field to be strictly of a particular size other than these then a proper struct needs to be defined and corresponding _ntoh_ and _hton_ functions need to be defined
 * If using default headers then user need to modify the resolveNextHeader of the default header layer to include next layers.
 
-Usage details for the tool with Scapy as backend can be found [here](UsageWithBackend.md#using-moongen-code).
+Usage details for the tool with MoonGen as backend can be found [here](UsageWithBackend.md#using-moongen-code).
 
 ## Lua with Wireshark as backend
 ### What the generated code provides
@@ -70,7 +70,7 @@ Usage details for the tool with Scapy as backend can be found [here](UsageWithBa
 ### What it doesn't
 * For parsing the packet correctly, user may need to disable the standard parsers of Wireshark
 
-Usage details for the tool with Scapy as backend can be found [here](UsageWithBackend.md#using-lua-dissectors-for-wireshark-or-tshark).
+Usage details for the tool with Wireshark as backend can be found [here](UsageWithBackend.md#using-lua-dissectors-for-wireshark-or-tshark).
 
 
 ## Similar tools
@@ -91,7 +91,7 @@ Lastly, to make use of the generated codes user needs the suitable backends.
 
 To run the toplevel script:
 ```
-./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> <specify destination directory path> [-scapy] [-lua] [-moongen] [-pcpp] [--d for debug mode]
+./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> <specify destination directory path> [-scapy] [-wireshark] [-moongen] [-pcpp] [--d for debug mode]
 ```
 
 To run the individual scripts to backend code generation:
@@ -100,7 +100,7 @@ python <path to the appropriate script> <path to json output of p4 program> <pat
 ```
 
 Scapy backend &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; : [GenTrafficScapy.py](src/GenTrafficScapy.py) <br>
-PcapPlusPlus backend &nbsp;: [DissectTraffic.py](src/DissectTraffic.py) <br>
+PcapPlusPlus backend &nbsp;: [DissectTrafficPcap.py](src/DissectTrafficPcap.py) <br>
 MoonGen backend &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; : [GenTrafficMoonGen.py](src/GenTrafficMoonGen.py) <br>
 Lua Wireshark backend : [DissectTrafficLua.py](src/DissectTrafficLua.py) <br>
 
