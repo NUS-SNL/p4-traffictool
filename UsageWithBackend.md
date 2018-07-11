@@ -3,7 +3,7 @@
 1. Generate code for Scapy backend
     * From P4 code
     ```
-    ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> <specify destination directory path> -scapy [--d for debug mode]
+    ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> [destination directory path] -scapy [--d for debug mode]
     ```
 
     * From json output of P4C 
@@ -33,7 +33,7 @@
 1. Generate code for Wireshark Lua dissector backend
     * From P4 code
     ```
-    ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> <specify destination directory path> -lua [--d for debug mode]
+    ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> [destination directory path] -lua [--d for debug mode]
     ```
 
     * From json output of P4C 
@@ -58,7 +58,7 @@ That's it! Your plugins are ready to work. Restart Wireshark and open the pcap f
 1. Generate code for PcapPlusPlus backend
     * From P4 code
     ```
-    ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> <specify destination directory path> -lua [--d for debug mode]
+    ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> [destination directory path] -lua [--d for debug mode]
     ```
 
     * From json output of P4C 
@@ -77,7 +77,7 @@ That's it! Your plugins are ready to work. Restart Wireshark and open the pcap f
 1. Generate code for MoonGen backend
     * From P4 code
     ```
-    ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> <specify destination directory path> -lua [--d for debug mode]
+    ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> [destination directory path] -lua [--d for debug mode]
     ```
 
     * From json output of P4C 

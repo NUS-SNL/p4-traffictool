@@ -91,7 +91,7 @@ Lastly, to make use of the generated codes user needs the suitable backends.
 
 To run the toplevel script:
 ```
-./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> <specify destination directory path> [-scapy] [-wireshark] [-moongen] [-pcpp] [--d for debug mode]
+./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> [destination directory path] [-scapy] [-wireshark] [-moongen] [-pcpp] [--d for debug mode]
 ```
 
 To run the individual scripts to backend code generation:
