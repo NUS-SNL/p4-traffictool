@@ -4,16 +4,49 @@ p4-traffictools is a tool designed to aid P4 developers with the process of pack
 
 So whether behavorial (qualitative) testing on software targets (e.g. [bmv2](https://github.com/p4lang/behavioral-model)) or production (quantitative) testing on hardware targets (e.g. [Barefoot Tofino](https://barefootnetworks.com/products/brief-tofino/)), p4-traffictools has you covered :)
 
-To get better undersanding of the purpose of tool, see the sample input P4 programs and corresponding outputs in the samples directory.
 
 ## Contents
+* [Getting Started](#getting-started)
+* [Usage](#usage)
 * [Scapy as backend](#scapy-as-backend)
 * [PCapPlusPlus as backend](#pcapplusplus-as-backend)
 * [MoonGen as backend](#moongen-as-backend)
 * [Lua with Wireshark as backend](#lua-with-wireshark-as-backend)
 * [Similar tools](#similar-tools)
-* [Requirements](#requirements)
-* [Usage](#usage)
+
+
+## Getting Started
+### Dependencies
+* **p4c compiler:** The input to p4-traffictools is the json file produced by the open-source p4c compiler, specifically the _p4c-bm2-ss_ backend. Follow the instructions [here](https://github.com/p4lang/p4c) to install _p4c_ and the _p4c-bm2-ss_ backend. Post the installation, _p4c-bm2-ss_ should be available in your _PATH_. 
+* **Python interpreter:** p4-traffictools is written in Python and can work with both Python2 and Python3. Most Linux distributions come preinstalled with either Python2 or Python3.
+* **Traffic Tools:** Since you are trying to install and use p4-traffictools, we assume you have the appropriate traffic generation/parsing tools for which you would be auto-generating the code. p4-traffictools currently supports code generation for [Scapy](https://scapy.net), [PcapPlusPlus](https://github.com/seladb/PcapPlusPlus), [MoonGen](https://github.com/emmericp/MoonGen/) and [Wireshark Dissector](https://wiki.wireshark.org/Lua/Dissectors).
+
+### Installation
+Simply clone this repository. No other action is required.
+```
+git clone https://github.com/djin31/p4-traffictools.git
+```
+
+## Usage
+
+For usage with a P4 source file, use the top-level script _p4-traffictools.sh_ as following:
+```
+./p4-traffictools.sh <path to p4 source file> <specify standard {p4-14, p4-16}> [output directory path] [--scapy] [--wireshark] [--moongen] [--pcpp] [--d for debug mode]
+```
+
+For usage directly with a json file, use the top-level script _p4-traffictools.sh_ as following:
+```
+./p4-traffictools.sh <path to json file> [output directory path] [--scapy] [--wireshark] [--moongen] [--pcpp] [--d for debug mode]
+```
+
+**Notes:**
+  * output directory path: If not specified, the default output directory is the same directory as the P4/json input file.
+  * target tool(s): At least one of `--scapy` `--wireshark` `--moongen` `--pcpp` needs to be specified. 
+
+p4-traffictools will create a subdirectory for each target tool inside the output directory. The generated files for each tool then need to be integrated with the respective tool. Usage of the generated files for different tools can be found in [UsageWithBackend.md](UsageWithBackend.md)
+
+\* common standard headers include Ethernet, IPv4, IPv6, TCP, UDP. These are detected by the tool only if their name in P4 code is amongst {ethernet, ipv4, ipv6, tcp, udp}.
+
 
 ## Scapy as backend
 
@@ -80,32 +113,3 @@ p4-traffictools and [p4pktgen](https://github.com/p4pktgen/p4pktgen) are closely
 
 p4pktgen is a tool that is focused more towards testing of all possible packet header combinations
 whereas p4-traffictools is a tool which provides an interface to the user using which one can generate and parse network traffic based on the headers defined in the P4 program
-
-## Requirements
-The code compiles the p4 code to generate the json output which it uses to generate codes for different backends.
-For compiling the p4 code user needs the [p4c](https://github.com/p4lang/p4c) compiler, specifically the _p4c-bm2-ss_ backend.
-
-The scripts to generate code can work both with python2 as well as python3.
-
-Lastly, to make use of the generated codes user needs the suitable backends.
-
-## Usage
-
-To run the toplevel script:
-```
-./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> [destination directory path] [-scapy] [-wireshark] [-moongen] [-pcpp] [--d for debug mode]
-```
-
-To run the individual scripts to backend code generation:
-```
-python <path to the appropriate script> <path to json output of p4 program> <path to destination directory> [-d for debug mode]
-```
-
-Scapy backend &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; : [GenTrafficScapy.py](src/GenTrafficScapy.py) <br>
-PcapPlusPlus backend &nbsp;: [DissectTrafficPcap.py](src/DissectTrafficPcap.py) <br>
-MoonGen backend &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; : [GenTrafficMoonGen.py](src/GenTrafficMoonGen.py) <br>
-Lua Wireshark backend : [DissectTrafficLua.py](src/DissectTrafficLua.py) <br>
-
-Usage of the generated code for different backends can be found in [UsageWithBackend.md](UsageWithBackend.md)
-
-\* common standard headers include Ethernet, IPv4, IPv6, TCP, UDP. These are detected by the tool only if their name in P4 code is amongst {ethernet, ipv4, ipv6, tcp, udp}.
