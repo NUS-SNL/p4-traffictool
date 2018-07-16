@@ -1,6 +1,8 @@
 # p4-traffictools
 
-p4-traffictools is a tool designed to aid P4-programming by easing the process of testing the code using packet generation, parsing and dissection tools. p4-traffictools supports code generation for Scapy, PCapPlusPlus, MoonGen and Lua dissector for Wireshark.
+p4-traffictools is a tool designed to aid P4 developers with the process of packet generation, parsing and dissection. It automatically generates code for several traffic generation and parsing tools such that they can readily support the custom packet format(s) defined by your P4 program. p4-traffictools currently supports code generation for [Scapy](https://scapy.net), [PcapPlusPlus](https://github.com/seladb/PcapPlusPlus), [MoonGen](https://github.com/emmericp/MoonGen/) and [Lua dissector for Wireshark](https://wiki.wireshark.org/Lua/Dissectors).
+
+So whether behavorial (qualitative) testing on software targets (e.g. [bmv2](https://github.com/p4lang/behavioral-model)) or production (quantitative) testing on hardware targets (e.g. [Barefoot Tofino](https://barefootnetworks.com/products/brief-tofino/)), p4-traffictools has you covered :)
 
 To get better undersanding of the purpose of tool, see the sample input P4 programs and corresponding outputs in the samples directory.
 
