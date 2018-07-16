@@ -2,7 +2,7 @@
 
 p4-traffictools is a tool designed to aid P4 developers with the process of packet generation, parsing and dissection. It automatically generates code for several traffic generation and parsing tools such that they can readily support the custom packet format(s) defined by your P4 program. p4-traffictools currently supports code generation for [Scapy](https://scapy.net), [PcapPlusPlus](https://github.com/seladb/PcapPlusPlus), [MoonGen](https://github.com/emmericp/MoonGen/) and [Lua dissector for Wireshark](https://wiki.wireshark.org/Lua/Dissectors).
 
-So whether behavorial (qualitative) testing on software targets (e.g. [bmv2](https://github.com/p4lang/behavioral-model)) or production (quantitative) testing on hardware targets (e.g. [Barefoot Tofino](https://barefootnetworks.com/products/brief-tofino/)), p4-traffictools has you covered :)
+So whether behavioral (qualitative) testing on software targets (e.g. [bmv2](https://github.com/p4lang/behavioral-model)) or production (quantitative) testing on hardware targets (e.g. [Barefoot Tofino](https://barefootnetworks.com/products/brief-tofino/)), p4-traffictools has you covered :)
 
 
 ## Contents
@@ -17,7 +17,7 @@ So whether behavorial (qualitative) testing on software targets (e.g. [bmv2](htt
 
 ## Getting Started
 ### Dependencies
-* **p4c compiler:** The input to p4-traffictools is the json file produced by the open-source p4c compiler, specifically the _p4c-bm2-ss_ backend. Follow the instructions [here](https://github.com/p4lang/p4c) to install _p4c_ and the _p4c-bm2-ss_ backend. Post the installation, _p4c-bm2-ss_ should be available in your _PATH_. 
+* **p4c compiler:** The input to p4-traffictools is the json file produced by the open-source p4c compiler, specifically the `p4c-bm2-ss` backend. Follow the instructions [here](https://github.com/p4lang/p4c) to install `p4c` and the `p4c-bm2-ss` backend. For the `p4c-bm2-ss` backend to compile correctly, you may need to install [behavioral model](https://github.com/p4lang/behavioral-model) first. Post the installation, `p4c-bm2-ss` should be available in your _PATH_. 
 * **Python interpreter:** p4-traffictools is written in Python and can work with both Python2 and Python3. Most Linux distributions come preinstalled with either Python2 or Python3.
 * **Traffic Tools:** Since you are trying to install and use p4-traffictools, we assume you have the appropriate traffic generation/parsing tools for which you would be auto-generating the code. p4-traffictools currently supports code generation for [Scapy](https://scapy.net), [PcapPlusPlus](https://github.com/seladb/PcapPlusPlus), [MoonGen](https://github.com/emmericp/MoonGen/) and [Wireshark Dissector](https://wiki.wireshark.org/Lua/Dissectors).
 
@@ -39,16 +39,19 @@ For usage directly with a json file, use the top-level script _p4-traffictools.s
 ./p4-traffictools.sh <path to json file> [output directory path] [--scapy] [--wireshark] [--moongen] [--pcpp] [--d for debug mode]
 ```
 
-**Notes:**
+**Usage Notes:**
   * output directory path: If not specified, the default output directory is the same directory as the P4/json input file.
   * target tool(s): At least one of `--scapy` `--wireshark` `--moongen` `--pcpp` needs to be specified. 
 
-p4-traffictools will create a subdirectory for each target tool inside the output directory. The generated files for each tool then need to be integrated with the respective tool. Usage of the generated files for different tools can be found in [UsageWithBackend.md](UsageWithBackend.md)
+**Output Files:**
+p4-traffictools will create a subdirectory for each target tool inside the output directory. The generated files for each tool will be placed in the respective subdirectory. Steps for integrating the generated files with the tools can be found in [UsageWithTools.md](UsageWithTools.md)
 
-\* common standard headers include Ethernet, IPv4, IPv6, TCP, UDP. These are detected by the tool only if their name in P4 code is amongst {ethernet, ipv4, ipv6, tcp, udp}.
+**Additional User Inputs:**
+* **Standard headers:** Several P4 programs use standard headers for common protocols such as Ethernet, IPv4, IPv6, TCP, UDP. These are detected by p4-traffictools if their name in P4 program is amongst {ethernet, ipv4, ipv6, tcp, udp} irrespective of the case (case insensitive). Once detected, p4-traffictools will prompt the user if s/he wishes to use the header/protocol implementations provided by the tool(s) instead of generating new implementations for them. The exception for this is the code generated for Wireshark Lua dissector (see more details in [Nuances.md](Nuances.md)).
+* **Variable Length Fields:** TODO
+ 
 
-
-## Scapy as backend
+## Scapy
 
 [Scapy](https://scapy.net/) is a powerful Python-based interactive packet manipulation program and library. The code generated for Scapy can be used for packet generation, dumping packets to pcap file or simply sending them on wire, as well as parsing and dissecting packets.
 
@@ -65,7 +68,7 @@ p4-traffictools will create a subdirectory for each target tool inside the outpu
 
 Usage details for the tool with Scapy as backend can be found [here](UsageWithBackend.md#using-scapy-code).
 
-## PCapPlusPlus as backend
+## PCapPlusPlus
 [PcapPlusPlus](http://seladb.github.io/PcapPlusPlus-Doc) is a multiplatform C++ network sniffing and packet parsing and crafting framework. It provides a very fast and efficient method for crafting and parsing network packets.
 
 ### What the generated code provides
@@ -81,7 +84,7 @@ Usage details for the tool with Scapy as backend can be found [here](UsageWithBa
 
 Usage details for the tool with PcapPlusPlus as backend can be found [here](UsageWithBackend.md#using-pcapplusplus-code).
 
-## MoonGen as backend
+## MoonGen
 [MoonGen](https://github.com/emmericp/MoonGen) is a scriptable high-speed packet generator built on libmoon. The whole load generator is controlled by a Lua script: all packets that are sent are crafted by a user-provided script. 
 
 ### What the generated code provides
@@ -96,7 +99,7 @@ Usage details for the tool with PcapPlusPlus as backend can be found [here](Usag
 
 Usage details for the tool with MoonGen as backend can be found [here](UsageWithBackend.md#using-moongen-code).
 
-## Lua with Wireshark as backend
+## Wireshark Lua Dissector
 ### What the generated code provides
 * Creates files correponding to each protocol defining the header struct
 * Detects variable length fields and prompts user to mention the size required for the current testbench
