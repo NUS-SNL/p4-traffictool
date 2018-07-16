@@ -1,4 +1,12 @@
-## Using Scapy Code
+## Tool-specific Usage
+* [Scapy](#scapy)
+* [PcapPlusPlus](#pcapplusplus)
+* [MoonGen](#moongen)
+* [Wireshark (Tshark) Lua Dissector](#wireshark-tshark-lua-dissector)
+
+## Scapy
+
+[Scapy](https://scapy.net) is a powerful Python-based interactive packet manipulation program and library. The code generated for Scapy can be used for packet generation, dumping packets to pcap file or simply sending them on wire, as well as parsing and dissecting packets.
 
 1. Generate code for Scapy backend
     * From P4 code
@@ -28,32 +36,9 @@
     sendp(a,iface=<netdev interface>)
     ```
 
-## Using Lua dissectors for Wireshark or Tshark
+## PcapPlusPlus
 
-1. Generate code for Wireshark Lua dissector backend
-    * From P4 code
-    ```
-    ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> [destination directory path] -lua [--d for debug mode]
-    ```
-
-    * From json output of P4C 
-    ```
-    python DissectTrafficLua.py <path to json output of p4 program> <path to destination directory> [-d for debug mode]
-    ```
-2. To register the protocol with Wireshark or Tshark you need access to the personal plugins folder of your Wireshark installation.
-    To get a path to personal plugins folder open Wireshark, go to Help->About->Folders. 
-    (If the given path doesn;t exist then create a plugins folder at the given path so that you can add personal plugins in the future).
-
-3. (Recommended method) Append the contents of the init.lua file created to the init.lua file just outside your personal plugins folder 
-(if it doesn't exist then copy the init.lua file at the path of your plugins folder)
-
-    If you no longer need these plugins then simply delete this part from the init file of your wireshark
-
-4. Another method is to simply copy these scripts in your wireshark personal plugins folder.
-
-That's it! Your plugins are ready to work. Restart Wireshark and open the pcap file which you wish to parse.
-
-## Using PCapPlusPlus Code
+[PcapPlusPlus](http://seladb.github.io/PcapPlusPlus-Doc) is a multiplatform C++ network sniffing and packet parsing and crafting framework. It provides a very fast and efficient method for crafting and parsing network packets.
 
 1. Generate code for PcapPlusPlus backend
     * From P4 code
@@ -72,7 +57,9 @@ That's it! Your plugins are ready to work. Restart Wireshark and open the pcap f
 
 4. Copy the header files of new protocols to packet++/header and the cpp files to Packet++/source
 
-## Using MoonGen Code
+## MoonGen
+
+[MoonGen](https://github.com/emmericp/MoonGen) is a scriptable high-speed packet generator built on libmoon. The whole load generator is controlled by a Lua script: all packets that are sent are crafted by a user-provided script.
 
 1. Generate code for MoonGen backend
     * From P4 code
@@ -112,3 +99,29 @@ That's it! Your plugins are ready to work. Restart Wireshark and open the pcap f
      ```
      proto.<PROTOCOL NAME> = require "proto.<file containing protocol(remove .lua)>"
      ```
+
+## Wireshark (Tshark) Lua Dissector
+
+1. Generate code for Wireshark Lua dissector backend
+    * From P4 code
+    ```
+    ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> [destination directory path] -lua [--d for debug mode]
+    ```
+
+    * From json output of P4C 
+    ```
+    python DissectTrafficLua.py <path to json output of p4 program> <path to destination directory> [-d for debug mode]
+    ```
+2. To register the protocol with Wireshark or Tshark you need access to the personal plugins folder of your Wireshark installation.
+    To get a path to personal plugins folder open Wireshark, go to Help->About->Folders. 
+    (If the given path doesn;t exist then create a plugins folder at the given path so that you can add personal plugins in the future).
+
+3. (Recommended method) Append the contents of the init.lua file created to the init.lua file just outside your personal plugins folder 
+(if it doesn't exist then copy the init.lua file at the path of your plugins folder)
+
+    If you no longer need these plugins then simply delete this part from the init file of your wireshark
+
+4. Another method is to simply copy these scripts in your wireshark personal plugins folder.
+
+That's it! Your plugins are ready to work. Restart Wireshark and open the pcap file which you wish to parse.
+
