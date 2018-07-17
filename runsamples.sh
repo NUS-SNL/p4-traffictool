@@ -11,25 +11,30 @@ mkdir -p samples/src_routing/output
 mkdir -p samples/tlv_parsing/output
 
 # for running in debug mode
-# ./p4-traffictools.sh samples/arp/arp.p4 p4-16 samples/arp/output -scapy -lua -moongen -pcpp --d <responses
-# ./p4-traffictools.sh samples/basic_tunnel/basic_tunnel.p4 p4-16 samples/basic_tunnel/output -scapy -lua -moongen -pcpp --d <responses
-# ./p4-traffictools.sh samples/dummy-for-dissector/dissector_dummy.p4 p4-14 samples/dummy-for-dissector/output -scapy -lua -moongen -pcpp --d <responses
-# ./p4-traffictools.sh samples/heavy_hitter/heavy_hitter.p4 p4-14 samples/heavy_hitter/output -scapy -lua -moongen -pcpp --d <responses
-# ./p4-traffictools.sh samples/ipv4/ipv4_forward.p4 p4-16 samples/ipv4/output -scapy -lua -moongen -pcpp --d <responses
-# ./p4-traffictools.sh samples/mri/mri.p4 p4-16 samples/mri/output -scapy -lua -moongen -pcpp --d <responses
-# ./p4-traffictools.sh samples/simple_nat/simple_nat.p4 p4-14 samples/simple_nat/output -scapy -lua -moongen -pcpp --d <responses
-# ./p4-traffictools.sh samples/simple_router/simple_router.p4 p4-14 samples/simple_router/output -scapy -lua -moongen -pcpp --d <responses
-# ./p4-traffictools.sh samples/src_routing/src_routing.p4 p4-16 samples/src_routing/output -scapy -lua -moongen -pcpp --d <responses
-# ./p4-traffictools.sh samples/tlv_parsing/tlv_parsing.p4 p4-14 samples/tlv_parsing/output -scapy -lua -moongen -pcpp --d 
+yes n|./p4-traffictools.sh -p4 samples/arp/arp.p4 --std p4-16 -o samples/arp/output --scapy --wireshark --moongen --pcpp --debug
+yes n|./p4-traffictools.sh -p4 samples/basic_tunnel/basic_tunnel.p4 --std p4-16 -o samples/basic_tunnel/output --scapy --wireshark --moongen --pcpp --debug
+yes n|./p4-traffictools.sh -p4 samples/dummy-for-dissector/dissector_dummy.p4 --std p4-14 -o samples/dummy-for-dissector/output --scapy --wireshark --moongen --pcpp --debug
+yes n|./p4-traffictools.sh -p4 samples/heavy_hitter/heavy_hitter.p4 --std p4-14 -o samples/heavy_hitter/output --scapy --wireshark --moongen --pcpp --debug
+yes n|./p4-traffictools.sh -p4 samples/ipv4/ipv4_forward.p4 --std p4-16 -o samples/ipv4/output --scapy --wireshark --moongen --pcpp --debug
+yes n|./p4-traffictools.sh -p4 samples/mri/mri.p4 --std p4-16 -o samples/mri/output --scapy --wireshark --moongen --pcpp --debug
+yes n|./p4-traffictools.sh -p4 samples/simple_nat/simple_nat.p4 --std p4-14 -o samples/simple_nat/output --scapy --wireshark --moongen --pcpp --debug
+yes n|./p4-traffictools.sh -p4 samples/simple_router/simple_router.p4 --std p4-14 -o samples/simple_router/output --scapy --wireshark --moongen --pcpp --debug
+yes n|./p4-traffictools.sh -p4 samples/src_routing/src_routing.p4 --std p4-16 -o samples/src_routing/output --scapy --wireshark --moongen --pcpp --debug
+
+#example showing variable length fields
+./p4-traffictools.sh -p4 samples/tlv_parsing/tlv_parsing.p4 --std p4-14 -o samples/tlv_parsing/output --scapy --wireshark --moongen --pcpp --debug
+
 
 # for running without debug flag
-./p4-traffictools.sh samples/arp/arp.p4 p4-16 samples/arp/output -scapy -lua -moongen -pcpp  <responses
-./p4-traffictools.sh samples/basic_tunnel/basic_tunnel.p4 p4-16 samples/basic_tunnel/output -scapy -lua -moongen -pcpp  <responses
-./p4-traffictools.sh samples/dummy-for-dissector/dissector_dummy.p4 p4-14 samples/dummy-for-dissector/output -scapy -lua -moongen -pcpp  <responses
-./p4-traffictools.sh samples/heavy_hitter/heavy_hitter.p4 p4-14 samples/heavy_hitter/output -scapy -lua -moongen -pcpp  <responses
-./p4-traffictools.sh samples/ipv4/ipv4_forward.p4 p4-16 samples/ipv4/output -scapy -lua -moongen -pcpp  <responses
-./p4-traffictools.sh samples/mri/mri.p4 p4-16 samples/mri/output -scapy -lua -moongen -pcpp  <responses
-./p4-traffictools.sh samples/simple_nat/simple_nat.p4 p4-14 samples/simple_nat/output -scapy -lua -moongen -pcpp  <responses
-./p4-traffictools.sh samples/simple_router/simple_router.p4 p4-14 samples/simple_router/output -scapy -lua -moongen -pcpp  <responses
-./p4-traffictools.sh samples/src_routing/src_routing.p4 p4-16 samples/src_routing/output -scapy -lua -moongen -pcpp  <responses
-./p4-traffictools.sh samples/tlv_parsing/tlv_parsing.p4 p4-14 samples/tlv_parsing/output -scapy -lua -moongen -pcpp  
+yes n|./p4-traffictools.sh -p4 samples/arp/arp.p4 --std p4-16 -o samples/arp/output --scapy --wireshark --moongen --pcpp 
+yes n|./p4-traffictools.sh -p4 samples/basic_tunnel/basic_tunnel.p4 --std p4-16 -o samples/basic_tunnel/output --scapy --wireshark --moongen --pcpp 
+yes n|./p4-traffictools.sh -p4 samples/dummy-for-dissector/dissector_dummy.p4 --std p4-14 -o samples/dummy-for-dissector/output --scapy --wireshark --moongen --pcpp 
+yes n|./p4-traffictools.sh -p4 samples/heavy_hitter/heavy_hitter.p4 --std p4-14 -o samples/heavy_hitter/output --scapy --wireshark --moongen --pcpp 
+yes n|./p4-traffictools.sh -p4 samples/ipv4/ipv4_forward.p4 --std p4-16 -o samples/ipv4/output --scapy --wireshark --moongen --pcpp 
+yes n|./p4-traffictools.sh -p4 samples/mri/mri.p4 --std p4-16 -o samples/mri/output --scapy --wireshark --moongen --pcpp 
+yes n|./p4-traffictools.sh -p4 samples/simple_nat/simple_nat.p4 --std p4-14 -o samples/simple_nat/output --scapy --wireshark --moongen --pcpp 
+yes n|./p4-traffictools.sh -p4 samples/simple_router/simple_router.p4 --std p4-14 -o samples/simple_router/output --scapy --wireshark --moongen --pcpp 
+yes n|./p4-traffictools.sh -p4 samples/src_routing/src_routing.p4 --std p4-16 -o samples/src_routing/output --scapy --wireshark --moongen --pcpp 
+
+# example showing variable length fields
+./p4-traffictools.sh -p4 samples/tlv_parsing/tlv_parsing.p4 --std p4-14 -o samples/tlv_parsing/output --scapy --wireshark --moongen --pcpp 

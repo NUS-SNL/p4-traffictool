@@ -130,14 +130,14 @@ def make_header(headers, header_types, header_id, checksums, calculations, fout)
         if field[1]!="*":
             fout.write("\t\t%s,\n" % (detect_field_type(field)))
         else:
-            field[1] = int(input('Variable length field ' + field[0] + ' detected in ' + header + '. Enter its length\n'))
+            field[1] = int(input('Variable length field ' + field[0] + ' detected in ' + header_type['name'] + '. Enter its length\n'))
             fout.write("\t\t%s,\n" % (detect_field_type(field)))
             
     if (len(header_type['fields'])>0):
-        if header_type['fields'][1]!="*":
+        if header_type['fields'][-1][1]!="*":
             fout.write("\t\t%s,\n" % (detect_field_type(header_type['fields'][-1])))
         else:
-            header_type['fields'][-1][1] = int(input('Variable length field ' + field[0] + ' detected in ' + header + '. Enter its length\n'))
+            header_type['fields'][-1][1] = int(input('Variable length field ' + header_type['fields'][-1][0] + ' detected in ' + header_type['name'] + '. Enter its length\n'))
             fout.write("\t\t%s,\n" % (detect_field_type(header_type['fields'][-1])))
            
     fout.write("\t]\n")
