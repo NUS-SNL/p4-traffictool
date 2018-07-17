@@ -1,4 +1,10 @@
 #!/bin/bash
+
+# exit codes
+#   1 incorrect file specification
+#   2 incorrect argument specification
+#   3 p4 compilation error
+
 usage(){
     echo "Usage: p4-traffictools.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--scapy] [--wireshark] [--moongen] [--pcpp] [--debug]"
     exit $1
@@ -99,16 +105,14 @@ while test $# -gt 0; do
             DEBUG_MODE=true
             ;;
         *)
-            break
+            echo "Unknown argument $1"
+            usage 2
             ;;  
     esac
 done
 
 if [[ "$DEBUG_MODE"=true ]]; then
     print_arguments
-    COMPILER_OUTPUT=""
-else
-    COMPILER_OUTPUT="> /dev/null 2>&1"
 fi
 
 if [ "$JSON_DETECT" = false ]; then
@@ -120,10 +124,10 @@ if [ "$JSON_DETECT" = false ]; then
 
     # p4 source compilation
     echo -e "----------------------------------\nCompiling p4 source ..."
-    p4c-bm2-ss --std $STANDARD -o alpha.json $P4_SOURCE $COMPILER_OUTPUT
+    p4c-bm2-ss --std $STANDARD -o alpha.json $P4_SOURCE 
     if [ $? != "0" ]; then
         echo "Compilation with p4c-bm2-ss failed...trying with p4c"
-        p4c -S --std $STANDARD $P4_SOURCE $COMPILER_OUTPUT
+        p4c -S --std $STANDARD $P4_SOURCE 
         if [ $? != "0" ]; then
             echo "Compilation with p4c failed.. exiting"
             cd ..
@@ -160,7 +164,7 @@ TARGET_SPEC=0
 # running backend scripts
 if [[ "$SCAPY" = true ]];then
     temp="$OUTPUT/scapy"
-    echo "Running Scapy backend script for $1"
+    echo "Running Scapy backend script"
     TARGET_SPEC=1
     mkdir -p $temp
     python $DIR/src/GenTrafficScapy.py $JSONSOURCE $temp $DEBUG_MODE
@@ -168,7 +172,7 @@ if [[ "$SCAPY" = true ]];then
 fi
 if [[ "$WIRESHARK" = true ]];then
     temp="$OUTPUT/lua_dissector"
-    echo "Running Lua dissector backend script for $1"
+    echo "Running Lua dissector backend script"
     TARGET_SPEC=1
     mkdir -p $temp
     python $DIR/src/DissectTrafficLua.py $JSONSOURCE $temp $DEBUG_MODE
@@ -176,7 +180,7 @@ if [[ "$WIRESHARK" = true ]];then
 fi
 if [[ "$MOONGEN" = true ]];then
     temp="$OUTPUT/moongen"
-    echo "Running MoonGen backend script for $1"
+    echo "Running MoonGen backend script"
     TARGET_SPEC=1
     mkdir -p $temp
     python $DIR/src/GenTrafficMoonGen.py $JSONSOURCE $temp $DEBUG_MODE
@@ -184,7 +188,7 @@ if [[ "$MOONGEN" = true ]];then
 fi
 if [[ "$PCAPPLUSPLUS" = true ]];then
     temp="$OUTPUT/pcapplusplus"
-    echo "Running PcapPlusPlus backend script for $1"
+    echo "Running PcapPlusPlus backend script"
     TARGET_SPEC=1
     mkdir -p $temp
     python $DIR/src/DissectTrafficPcap.py $JSONSOURCE $temp $DEBUG_MODE
@@ -192,7 +196,7 @@ if [[ "$PCAPPLUSPLUS" = true ]];then
 fi
 if (("$TARGET_SPEC"!=1)); then
     echo "No target specified"
-    usage 3
+    usage 2
 fi
 
 # remove tempfolder created
