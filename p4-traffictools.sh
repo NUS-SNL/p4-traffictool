@@ -106,9 +106,6 @@ done
 
 if [[ "$DEBUG_MODE"=true ]]; then
     print_arguments
-    COMPILER_OUTPUT=""
-else
-    COMPILER_OUTPUT="> /dev/null 2>&1"
 fi
 
 if [ "$JSON_DETECT" = false ]; then
@@ -120,10 +117,10 @@ if [ "$JSON_DETECT" = false ]; then
 
     # p4 source compilation
     echo -e "----------------------------------\nCompiling p4 source ..."
-    p4c-bm2-ss --std $STANDARD -o alpha.json $P4_SOURCE $COMPILER_OUTPUT
+    p4c-bm2-ss --std $STANDARD -o alpha.json $P4_SOURCE 
     if [ $? != "0" ]; then
         echo "Compilation with p4c-bm2-ss failed...trying with p4c"
-        p4c -S --std $STANDARD $P4_SOURCE $COMPILER_OUTPUT
+        p4c -S --std $STANDARD $P4_SOURCE 
         if [ $? != "0" ]; then
             echo "Compilation with p4c failed.. exiting"
             cd ..

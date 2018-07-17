@@ -117,7 +117,7 @@ def detect_field_type(field):
     elif (field[1]==32):
         return ("IntField("+field[0]+", 0)")
     else:
-        return ("XBitField("+field[0]+", 0, "+ str(field[1]+")"))
+        return ("XBitField("+field[0]+", 0, "+ str(field[1])+")")
 
 # declares header fields and initialises them with default value zero, also specifies if there is any checksum fields which needs to be post-build
 # other post-build fields need to be added manually
