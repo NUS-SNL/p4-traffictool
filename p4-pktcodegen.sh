@@ -1,10 +1,22 @@
 #!/bin/bash
-# usage : <path to p40pktcodegen.sh> <p4-source> <std {p4-14, p4-16}> <destination directory path> [-d] [-scapy] [-lua] [-moongen] [-pcpp]
-
 usage(){
     echo "Usage: p4-pktcodegen.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--scapy] [--wireshark] [--moongen] [--pcpp] [--debug]"
     exit $1
 }
+
+print_arguments(){
+    echo "P4_SOURCE $P4_SOURCE"
+    echo "JSONSOURCE $JSONSOURCE"
+    echo "SCAPY $SCAPY"
+    echo "WIRESHARK $WIRESHARK"
+    echo "PCAPPLUSPLUS $PCAPPLUSPLUS"
+    echo "MOONGEN $MOONGEN"
+    echo "STANDARD $STANDARD"
+    echo "DEBUG_MODE $DEBUG_MODE"
+    echo "OUTPUT DIR $OUTPUT"
+}
+
+
 # if no arguments are specified then show usage
 if ([[ "$#" == "0" ]]); then
     usage 0
@@ -17,7 +29,7 @@ WIRESHARK=false
 MOONGEN=false
 PCAPPLUSPLUS=false
 DEBUG_MODE=false
-STANDARD="p4-14"
+STANDARD="p4-16"
 
 while test $# -gt 0; do
     case "$1" in
@@ -92,6 +104,9 @@ while test $# -gt 0; do
     esac
 done
 
+if [[ "$DEBUG_MODE"=true ]]; then
+    print_arguments
+fi
 
 if [ "$JSON_DETECT" = false ]; then
     # creates a temp folder with timestamp to hold json script and compiled binaries
@@ -102,10 +117,10 @@ if [ "$JSON_DETECT" = false ]; then
 
     # p4 source compilation
     echo -e "----------------------------------\nCompiling p4 source ..."
-    p4c-bm2-ss --std $standard -o alpha.json $source_path > /dev/null 2>&1
+    p4c-bm2-ss --std $STANDARD -o alpha.json "$P4_SOURCE" > /dev/null 2>&1
     if [ $? != "0" ]; then
         echo "Compilation with p4c-bm2-ss failed...trying with p4c"
-        p4c -S --std $standard $source_path > /dev/null 2>&1
+        p4c -S --std $STANDARD $P4_SOURCE > /dev/null 2>&1
         if [ $? != "0" ]; then
             echo "Compilation with p4c failed.. exiting"
             cd ..
@@ -177,6 +192,7 @@ if (("$TARGET_SPEC"!=1)); then
     usage 3
 fi
 
+# remove tempfolder created
 if [[ "$JSON_DETECT" = false ]]; then
     rm -rf $foldername
 fi
