@@ -225,16 +225,13 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_header.write("namespace pcpp{\n\t#pragma pack(push,1)\n")
     fout_header.write("\tstruct %s{\n" %(header.lower()+"hdr"))
     
-    variable_fields = []
     for field in header_type["fields"]:
         try:
             fout_header.write("\t\t%s \t %s;\n" %(predict_type(field[1]),field[0]))
         except TypeError:
-            variable_fields.append(field[0])
-    if (len(variable_fields)>0):
-        fout_header.write("\n\t\t// variable length fields\n")
-    for variable_field in variable_fields:
-        fout_header.write("%s\n" %(variable_field))
+            field[1] = int(input('Variable length field ' + field[0] + ' detected in ' + header + '. Enter its length\n'))
+            fout_header.write("\t\t%s \t %s;\n" %(predict_type(field[1]),field[0]))
+    
     fout_header.write("\t};\n\n")
 
     fout_header.write("\t#pragma pack(pop)\n")
@@ -245,12 +242,8 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_header.write("\n\t\t // Getters for fields\n")
 
     for field in header_type["fields"]:
-        try:
-            fout_header.write("\t\t %s get%s();\n" %(predict_type(field[1]),str(field[0]).capitalize()))
-        except TypeError:
-            field[1] = int(input('Variable length field ' + field[0] + ' detected in ' + header + '. Enter its length\n'))
-            fout_header.write("\t\t %s get%s();\n" %(predict_type(field[1]),str(field[0]).capitalize()))
-
+        fout_header.write("\t\t %s get%s();\n" %(predict_type(field[1]),str(field[0]).capitalize()))
+    
     fout_header.write("\n\t\t inline %shdr* get%sHeader() { return (%shdr*)m_Data; }\n\n" %(header.lower(), header.capitalize(), header.lower()))
     fout_header.write("\t\t void parseNextLayer();\n\n")
     fout_header.write("\t\t inline size_t getHeaderLen() { return sizeof(%shdr); }\n\n" %(header.lower()))
@@ -268,20 +261,12 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_source.write("namespace pcpp{\n")
 
     for field in header_type["fields"]:
-        try:
-            fout_source.write("\t%s %sLayer::get%s(){\n" %(predict_type(field[1]), header.capitalize(), str(field[0]).capitalize()))
-            fout_source.write("\t\t%s %s;\n" %(predict_type(field[1]), field[0]))
-            fout_source.write("\t\t%shdr* hdrdata = (%shdr*)m_Data;\n" %(header.lower(),header.lower()))
-            fout_source.write("\t\t%s = %s(hdrdata->%s);\n" %(field[0],host_network_conversion(field), field[0]))
-            fout_source.write("\t\treturn %s;\n\t}\n\n" %(field[0]))
-        except TypeError:
-            field[1] = int(input('Variable length field ' + field[0] + ' detected in ' + header + '. Enter its length\n'))
-            fout_source.write("\t%s %sLayer::get%s(){\n" %(predict_type(field[1]), header.capitalize(), str(field[0]).capitalize()))
-            fout_source.write("\t\t%s %s;\n" %(predict_type(field[1]), field[0]))
-            fout_source.write("\t\t%shdr* hdrdata = (%shdr*)m_Data;\n" %(header.lower(),header.lower()))
-            fout_source.write("\t\t%s = %s(hdrdata->%s);\n" %(field[0],host_network_conversion(field), field[0]))
-            fout_source.write("\t\treturn %s;\n\t}\n\n" %(field[0]))
-
+        fout_source.write("\t%s %sLayer::get%s(){\n" %(predict_type(field[1]), header.capitalize(), str(field[0]).capitalize()))
+        fout_source.write("\t\t%s %s;\n" %(predict_type(field[1]), field[0]))
+        fout_source.write("\t\t%shdr* hdrdata = (%shdr*)m_Data;\n" %(header.lower(),header.lower()))
+        fout_source.write("\t\t%s = %s(hdrdata->%s);\n" %(field[0],host_network_conversion(field), field[0]))
+        fout_source.write("\t\treturn %s;\n\t}\n\n" %(field[0]))
+       
     default_next_transition = None
     transition_key = None
     next_transitions = []

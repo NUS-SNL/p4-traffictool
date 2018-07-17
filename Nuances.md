@@ -39,7 +39,6 @@ Usage details for PcapPlusPlus can be found [here](ToolSpecificUsage.md#pcapplus
 ### What the generated code provides
 * Creates files correponding to each protocol defining the header struct, and getter and setter functions.
 * Provides functionality for using MoonGen's built-in standard headers.
-* Detects variable length fields and prompts user to mention the size required for the current testbench.
 
 ### What it doesn't
 * Post build fields like length and checksums need to be calculated in the setter function by the user.

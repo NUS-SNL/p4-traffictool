@@ -2,13 +2,6 @@ import json
 import sys
 import os
 
-# global variables for common headers detection
-# ETHER_DETECT = False
-# IPv4_DETECT = False
-# IPv6_DETECT = False
-# TCP_DETECT = False
-# UDP_DETECT = False
-
 DEBUG = False
 
 # open file to load json data
@@ -69,11 +62,6 @@ def search_header_type(header_types, name):
 
 
 def find_data_headers(headers, header_types):
-    # global ETHER_DETECT
-    # global IPv4_DETECT
-    # global IPv6_DETECT
-    # global TCP_DETECT
-    # global UDP_DETECT
 
     header_ports = []
     header_dict = {}
@@ -91,32 +79,6 @@ def find_data_headers(headers, header_types):
             header_ports.append(name)
             header_dict[name] = search_header_type(
                 header_types, headers[header_id]["header_type"])
-            # Functionality for detection of common headers to be added
-            # if (name=='ethernet'):
-            #     print("\nEthernet header detected, would you like the standard ethernet header to be used(y/n) :")
-            #     temp = input().strip()
-            #     if (temp == 'y'):
-            #         ETHER_DETECT = True
-            # elif (name=='ipv4'):
-            #     print("\nIPv4 header detected, would you like the standard ethernet header to be used(y/n) : ")
-            #     temp = input().strip()
-            #     if (temp == 'y'):
-            #         IPv4_DETECT = True
-            # elif (name=='ipv6'):
-            #     print("\nIPv6 header detected, would you like the standard ethernet header to be used(y/n) : ")
-            #     temp = input().strip()
-            #     if (temp == 'y'):
-            #         IPv6_DETECT = True
-            # elif (name=='tcp'):
-            #     print("\nTCP header detected, would you like the standard ethernet header to be used(y/n) : ")
-            #     temp = input().strip()
-            #     if (temp == 'y'):
-            #         TCP_DETECT = True
-            # elif (name=='udp'):
-            #     print("\nUDP header detected, would you like the standard ethernet header to be used(y/n) :")
-            #     temp = input().strip()
-            #     if (temp == 'y'):
-            #         UDP_DETECT = True
     header_ports = remove_duplicates(header_ports)
 
     header_types = []

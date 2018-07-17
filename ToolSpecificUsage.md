@@ -9,15 +9,10 @@
 [Scapy](https://scapy.net) is a powerful Python-based interactive packet manipulation program and library. The code generated for Scapy can be used for packet generation, dumping packets to pcap file or simply sending them on wire, as well as parsing and dissecting packets.
 
 1. Generate code for Scapy backend
-    * From P4 code
     ```
-    ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> [destination directory path] -scapy [--d for debug mode]
+    ./p4-traffictools.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--scapy] [--debug]
     ```
 
-    * From json output of P4C 
-    ```
-    python GenTrafficScapy.py <path to json output of p4 program> <path to destination directory> [-d for debug mode]
-    ```
 
 2. Import the generated code using
     ```
@@ -41,14 +36,8 @@
 [PcapPlusPlus](http://seladb.github.io/PcapPlusPlus-Doc) is a multiplatform C++ network sniffing and packet parsing and crafting framework. It provides a very fast and efficient method for crafting and parsing network packets.
 
 1. Generate code for PcapPlusPlus backend
-    * From P4 code
     ```
-    ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> [destination directory path] -lua [--d for debug mode]
-    ```
-
-    * From json output of P4C 
-    ```
-    python DissectTrafficPcap.py <path to json output of p4 program> <path to destination directory> [-d for debug mode]
+    ./p4-traffictools.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--pcpp] [--debug]
     ```
 
 2. Add the new protocols generated to Packet++/header/ProtocolType.h
@@ -62,14 +51,8 @@
 [MoonGen](https://github.com/emmericp/MoonGen) is a scriptable high-speed packet generator built on libmoon. The whole load generator is controlled by a Lua script: all packets that are sent are crafted by a user-provided script.
 
 1. Generate code for MoonGen backend
-    * From P4 code
     ```
-    ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> [destination directory path] -lua [--d for debug mode]
-    ```
-
-    * From json output of P4C 
-    ```
-    python GenTafficMoonGen.py <path to json output of p4 program> <path to destination directory> [-d for debug mode]
+    ./p4-traffictools.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--moongen] [--debug]
     ```
 
 2. Copy the new protocol files to MoonGen/libmoon/lua/proto/    
@@ -103,14 +86,8 @@
 ## Wireshark (Tshark) Lua Dissector
 
 1. Generate code for Wireshark Lua dissector backend
-    * From P4 code
     ```
-    ./p4-pktcodegen.sh <path to p4 source> <specify standard {p4-14, p4-16}> [destination directory path] -lua [--d for debug mode]
-    ```
-
-    * From json output of P4C 
-    ```
-    python DissectTrafficLua.py <path to json output of p4 program> <path to destination directory> [-d for debug mode]
+    ./p4-traffictools.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--wireshark] [--debug]
     ```
 2. To register the protocol with Wireshark or Tshark you need access to the personal plugins folder of your Wireshark installation.
     To get a path to personal plugins folder open Wireshark, go to Help->About->Folders. 
@@ -123,5 +100,5 @@
 
 4. Another method is to simply copy these scripts in your wireshark personal plugins folder.
 
-That's it! Your plugins are ready to work. Restart Wireshark and open the pcap file which you wish to parse.
+    That's it! Your plugins are ready to work. Restart Wireshark and open the pcap file which you wish to parse.
 

@@ -109,6 +109,16 @@ def check_checksum_fields(checksums, calculations, name):
                     return(True, chksum["target"][1], fields, calc["algo"])
     return(False, None, None, None)
 
+def detect_field_type(field):
+    if (field[1]==8):
+        return ("ByteField("+field[0]+", 0)")
+    elif (field[1]==16):
+        return ("ShortField("+field[0]+", 0)")
+    elif (field[1]==32):
+        return ("IntField("+field[0]+", 0)")
+    else:
+        return ("XBitField("+field[0]+", 0, "+ str(field[1]+")"))
+
 # declares header fields and initialises them with default value zero, also specifies if there is any checksum fields which needs to be post-build
 # other post-build fields need to be added manually
 def make_header(headers, header_types, header_id, checksums, calculations, fout):
@@ -117,17 +127,19 @@ def make_header(headers, header_types, header_id, checksums, calculations, fout)
     fout.write("\tfields_desc = [\n")
     header_type = search_header_type(header_types, headers[header_id]["header_type"])
     for field in header_type['fields'][:-1]:
-        try:
-            fout.write("\t\tXBitField('%s',0,%d),\n" % (field[0], field[1]))
-        except TypeError:
-            print("Variable length field '%s' detected in header type '%s', fill in the template suitably\n" %(field[0], header_type['name']))
-            fout.write("\t\tXBitField('%s',0,<insert length for variable field here or handle it in post_build>),\n" % (field[0]))
+        if field[1]!="*":
+            fout.write("\t\t%s,\n" % (detect_field_type(field)))
+        else:
+            field[1] = int(input('Variable length field ' + field[0] + ' detected in ' + header + '. Enter its length\n'))
+            fout.write("\t\t%s,\n" % (detect_field_type(field)))
+            
     if (len(header_type['fields'])>0):
-        try:
-            fout.write("\t\tXBitField('%s',0,%d)\n" % (header_type['fields'][-1][0], header_type['fields'][-1][1]))
-        except TypeError:
-            print("Variable length field '%s' detected in header type '%s', fill in the template suitably\n" %(header_type['fields'][-1][0], header_type['name']))
-            fout.write("\t\tXBitField('%s',0,<insert length for variable field here or handle it in post_build>)\n" % (header_type['fields'][-1][0]))
+        if header_type['fields'][1]!="*":
+            fout.write("\t\t%s,\n" % (detect_field_type(header_type['fields'][-1])))
+        else:
+            header_type['fields'][-1][1] = int(input('Variable length field ' + field[0] + ' detected in ' + header + '. Enter its length\n'))
+            fout.write("\t\t%s,\n" % (detect_field_type(header_type['fields'][-1])))
+           
     fout.write("\t]\n")
     chksum,target,fields,algo = check_checksum_fields(checksums, calculations, data["headers"][header_id]['name'])
     if (chksum):

@@ -1,6 +1,6 @@
 #!/bin/bash
 usage(){
-    echo "Usage: p4-pktcodegen.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--scapy] [--wireshark] [--moongen] [--pcpp] [--debug]"
+    echo "Usage: p4-traffictools.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--scapy] [--wireshark] [--moongen] [--pcpp] [--debug]"
     exit $1
 }
 
@@ -106,6 +106,9 @@ done
 
 if [[ "$DEBUG_MODE"=true ]]; then
     print_arguments
+    COMPILER_OUTPUT=""
+else
+    COMPILER_OUTPUT="> /dev/null 2>&1"
 fi
 
 if [ "$JSON_DETECT" = false ]; then
@@ -117,10 +120,10 @@ if [ "$JSON_DETECT" = false ]; then
 
     # p4 source compilation
     echo -e "----------------------------------\nCompiling p4 source ..."
-    p4c-bm2-ss --std $STANDARD -o alpha.json "$P4_SOURCE" > /dev/null 2>&1
+    p4c-bm2-ss --std $STANDARD -o alpha.json $P4_SOURCE $COMPILER_OUTPUT
     if [ $? != "0" ]; then
         echo "Compilation with p4c-bm2-ss failed...trying with p4c"
-        p4c -S --std $STANDARD $P4_SOURCE > /dev/null 2>&1
+        p4c -S --std $STANDARD $P4_SOURCE $COMPILER_OUTPUT
         if [ $? != "0" ]; then
             echo "Compilation with p4c failed.. exiting"
             cd ..
