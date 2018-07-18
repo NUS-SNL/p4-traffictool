@@ -186,17 +186,27 @@ def predict_type(field):
         return "uint8_t"
     if (field<=16):
         return "uint16_t"
-    # if (field<=24):
-    #     return "union bitfield_24"
+    if (field<=24):
+        return "uint24_t"
     if (field<=32):
         return "uint32_t"
-    # if (field<=40):
-    #     return "union bitfield_40"
-    # if (field<=48):
-    #     return "union bitfield_48"
+    if (field<=40):
+        return "uint40_t"
+    if (field<=48):
+        return "uint48_t"
     if (field<=64):
         return "uint64_t"
     return "-- fill blank here " + str(field)
+
+def predict_input_type(field):
+    if (field<=8):
+        return "uint8_t"
+    if (field<=16):
+        return "uint16_t"
+    if (field<=32):
+        return "uint32_t"
+    if (field<=64):
+        return "uint64_t"
 
 def network_host_conversion(field):
     if (field[1]<=8):
@@ -214,14 +224,8 @@ def host_network_conversion(field):
         return ""
     if (field[1]<=16):
         return "htons"
-    # if (field[1]<=24):
-    #     return ""
     if (field[1]<=32):
         return "htonl"
-    # if (field[1]<=40):
-    #     return ""
-    # if (field[1]<=48):
-    #     return ""
     if (field[1]<=64):
         return "htobe64"
     return "-- fill blank here"
@@ -255,10 +259,11 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_header.write("\t\tpublic:\n")
     fout_header.write("\t\t %sLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_%s;}\n" %(header.capitalize(), header.upper()))
    
-    fout_header.write("\n\t\t // Getters for fields\n")
+    fout_header.write("\n\t\t // Getters and Setters for fields\n")
 
     for field in header_type["fields"]:
         fout_header.write("\t\t %s get%s();\n" %(predict_type(field[1]),str(field[0]).capitalize()))
+        fout_header.write("\t\t void set%s(%s value);\n" %(str(field[0]).capitalize(),predict_input_type(field[1])))
     
     fout_header.write("\n\t\t inline %shdr* get%sHeader() { return (%shdr*)m_Data; }\n\n" %(header.lower(), header.capitalize(), header.lower()))
     fout_header.write("\t\t void parseNextLayer();\n\n")
@@ -280,8 +285,17 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         fout_source.write("\t%s %sLayer::get%s(){\n" %(predict_type(field[1]), header.capitalize(), str(field[0]).capitalize()))
         fout_source.write("\t\t%s %s;\n" %(predict_type(field[1]), field[0]))
         fout_source.write("\t\t%shdr* hdrdata = (%shdr*)m_Data;\n" %(header.lower(),header.lower()))
-        fout_source.write("\t\t%s = %s(hdrdata->%s);\n" %(field[0],host_network_conversion(field), field[0]))
+        if (field[1]==24 or field[1]==40 or field[1]==48):
+            fout_source.write("\t\tUINT%d_HTON(hdrdata->%s,%s);\n" %(field[1], field[0], field[0]))
+        else:
+            fout_source.write("\t\t%s = %s(hdrdata->%s);\n" %(field[0],host_network_conversion(field), field[0]))
         fout_source.write("\t\treturn %s;\n\t}\n\n" %(field[0]))
+
+        fout_source.write("\tvoid %sLayer::set%s(%s value){\n" %(header.capitalize(), str(field[0]).capitalize(), predict_input_type(field[1])))
+        fout_source.write("\t\t%shdr* hdrdata = (%shdr*)m_Data;\n" %(header.lower(),header.lower()))
+        if (field[1]==24 or field[1]==40 or field[1]==48):
+            fout_source.write("\t\tUINT%d_SET(value,hdrdata->%s);\n"%(field[1],field[0]))
+        fout_source.write("\t}\n")
        
     default_next_transition = None
     transition_key = None
@@ -322,6 +336,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
                 fout_source.write("\t\t\tm_NextLayer = new default_next_transition(m_Data + sizeof(%shdr), m_DataLen - sizeof(%shdr), this, m_Packet);\n\t}\n" %(header.lower(),header.lower()))
 
     fout_source.write("\n\tstd::string %sLayer::toString(){}\n\n" %(header.capitalize()))
+    fout_source.write("}")
 
 
 control_graph = make_control_graph(data["parsers"])
