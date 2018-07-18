@@ -111,13 +111,13 @@ def check_checksum_fields(checksums, calculations, name):
 
 def detect_field_type(field):
     if (field[1]==8):
-        return ("XByteField("+field[0]+", 0)")
+        return ("XByteField('"+field[0]+"', 0)")
     elif (field[1]==16):
-        return ("XShortField("+field[0]+", 0)")
+        return ("XShortField('"+field[0]+"', 0)")
     elif (field[1]==32):
-        return ("XLongField("+field[0]+", 0)")
+        return ("XLongField('"+field[0]+"', 0)")
     else:
-        return ("XBitField("+field[0]+", 0, "+ str(field[1])+")")
+        return ("XBitField('"+field[0]+"', 0, "+ str(field[1])+")")
 
 # declares header fields and initialises them with default value zero, also specifies if there is any checksum fields which needs to be post-build
 # other post-build fields need to be added manually
