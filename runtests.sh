@@ -7,6 +7,7 @@ mkdir -p tests/tests2
 yes n| ./p4-traffictools.sh -json samples/basic_tunnel/basic_tunnel.json -o tests/tests1 --scapy --wireshark > /dev/null
 yes n| ./p4-traffictools.sh -p4 samples/basic_tunnel/basic_tunnel.p4 -o tests/tests2 --scapy --wireshark > /dev/null
 
+
 foo="$(cmp -s tests/tests1/*.py tests/tests1/*.py)"
 if [ $foo ]; then
 	echo "tests failed"
