@@ -2,6 +2,12 @@
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"  
 
+if [[ "$1" == clean ]]; then
+	cd tests
+	rm -rf lua_dissector
+	rm -f tests_data.pcap
+	exit 0
+fi
 mkdir -p tests/tests1
 mkdir -p tests/tests2
 yes n| ./p4-traffictools.sh -json samples/basic_tunnel/basic_tunnel.json -o tests/tests1 --scapy --wireshark > /dev/null
@@ -10,7 +16,8 @@ yes n| ./p4-traffictools.sh -p4 samples/basic_tunnel/basic_tunnel.p4 -o tests/te
 
 foo="$(cmp -s tests/tests1/*.py tests/tests1/*.py)"
 if [ $foo ]; then
-	echo "tests failed"
+	echo "tests failed, different outputs for json and p4"
+	exit 1
 fi
 cd tests
 rm -r tests1

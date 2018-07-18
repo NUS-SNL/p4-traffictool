@@ -297,7 +297,7 @@ def make_packets(header_ports, init_states, control_graph, fout):
         fout.write(
             "\n#No possible packets which can be parsed to the final state")
         return
-    fout.write("possible_packets = [\n")
+    fout.write("possible_packets_ = [\n")
     for i in paths[:-1]:
         fout.write("\t(%s)),\n" % (string_packet(header_ports,i)))
     fout.write("\t(%s))\n" % (string_packet(header_ports,paths[-1])))
