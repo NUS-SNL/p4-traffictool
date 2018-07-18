@@ -12,9 +12,13 @@
 Use the top-level script of `p4-traffictools.sh` as following
     
 ```    
-./p4-traffictools.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --scapy
+./p4-traffictools.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --scapy 
 ```
 If standard headers (Ethernet, IPv4, etc.) are detected, the user will be asked if s/he wants to use Scapy's built-in headers instead of re-defining them.
+
+The user would also be asked to specify the length of the variable length field (if any is used). This length should be a multiple of 8 to ensure that the header is byte aligned.
+A fixed length field would be produced for the current run of p4-traffictools. In order to modify this length, the user needs to rerun p4-traffictools. Note that this is a limitation of the target tool and p4-traffictools merely provides an option to choose the fixed length.
+
 
 #### Generated Code
 The code for Scapy would be generated in the output directory inside a subdirectory "scapy". It consists of a single Python file which contains:
@@ -45,38 +49,58 @@ The code for Scapy would be generated in the output directory inside a subdirect
 
 [PcapPlusPlus](http://seladb.github.io/PcapPlusPlus-Doc) is a multiplatform C++ network sniffing and packet parsing and crafting framework. It provides a very fast and efficient method for crafting and parsing network packets.
 
-1. Generate code for PcapPlusPlus backend
-    ```
-    ./p4-traffictools.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--pcpp] [--debug]
-    ```
+### Generating code for PcapPlusPlus
+```
+./p4-traffictools.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --pcpp 
+```
+If standard headers (Ethernet, IPv4, etc.) are detected, the user will be asked if s/he wants to use PcapPlusPlus' built-in headers instead of re-defining them.
 
-2. Add the new protocols generated to Packet++/header/ProtocolType.h
+The user would also be asked to specify the length of the variable length field (if any is used). This length should be a multiple of 8 to ensure that the header is byte aligned.
+A fixed length field would be produced for the current run of p4-traffictools. In order to modify this length, the user needs to rerun p4-traffictools. Note that this is a limitation of the target tool and p4-traffictools merely provides an option to choose the fixed length.
 
-3. If you used any default headers then add the corresponding next layer headers to the parseNextLayer function of the default header.
+#### Generated Code
+The code for PcapPlusPlus would be generated in the output directory inside a subdirectory "pcapplusplus". It consists of header and cpp files defining classes for each protocol. The code contains:
+    *  Definition of the header struct
+    *  Getters and Setters for each field of the protocol
+    *  A function named parseNextLayer which determines the next header to be parsed depending on the value of the relevant field in the current protocol
 
-4. Copy the header files of new protocols to packet++/header and the cpp files to Packet++/source
+### Integration and Usage with PcapPlusPlus
+1. Add the new protocols generated to Packet++/header/ProtocolType.h
+
+2. If you used any standard PcapPlusPlus headers then add the corresponding next layer headers to the parseNextLayer function of the standard header.
+
+3. Copy the header files of new protocols to packet++/header and the cpp files to Packet++/source
+
+4. TODO
 
 ## MoonGen
 
 [MoonGen](https://github.com/emmericp/MoonGen) is a scriptable high-speed packet generator built on libmoon. The whole load generator is controlled by a Lua script: all packets that are sent are crafted by a user-provided script.
 
-1. Generate code for MoonGen backend
-    ```
-    ./p4-traffictools.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--moongen] [--debug]
-    ```
+### Generating code for MoonGen
+```
+./p4-traffictools.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --moongen 
+```
+If standard headers (Ethernet, IPv4, etc.) are detected, the user will be asked if s/he wants to use MoonGen's built-in headers instead of re-defining them.
 
-2. Copy the new protocol files to MoonGen/libmoon/lua/proto/    
+#### Generated Code
+The code for MoonGen would be generated in the output directory inside a subdirectory "moongen". It consists of files corresponding to each protocol. Each file contains:
+    *  Struct definitions for 24, 40 and 48 bits fields
+    *  Header struct definition
+    *  Getters, Setters and String function for each field of the protocol
+    *  A function named resolveNextHeader which determines the next header to be parsed depending on the value of the relevant field in the current protocol
 
-3. If you used any default headers then add the corresponding next layer headers to the resolveNextHeader function of the default header.
+### Integration and Usage with MoonGen
+1. Copy the new protocol files to MoonGen/libmoon/lua/proto/    
+
+2. If you used any default headers then add the corresponding next layer headers to the resolveNextHeader function of the default header.
     ```
     Let's say you wanted to add protocol 'foo' on top of standard UDP layer. 
     Then you need to modify MoonGen/libmoon/lua/proto/udp.lua so that foo gets recognised while parsing udp packet.
     Search for the function resolveNextHeader within udp.lua. Over that you will find a map mapNamePort, 
     add FOO and the corresponding port number to this list.
-    ```
-    
-    
-4. Necessary changes to other files:
+    ``` 
+3. Necessary changes to other files:
     - MoonGen/libmoon/lua/packet.lua: register the packet header combinations using createStack function
         ```
         Say you want to add layer foo over UDP. 
@@ -92,23 +116,35 @@ The code for Scapy would be generated in the output directory inside a subdirect
      ```
      proto.<PROTOCOL NAME> = require "proto.<file containing protocol(remove .lua)>"
      ```
+4. Now you can run any of the example (or otherwise) scripts in MoonGen by using the function `get<ProtoName>Packet()` instead of the usual `getUdpPacket()`.
 
 ## Wireshark (Tshark) Lua Dissector
 
-1. Generate code for Wireshark Lua dissector backend
-    ```
-    ./p4-traffictools.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--wireshark] [--debug]
-    ```
-2. To register the protocol with Wireshark or Tshark you need access to the personal plugins folder of your Wireshark installation.
+### Generating code for Wireshark Lua dissector backend
+```
+./p4-traffictools.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --wireshark
+```
+
+The user would also be asked to specify the length of the variable length field (if any is used). This length should be a multiple of 8 to ensure that the header is byte aligned.
+A fixed length field would be produced for the current run of p4-traffictools. In order to modify this length, the user needs to rerun p4-traffictools. Note that this is a limitation of the target tool and p4-traffictools merely provides an option to choose the fixed length.
+
+#### Generated Code
+The code for Lua dissector would be generated in the output directory inside a subdirectory "lua_dissector". It consists of lua files corresponding to each protocol. Each file contains:
+    *  Header struct definition
+    *  Table definitions for the next layers (if the current layer is not the final layer)
+    *  Addition of the current layer to table definition of previous layer
+
+### Integration and Usage with Wireshark (Tshark)
+1. To register the protocol with Wireshark or Tshark you need access to the personal plugins folder of your Wireshark installation.
     To get a path to personal plugins folder open Wireshark, go to Help->About->Folders. 
     (If the given path doesn;t exist then create a plugins folder at the given path so that you can add personal plugins in the future).
 
-3. (Recommended method) Append the contents of the init.lua file created to the init.lua file just outside your personal plugins folder 
+2. (Recommended method) Append the contents of the init.lua file created to the init.lua file just outside your personal plugins folder 
 (if it doesn't exist then copy the init.lua file at the path of your plugins folder)
 
     If you no longer need these plugins then simply delete this part from the init file of your wireshark
 
-4. Another method is to simply copy these scripts in your wireshark personal plugins folder.
+3. Another method is to simply copy these scripts in your wireshark personal plugins folder.
 
     That's it! Your plugins are ready to work. Restart Wireshark and open the pcap file which you wish to parse.
 

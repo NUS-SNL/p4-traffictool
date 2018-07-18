@@ -44,8 +44,8 @@ The generated output files need to be integrated with the correponding tool(s). 
 
 ### Additional User Inputs
 * **Standard headers:** If standard headers for common protocols such as Ethernet, IPv4, IPv6, TCP, and UDP are detected by p4-traffictools, it will prompt the user if s/he wishes to use the original header/protocol implementations provided by the tool(s) instead of generating new implementations for them. An exception for this is the code generated for the Wireshark Lua dissector (see more details in [Nuances.md](Nuances.md)).
-* **Variable Length Fields:** Since there is limited support  available (and/or inconvenience of use) for variable length fields with Scapy, PcapPlusPlus and Wireshark Lua diseector, the tool prompts the user to enter the length of a variable length field when it detects one. This length should be a multiple of 8 to ensure that the header is byte aligned.
-  * A fixed length field would be produced for the current run of p4-traffictools for Scapy, PcapPlusPlus and Wireshark Lua diseector. In order to modify this length, the user needs to rerun p4-traffictools. Note that this is a limitation of the target tools and p4-traffictools merely provides an option to choose the fixed length. 
+* **Variable Length Fields:** Since there is limited support  available (and/or inconvenience of use) for variable length fields with Scapy, PcapPlusPlus and Wireshark Lua dissector, the tool prompts the user to enter the length of a variable length field when it detects one. This length should be a multiple of 8 to ensure that the header is byte aligned.
+  * A fixed length field would be produced for the current run of p4-traffictools for Scapy, PcapPlusPlus and Wireshark Lua dissector. In order to modify this length, the user needs to rerun p4-traffictools. Note that this is a limitation of the target tools and p4-traffictools merely provides an option to choose the fixed length. 
 
 ## Nuances
 While p4-traffictools works pretty well for most general cases, there are few tool-specific nuances and known issues. Please refer [Nuances.md](Nuances.md) for details.
