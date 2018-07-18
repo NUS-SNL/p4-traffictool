@@ -6,30 +6,40 @@
 
 ## Scapy
 
-[Scapy](https://scapy.net) is a powerful Python-based interactive packet manipulation program and library. The code generated for Scapy can be used for packet generation, dumping packets to pcap file or simply sending them on wire, as well as parsing and dissecting packets.
+[Scapy](https://scapy.net) is a powerful Python-based interactive packet manipulation program and library. The p4-traffictools generates code for Scapy such that your p4-defined protocol stack can be used in packet generation, packet capture, as well as parsing and dissecting packets (_on-wire_ or from a pcap file).
 
-1. Generate code for Scapy backend
+### Generating code for Scapy
+Use the top-level script of `p4-traffictools.sh` as following
+    
+```    
+./p4-traffictools.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --scapy
+```
+If standard headers (Ethernet, IPv4, etc.) are detected, the user will be asked if s/he wants to use Scapy's built-in headers instead of re-defining them.
+
+#### Generated Code
+The code for Scapy would be generated in the output directory inside a subdirectory "scapy". It consists of a single Python file which contains:
+  * Scapy class definitions for custom headers defined in the P4 program.
+  * Scapy bindings between standard and custom headers based on the parser defined in the P4 program.
+  * A list of all possible packet combinations using the defined headers.
+
+### Integration and Usage with Scapy
+1. In your Python code that uses Scapy, import the generated Python file using
     ```
-    ./p4-traffictools.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--scapy] [--debug]
+    from <filename> import *
     ```
 
-
-2. Import the generated code using
-    ```
-    from <package name> import *
-    ```
-
-3. Therafter, you can generate packets using standard Scapy format. For eg. you want to generate a packet with layer _foo_ followed by layer _bar_ with payload _"foobar"_ , then:
+2. Then, you can generate packets using standard Scapy format. For example, if you want to generate a packet with custom P4-defined layers _foo_ and _bar_ with payload _"foobar"_ , then:
     ```
     a = Foo()/Bar()/"foobar"
     ```
     will generate the required packet.
 
-4. Also you can access a list of possible packet combinations using the keyword *possible_packets*
-5. To send packets on the wire use send()/sendp() methods:
+3. Also you can access a list of possible packet combinations using the variable *possible_packets_*
+4. To send packets on the wire, use the `send()` or `sendp()` methods:
     ```
-    sendp(a,iface=<netdev interface>)
+    sendp(a, iface=<netdev interface>)
     ```
+5. For receiving or parsing packets, simply use the standard Scapy methods and it should now be able to recognize and show the custom P4-defined layers.
 
 ## PcapPlusPlus
 
