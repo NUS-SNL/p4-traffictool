@@ -134,12 +134,14 @@ if [ "$JSON_DETECT" = false ]; then
     # creates a temp folder with timestamp to hold json script and compiled binaries
     foldername="`date +%Y%m%d%H%M%S`";
     foldername="tempfolder_$foldername"
+    jsonname=$(basename -- "$P4_SOURCE")
+    jsonname="${jsonname%.*}.json"
     mkdir $foldername
     cd $foldername
 
     # p4 source compilation
     echo -e "----------------------------------\nCompiling p4 source ..."
-    p4c-bm2-ss --std $STANDARD -o alpha.json $P4_SOURCE 
+    p4c-bm2-ss --std $STANDARD -o $jsonname $P4_SOURCE 
     if [ $? != "0" ]; then
         echo "Compilation with p4c-bm2-ss failed...trying with p4c"
         p4c -S --std $STANDARD $P4_SOURCE 
