@@ -11,6 +11,7 @@ UDP_DETECT = False
 
 DEBUG = False
 
+# merges padding field with the next field
 def merge_padding(data):
     for header_type in data["header_types"]:
         temp_list=[header_type["fields"][0]]
@@ -361,7 +362,7 @@ except KeyError:
     local_name = sys.argv[1]
 local_name = local_name[local_name.rfind('/')+1:local_name.rfind('.')]
 
-
+# iterates over the headers which are relevant to packet generation, filters out standard headers
 for i in range(len(header_ports)):
     if ((ETHER_DETECT and header_ports[i]=='ethernet') or (IPv4_DETECT and header_ports[i]=='ipv4') or (IPv6_DETECT and header_ports[i]=='ipv6') or (TCP_DETECT and header_ports[i]=='tcp') or (UDP_DETECT and header_ports[i]=='udp')):
         continue
@@ -369,14 +370,3 @@ for i in range(len(header_ports)):
         header_ports[i] + ".lua"
     make_template(
         control_graph, header_ports[i], header_types[i], destination, header_ports)
-
-
-if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT):
-    next_layer = {}
-    for edge in control_graph:
-        if (edge[-1]!='final'):
-            if (edge[0] in next_layer):
-                next_layer[edge[0]].append(edge[-1])
-            else:
-                next_layer[edge[0]]=[edge[-1]]
-

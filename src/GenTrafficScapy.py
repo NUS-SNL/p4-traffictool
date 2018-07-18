@@ -356,6 +356,7 @@ def make_template(json_data, destination):
     except IOError:
         print("Destination file cannot be created\n")
         exit(0)
+
 try:
     local_name = data["program"]
 except KeyError:

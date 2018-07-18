@@ -11,10 +11,24 @@ UDP_DETECT = False
 
 DEBUG = False
 
+# merges padding field with the next field
+def merge_padding(data):
+    for header_type in data["header_types"]:
+        temp_list=[header_type["fields"][0]]
+        for i in range(1,len(header_type["fields"])):
+            if (temp_list[-1][0][:4]=="_pad"):
+                temp_list=temp_list[:-1]
+                temp_list.append([header_type["fields"][i][0], header_type["fields"][i-1][1]+header_type["fields"][i][1]])
+            else:
+                temp_list.append(header_type["fields"][i])
+        header_type["fields"] = temp_list
+    return data
+
+
 # open file to load json data
 # standardize destination path
 try:
-    data = json.load(open(sys.argv[1]))
+    data = merge_padding(json.load(open(sys.argv[1])))
     DESTINATION = sys.argv[2]
     if (DESTINATION[-1] != '/'):
         DESTINATION += '/'
@@ -165,6 +179,8 @@ def copy_template(fout):
     for i in l:
         fout.write(i)
 
+# returns suitable datatype for the field
+# currently promoting all fields to 8, 16, 32, or 64 bit fields
 def predict_type(field):
     if (field<=8):
         return "uint8_t"

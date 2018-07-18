@@ -4,6 +4,13 @@ import os
 
 DEBUG = False
 
+# to maintain compatibility
+global input
+try:
+    input = raw_input
+except NameError:
+    pass
+
 # open file to load json data
 # fix destination path
 try:
@@ -38,7 +45,7 @@ def remove_duplicates(li):
             
     return res
 
-
+# returns the name of state depending on what it extracts (if it does else simply return the name of state as mentioned in json)
 def valid_state_name(state):
     if len(state["parser_ops"]) > 0:
         if type(state["parser_ops"][0]["parameters"][0]["value"]) is list:
@@ -48,30 +55,26 @@ def valid_state_name(state):
     else:
         return state["name"]
 
-
+# searches state with the given name
 def search_state(parser, name):
     for state in parser["parse_states"]:
         if (state["name"] == name):
             return valid_state_name(state)
 
-
+# searches header_type with the given name
 def search_header_type(header_types, name):
     for header_type in header_types:
         if (header_type["name"] == name):
             return header_type
 
-
+# finds headers that are not part of metadata and return a pair of 
+# a. List of headers in the order in which they are defined
+# b. dictionary of header names and their types
 def find_data_headers(headers, header_types):
-
     header_ports = []
     header_dict = {}
 
     for header_id in range(len(headers)):
-        global input
-        try:
-            input = raw_input
-        except NameError:
-            pass
         if (headers[header_id]['metadata']) == False:
             name = headers[header_id]['name']
             if (name.find('[') != (-1)):
@@ -91,7 +94,8 @@ def find_data_headers(headers, header_types):
             print (header_ports[i], header_types[i]["name"])
     return (header_ports, header_types)
 
-
+# make a control graph for all possible state transitions
+# returns the list of edges in graph
 def make_control_graph(parsers):
     graph = []
     for parser in parsers:
@@ -120,7 +124,7 @@ def make_control_graph(parsers):
             print(i)
     return graph
 
-
+# makes the actual lua script given the relevant header type and next and previous state transition information
 def make_template(control_graph, header, header_type, destination, header_ports):
     fout = open(destination, 'w')
     header_lower = "p4_"+header.lower()
