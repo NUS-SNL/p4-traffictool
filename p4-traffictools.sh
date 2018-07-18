@@ -11,6 +11,7 @@ usage(){
 }
 
 print_arguments(){
+    echo -e "------------------------------------"
     echo "P4_SOURCE $P4_SOURCE"
     echo "JSONSOURCE $JSONSOURCE"
     echo "SCAPY $SCAPY"
@@ -20,6 +21,8 @@ print_arguments(){
     echo "STANDARD $STANDARD"
     echo "DEBUG_MODE $DEBUG_MODE"
     echo "OUTPUT DIR $OUTPUT"
+    echo -e "------------------------------------\n"
+
 }
 
 
@@ -29,6 +32,7 @@ if ([[ "$#" == "0" ]]); then
 fi
 
 JSON_DETECT=false
+P4_DETECT=false
 OUT_DETECT=false
 SCAPY=false
 WIRESHARK=false
@@ -45,6 +49,7 @@ while test $# -gt 0; do
         -p4)
             shift
             if test $# -gt 0; then
+                P4_DETECT=true
                 P4_SOURCE=$(realpath $1)
                 shift    
             else
@@ -111,8 +116,18 @@ while test $# -gt 0; do
     esac
 done
 
-if [[ "$DEBUG_MODE"=true ]]; then
+if [[ "$DEBUG_MODE" = true ]]; then
     print_arguments
+fi
+
+if [[ "$SCAPY" = false  &&  "$MOONGEN" = false &&  "$PCAPPLUSPLUS" = false &&  "$WIRESHARK" = false ]] ; then
+    echo "No Target specified"
+    usage 2
+fi
+
+if [[ "$JSON_DETECT" = false && "$P4_DETECT" = false ]]; then
+    echo "No source specified"
+    usage 2
 fi
 
 if [ "$JSON_DETECT" = false ]; then
@@ -160,12 +175,10 @@ fi
 # DIR stores the path to p4-pktcodegen script, this is required for calling backend scripts
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" 
 
-TARGET_SPEC=0
 # running backend scripts
 if [[ "$SCAPY" = true ]];then
     temp="$OUTPUT/scapy"
     echo "Running Scapy backend script"
-    TARGET_SPEC=1
     mkdir -p $temp
     python $DIR/src/GenTrafficScapy.py $JSONSOURCE $temp $DEBUG_MODE
     echo -e "------------------------------------\n"
@@ -173,7 +186,6 @@ fi
 if [[ "$WIRESHARK" = true ]];then
     temp="$OUTPUT/lua_dissector"
     echo "Running Lua dissector backend script"
-    TARGET_SPEC=1
     mkdir -p $temp
     python $DIR/src/DissectTrafficLua.py $JSONSOURCE $temp $DEBUG_MODE
     echo -e "------------------------------------\n"
@@ -181,7 +193,6 @@ fi
 if [[ "$MOONGEN" = true ]];then
     temp="$OUTPUT/moongen"
     echo "Running MoonGen backend script"
-    TARGET_SPEC=1
     mkdir -p $temp
     python $DIR/src/GenTrafficMoonGen.py $JSONSOURCE $temp $DEBUG_MODE
     echo -e "------------------------------------\n"
@@ -189,14 +200,9 @@ fi
 if [[ "$PCAPPLUSPLUS" = true ]];then
     temp="$OUTPUT/pcapplusplus"
     echo "Running PcapPlusPlus backend script"
-    TARGET_SPEC=1
     mkdir -p $temp
     python $DIR/src/DissectTrafficPcap.py $JSONSOURCE $temp $DEBUG_MODE
     echo -e "------------------------------------\n"
-fi
-if (("$TARGET_SPEC"!=1)); then
-    echo "No target specified"
-    usage 2
 fi
 
 # remove tempfolder created
