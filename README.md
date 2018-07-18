@@ -31,22 +31,21 @@ For usage with a P4 source file, use the top-level script _p4-traffictools.sh_ a
 ```
 ./p4-traffictools.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--scapy] [--wireshark] [--moongen] [--pcpp] [--debug]
 ```
-
-* output directory path: If not specified, the default output directory is the same directory as the P4/json input file.
-* standard: If not specified then p4-16 is taken up as the default standard
-* target tool(s): At least one of `--scapy` `--wireshark` `--moongen` `--pcpp` needs to be specified. 
+* **Inputs:** Exactly one of `-p4 <path to p4 source>` or `-json <path to json description>` should be specified.
+* **Output directory path:** If not specified, the default output directory is the same directory as the P4/json input file.
+* **P4 standard:** If not specified, then p4-16 is taken up as the default standard.
+* **Target tool(s):** At least one of `--scapy` `--wireshark` `--moongen` `--pcpp` needs to be specified. 
 
 The above command will generate output files for specified target tool(s). The output files for each target tool will be placed in a subdirectory inside the _output directory_.
 
+### Using the output files
+The generated output files need to be integrated with the correponding tool(s). See [ToolSpecificUsage.md](ToolSpecificUsage.md) for detailed steps.
 
 
 ### Additional User Inputs
 * **Standard headers:** If standard headers for common protocols such as Ethernet, IPv4, IPv6, TCP, and UDP are detected by p4-traffictools, it will prompt the user if s/he wishes to use the original header/protocol implementations provided by the tool(s) instead of generating new implementations for them. An exception for this is the code generated for the Wireshark Lua dissector (see more details in [Nuances.md](Nuances.md)).
-* **Variable Length Fields:** Since there is limited support  available (and/or inconvenience of use) for variable length fields with Scapy, PcapPlusPlus and Lua based Wireshark diseector, the tool prompts the use to enter the length of variable length field when it detects one. This length should be a multiple of 8 to ensure that the header is byte aligned, and the length will be fixed for the current test run. In order to modify this length user needs to rerun the code generation step.
-
-
-### Using the output files
-The generated output files need to be integrated with the correponding tool. See [ToolSpecificUsage.md](ToolSpecificUsage.md) for detailed steps.
+* **Variable Length Fields:** Since there is limited support  available (and/or inconvenience of use) for variable length fields with Scapy, PcapPlusPlus and Wireshark Lua diseector, the tool prompts the user to enter the length of a variable length field when it detects one. This length should be a multiple of 8 to ensure that the header is byte aligned.
+  * A fixed length field would be produced for the current run of p4-traffictools for Scapy, PcapPlusPlus and Wireshark Lua diseector. In order to modify this length, the user needs to rerun p4-traffictools. Note that this is a limitation of the target tools and p4-traffictools merely provides an option to choose the fixed length. 
 
 ## Nuances
 While p4-traffictools works pretty well for most general cases, there are few tool-specific nuances and known issues. Please refer [Nuances.md](Nuances.md) for details.
@@ -55,6 +54,4 @@ While p4-traffictools works pretty well for most general cases, there are few to
 ## Similar tools
 [p4pktgen](https://github.com/p4pktgen/p4pktgen) is closely related to p4-traffictools. But the target usecases for the two tools are completely different. p4pktgen is a tool that is focused more towards testing all possible packet header combinations, whereas p4-traffictools is a tool which provides auto-generated code which the user can plug into popular traffic generation and parsing tools.
 
-[P4 Wireshark Dissector](https://github.com/gnikol/P4-Wireshark-Dissector) also generates a Wireshark (Tshark) Lua dissector plugin for a given P4 program. However, it can only add layers on the top of the stack and doesn't provide any support to add layers one above another.
-
-` For eg. Suppose "foo" and "bar" are custom protocols. Then using this tool you would be able to send a packet of format Ethernet/IP/UDP/foo but not of type Ethernet/IP/UDP/foo/bar'
+[P4 Wireshark Dissector](https://github.com/gnikol/P4-Wireshark-Dissector) also generates a Wireshark (Tshark) Lua dissector plugin for a given P4 program. However, a custom P4-defined layer can only be the last layer in the protocol stack. As a result, it supports a single custom layer in the protocol stack at a time. For example, suppose "foo" and "bar" are custom layers. Then using P4 Wireshark Dissector, you would be able to parse a packet of format `Ethernet/IP/UDP/foo` or `Ethernet/IP/bar`, but not of the format `Ethernet/IP/UDP/foo/bar` or `Ethernet/foo/bar`.
