@@ -250,7 +250,7 @@ def host_network_conversion(field):
 # makes the actual lua script given the relevant header type and next and previous state transition information
 def make_template(control_graph, header, header_type, destination, header_ports):
     
-        headerUpper = header.upper()
+        headerUpper = header.lower()
         fout = open(destination,"w")
         fout.write("--Template for addition of new protocol '%s'\n\n" %(header))
         copy_template(fout)

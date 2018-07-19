@@ -138,11 +138,24 @@ A fixed length field would be produced for the current run of p4-traffictools. I
 
 #### Generated Code
 The code for Lua dissector would be generated in the output directory inside a subdirectory "lua_dissector". It consists of lua files corresponding to each protocol. Each file contains:
-    *  Header struct definition
-    *  Table definitions for the next layers (if the current layer is not the final layer)
-    *  Addition of the current layer to table definition of previous layer
+*  Header struct definition
+*  Table definitions for the next layers (if the current layer is not the final layer)
+*  Addition of the current layer to table definition of previous layer
+
+Apart from these, there would be a file named `init.lua` which contains the loading order of the script that needs to be followed to ensure that no conflicts arise in wireshark. 
 
 ### Integration and Usage with Wireshark (Tshark)
+
+#### Quick short term usage
+While running wireshark (or tshark) through command line just pass `-X lua_script:<path to the generated init.lua>` and you would be able to dissect the packets with your custom headers rightaway. e.g.
+    ```
+    wireshark -X lua_script:init.lua 
+    tshark -X lua_script:init.lua -r captured_packets.pcap -Tfields -e <field_name>
+    ```
+The first examples shows how to open wireshark with your custom plugins imported into it.
+The second example demonstrates extraction of a field values from the packets captured in a pcap file using tshark with your custom plugins enabled.
+
+#### Long term usage
 1. To register the protocol with Wireshark or Tshark you need access to the personal plugins folder of your Wireshark installation.
     To get a path to personal plugins folder open Wireshark, go to Help->About->Folders. 
     (If the given path doesn;t exist then create a plugins folder at the given path so that you can add personal plugins in the future).
