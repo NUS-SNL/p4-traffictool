@@ -238,6 +238,21 @@ def make_control_graph(parsers):
                         parser, state["transitions"][0]["next_state"])])
                 else:
                     graph.append([name, None, None, "final"])
+    for i in range(len(graph)):
+        edge=graph[i]
+        if (edge[0]=='ethernet' and ETHER_DETECT):
+            edge[1]='type'
+        elif (edge[0]=='ipv4' and IPv4_DETECT):
+            edge[1]='proto'
+        elif (edge[0]=='ipv6' and IPv6_DETECT):
+            edge[1]='nh'
+        elif (edge[0]=='tcp' and TCP_DETECT):
+            edge[1]='dport'
+        elif (edge[0]=='udp' and UDP_DETECT):
+            edge[1]='dport'
+        graph[i]=edge
+
+
     if (DEBUG):
         print("\nEdges in the control_graph\n")
         for i in graph:

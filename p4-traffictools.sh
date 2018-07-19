@@ -177,6 +177,11 @@ fi
 # DIR stores the path to p4-pktcodegen script, this is required for calling backend scripts
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" 
 
+if [[ "$DEBUG_MODE" = true ]]; then
+    DEBUG_MODE="-d"
+else
+    DEBUG_MODE=""
+fi
 # running backend scripts
 if [[ "$SCAPY" = true ]];then
     temp="$OUTPUT/scapy"

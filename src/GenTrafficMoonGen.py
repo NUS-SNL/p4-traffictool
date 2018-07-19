@@ -1,7 +1,7 @@
 import json
 import sys
 import os
-
+from tabulate import tabulate
 # global variables for common header types
 ETHER_DETECT = False
 IPv4_DETECT = False
@@ -351,8 +351,6 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 
         fout.close()
 
-
-
 control_graph = make_control_graph(data["parsers"])
 header_ports, header_types = find_data_headers(
     data["headers"], data["header_types"])
@@ -370,3 +368,27 @@ for i in range(len(header_ports)):
         header_ports[i] + ".lua"
     make_template(
         control_graph, header_ports[i], header_types[i], destination, header_ports)
+
+# next header addition info
+d={ 'ethernet':[],
+    'ipv4':[],
+    'ipv6':[],
+    'tcp':[],
+    'udp':[]
+    }
+
+for i in range(len(control_graph)):
+    edge=control_graph[i]
+    if ((edge[0]=='ethernet' and ETHER_DETECT) or (edge[0]=='ipv4' and IPv4_DETECT) or (edge[0]=='ipv6' and IPv6_DETECT) or (edge[0]=='tcp' and TCP_DETECT) or (edge[0]=='udp' and UDP_DETECT)):
+        d[edge[0]].append(edge[-1])
+
+def remove_headers(l):
+    l_dash=[]
+    for i in l:
+        if ((i=='final') or (i=='ethernet' and ETHER_DETECT) or (i=='ipv4' and IPv4_DETECT) or (i=='ipv6' and IPv6_DETECT) or (i=='tcp' and TCP_DETECT) or (i=='udp' and UDP_DETECT) ):
+            l_dash.append(i)
+    return l
+for k,v in d.iteritems():
+    d[k]=remove_headers(d[k])
+table=[[k,v] for k,v in d.iteritems() if len(v)>0]
+print tabulate(table, headers =['Standard headers used', 'Headers to be added in resolveNextHeader'])

@@ -12,7 +12,7 @@ UDP_DETECT = False
 DEBUG = False
 
 # merges padding field with the next field
-def merge_padding(data):
+def pre_processing_check(data):
     for header_type in data["header_types"]:
         temp_list=[header_type["fields"][0]]
         for i in range(1,len(header_type["fields"])):
@@ -28,7 +28,7 @@ def merge_padding(data):
 # open file to load json data
 # standardize destination path
 try:
-    data = merge_padding(json.load(open(sys.argv[1])))
+    data = pre_processing_check(json.load(open(sys.argv[1])))
     DESTINATION = sys.argv[2]
     if (DESTINATION[-1] != '/'):
         DESTINATION += '/'
@@ -361,3 +361,27 @@ if (DEBUG):
     print ("\nTables created\n")
     for i in tables_created:
         print (i)
+
+# next header addition info
+d={ 'ethernet':[],
+    'ipv4':[],
+    'ipv6':[],
+    'tcp':[],
+    'udp':[]
+    }
+
+for i in range(len(control_graph)):
+    edge=control_graph[i]
+    if ((edge[0]=='ethernet' and ETHER_DETECT) or (edge[0]=='ipv4' and IPv4_DETECT) or (edge[0]=='ipv6' and IPv6_DETECT) or (edge[0]=='tcp' and TCP_DETECT) or (edge[0]=='udp' and UDP_DETECT)):
+        d[edge[0]].append(edge[-1])
+
+def remove_headers(l):
+    l_dash=[]
+    for i in l:
+        if ((i=='final') or (i=='ethernet' and ETHER_DETECT) or (i=='ipv4' and IPv4_DETECT) or (i=='ipv6' and IPv6_DETECT) or (i=='tcp' and TCP_DETECT) or (i=='udp' and UDP_DETECT) ):
+            l_dash.append(i)
+    return l
+for k,v in d.iteritems():
+    d[k]=remove_headers(d[k])
+table=[[k,v] for k,v in d.iteritems() if len(v)>0]
+print tabulate(table, headers =['Standard headers used', 'Headers to be added in resolveNextHeader'])

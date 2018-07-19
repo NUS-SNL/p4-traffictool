@@ -25,6 +25,14 @@ Simply clone this repository. No other action is required.
 git clone https://github.com/djin31/p4-traffictools.git
 ```
 
+### Installation checks and tests (optional)
+To perform a sanity check that the code produced by the tool is compatible with the tools available on your system you can use `./runtests.sh`. It runs the tool with a sample p4 program and its corresponding json file to produce scapy codes and checks that they are equivalent.
+It then uses the generated scapy code to produce a pcap file `tests_data.pcap`. Then it generates the lua dissector and uses it with tshark to parse the pcap file and checks if the fields are parsed correctly.
+
+Fulfilling all the above required tests prints `Tests passed`. This ensures that the tool is compatible with the wireshark and scapy installation on your system.
+
+Use `./runtests.sh clean` to wipe out all the code and pcap file generated from the tests directory.
+
 ## Usage
 
 For usage with a P4 source file, use the top-level script _p4-traffictools.sh_ as following:
