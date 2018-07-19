@@ -182,6 +182,7 @@ if [[ "$DEBUG_MODE" = true ]]; then
 else
     DEBUG_MODE=""
 fi
+mkdir -p "$OUTPUT"
 # running backend scripts
 if [[ "$SCAPY" = true ]];then
     temp="$OUTPUT/scapy"

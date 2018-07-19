@@ -1,7 +1,7 @@
 import json
 import sys
 import os
-
+from tabulate import tabulate
 # global variables for common header types
 ETHER_DETECT = False
 IPv4_DETECT = False
@@ -140,6 +140,28 @@ def find_data_headers(headers, header_types):
         print("\nHeaders \n")
         for i in range(len(header_ports)):
             print (header_ports[i], header_types[i]["name"])
+
+    require_correction=[]
+    for i in range(len(header_types)):
+        if ((ETHER_DETECT and header_ports[i]=='ethernet') or (IPv4_DETECT and header_ports[i]=='ipv4') or (IPv6_DETECT and header_ports[i]=='ipv6') or (TCP_DETECT and header_ports[i]=='tcp') or (UDP_DETECT and header_ports[i]=='udp')):
+            continue
+        else:
+            header_type=header_types[i]
+            corrected_data = {"name":header_type["name"], "fields":[]}
+            for field in header_type["fields"]:
+                try:
+                    if (field[1]%8!=0):
+                        corrected_data["fields"].append(field[0])
+                except:
+                    pass
+            if len(corrected_data["fields"])>0:
+                require_correction.append(corrected_data)
+    if len(require_correction)>0:
+        for incorrect_header in require_correction:
+            print("Non byte-aligned fields found in %s" %(str(incorrect_header["name"])))
+            print("Correct the following fields to make them byte-aligned:")
+            print(map(str,incorrect_header["fields"]))
+        exit(1)
     return (header_ports, header_types)
 
 # make a control graph for all possible state transitions
@@ -378,9 +400,9 @@ for i in range(len(control_graph)):
 def remove_headers(l):
     l_dash=[]
     for i in l:
-        if ((i=='final') or (i=='ethernet' and ETHER_DETECT) or (i=='ipv4' and IPv4_DETECT) or (i=='ipv6' and IPv6_DETECT) or (i=='tcp' and TCP_DETECT) or (i=='udp' and UDP_DETECT) ):
+        if ((i=='final') or (i=='ethernet' and ETHER_DETECT) or (i=='ipv4' and IPv4_DETECT) or (i=='ipv6' and IPv6_DETECT) or (i=='tcp' and TCP_DETECT) or (i=='udp' and UDP_DETECT) )==False:
             l_dash.append(i)
-    return l
+    return l_dash
 for k,v in d.iteritems():
     d[k]=remove_headers(d[k])
 table=[[k,v] for k,v in d.iteritems() if len(v)>0]
