@@ -16,7 +16,7 @@ So whether behavioral (qualitative) testing on software targets (e.g. [bmv2](htt
 ## Getting Started
 ### Dependencies
 * **p4c compiler:** The input to p4-traffictools is the json file produced by the open-source p4c compiler, specifically the `p4c-bm2-ss` backend. Follow the instructions [here](https://github.com/p4lang/p4c) to install `p4c` and the `p4c-bm2-ss` backend. For the `p4c-bm2-ss` backend to compile correctly, you may need to install [behavioral model](https://github.com/p4lang/behavioral-model) first. Post installation, `p4c-bm2-ss` should be available in your _PATH_. 
-* **Python interpreter:** p4-traffictools is written in Python and can work with both Python2 and Python3. Most Linux distributions come preinstalled with either Python2 or Python3.
+* **Python interpreter:** p4-traffictools is written in Python and can work with both Python2 and Python3. Most Linux distributions come preinstalled with either Python2 or Python3. Required python packages: `json`, `sys`, `os`, `re` and `tabulate`. The first four are included in the standard python installation, you can install `tabulate` with `pip install tabulate`.
 * **Traffic Tools:** Since you are trying to install and use p4-traffictools, we assume you have the appropriate traffic generation/parsing tools for which you would be auto-generating the code. p4-traffictools currently supports code generation for [Scapy](https://scapy.net), [PcapPlusPlus](https://github.com/seladb/PcapPlusPlus), [MoonGen](https://github.com/emmericp/MoonGen/) and [Wireshark Dissector](https://wiki.wireshark.org/Lua/Dissectors).
 
 ### Installation
