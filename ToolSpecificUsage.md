@@ -9,7 +9,7 @@
 [Scapy](https://scapy.net) is a powerful Python-based interactive packet manipulation program and library. The p4-traffictools generates code for Scapy such that your p4-defined protocol stack can be used in packet generation, packet capture, as well as parsing and dissecting packets (_on-wire_ or from a pcap file).
 
 ### Generating code for Scapy
-Use the top-level script of `p4-traffictools.sh` as following
+Use the top-level script `p4-traffictools.sh` as following:
     
 ```    
 ./p4-traffictools.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --scapy 
@@ -47,35 +47,45 @@ The code for Scapy would be generated in the output directory inside a subdirect
 
 ## PcapPlusPlus
 
-[PcapPlusPlus](http://seladb.github.io/PcapPlusPlus-Doc) is a multiplatform C++ network sniffing and packet parsing and crafting framework. It provides a very fast and efficient method for crafting and parsing network packets.
+[PcapPlusPlus](http://seladb.github.io/PcapPlusPlus-Doc) is a multiplatform C++ network sniffing and packet parsing/crafting framework. It provides a very fast and efficient method for crafting and parsing network packets.
 
 ### Generating code for PcapPlusPlus
+Use the top-level script `p4-traffictools.sh` as following:
 ```
 ./p4-traffictools.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --pcpp 
 ```
 If standard headers (Ethernet, IPv4, etc.) are detected, the user will be asked if s/he wants to use PcapPlusPlus' built-in headers instead of re-defining them.
 
-The user would also be asked to specify the length of the variable length field (if any is used). This length should be a multiple of 8 to ensure that the header is byte aligned.
-A fixed length field would be produced for the current run of p4-traffictools. In order to modify this length, the user needs to rerun p4-traffictools. Note that this is a limitation of the target tool and p4-traffictools merely provides an option to choose the fixed length.
+The user would also be asked to specify the length of variable length field(s) (if any is used). This length should be a multiple of 8 to ensure that the header is byte aligned.
+A fixed length field would be produced for the current run of p4-traffictools. In order to modify this length, the user needs to rerun p4-traffictools. Note that this is a limitation of PcapPlusPlus and p4-traffictools merely provides an option to choose the fixed length.
 
 #### Generated Code
-The code for PcapPlusPlus would be generated in the output directory inside a subdirectory "pcapplusplus". It consists of header and cpp files defining classes for each protocol. The code contains:
-    *  Definition of the header struct
-    *  Getters and Setters for each field of the protocol
-    *  A function named parseNextLayer which determines the next header to be parsed depending on the value of the relevant field in the current protocol
+The code for PcapPlusPlus would be generated in the output directory inside a subdirectory "pcapplusplus". It consists of C++ header and source file(s) defining class(es) for custom P4-defined protocol header(s). The code contains:
+*  Definition of the header struct.
+*  Getters and Setters for each field of the header.
+*  A function named parseNextLayer which determines the next header to be parsed depending on the value of the "selector" field in the current header.
 
 ### Integration and Usage with PcapPlusPlus
-1. Add the new protocols generated to Packet++/header/ProtocolType.h
+1. Copy the header (.h) files of custom P4-defined protocol(s) to packet++/header directory and the C++ (.cpp) files to Packet++/source directory inside your PcapPlusPlus source tree.
 
-2. If you used any standard PcapPlusPlus headers then add the corresponding next layer headers to the parseNextLayer function of the standard header.
+2. If you have used any standard PcapPlusPlus headers (e.g. Ethernet, IPv4, etc.) and if any of the new custom headers are the "next" layers, then add the new custom headers to the `parseNextLayer` function of the standard header.
+   * For example, if a new custom header _foo_ appears after the Ethernet layer and is identified by etherType `0x123`, then add a new switch case inside the function `EthLayer::parseNextLayer()` in Packet++/src/EthLayer.cpp. 
 
-3. Copy the header files of new protocols to packet++/header and the cpp files to Packet++/source
+3. [Optional] Add the newly generated protocol(s) to the `enum ProtocolType` inside Packet++/header/ProtocolType.h. Note that the `enum ProtocolType` specifies a separate bit for each protocol. This step is necessary if you planning to parse PcapPlusPlus' "rawPacket" partially upto a certain protocol layer.
+   * For example, a function call like `pcpp::Packet parsedPacket(&rawPacket, pcpp::FOO);` will parse only until the protocol _foo_. Here `pcpp::FOO` comes from the `enum ProtocolType`.
 
-4. TODO
+4. Now recompile PcapPlusPlus and also install it (if you are accessing it from a central location):
+```
+make clean
+make all [-j4]
+sudo make install
+```
+
+5. For using the new P4-defined layers in your PcapPlusPlus "application", simply include the header (.h) files of the required layer(s) in your C++ program and call the constructor, getters, setters, etc. in the usual way of using PcapPlusPlus.
 
 ## MoonGen
 
-[MoonGen](https://github.com/emmericp/MoonGen) is a scriptable high-speed packet generator built on libmoon. The whole load generator is controlled by a Lua script: all packets that are sent are crafted by a user-provided script.
+[MoonGen](https://github.com/emmericp/MoonGen) is a Lua-based high-speed packet generator.
 
 ### Generating code for MoonGen
 ```
@@ -84,39 +94,37 @@ The code for PcapPlusPlus would be generated in the output directory inside a su
 If standard headers (Ethernet, IPv4, etc.) are detected, the user will be asked if s/he wants to use MoonGen's built-in headers instead of re-defining them.
 
 #### Generated Code
-The code for MoonGen would be generated in the output directory inside a subdirectory "moongen". It consists of files corresponding to each protocol. Each file contains:
-    *  Struct definitions for 24, 40 and 48 bits fields
-    *  Header struct definition
-    *  Getters, Setters and String function for each field of the protocol
-    *  A function named resolveNextHeader which determines the next header to be parsed depending on the value of the relevant field in the current protocol
+The code for MoonGen would be generated in the output directory inside a subdirectory "moongen". It consists of Lua files corresponding to each protocol (header). Each file contains:
+*  Struct definitions for 24, 40 and 48 bits fields.
+*  Header struct definition.
+*  Getters, Setters and String function for each field of the protocol.
+*  A function named `resolveNextHeader` which determines the next header to be parsed depending on the value of the "selector" field in the current protocol.
 
 ### Integration and Usage with MoonGen
-1. Copy the new protocol files to MoonGen/libmoon/lua/proto/    
+1. Copy the newly generated protocol files (Lua files) to MoonGen/libmoon/lua/proto/    
 
-2. If you used any default headers then add the corresponding next layer headers to the resolveNextHeader function of the default header.
-    ```
-    Let's say you wanted to add protocol 'foo' on top of standard UDP layer. 
-    Then you need to modify MoonGen/libmoon/lua/proto/udp.lua so that foo gets recognised while parsing udp packet.
-    Search for the function resolveNextHeader within udp.lua. Over that you will find a map mapNamePort, 
-    add FOO and the corresponding port number to this list.
-    ``` 
-3. Necessary changes to other files:
-    - MoonGen/libmoon/lua/packet.lua: register the packet header combinations using createStack function
-        ```
-        Say you want to add layer foo over UDP. 
-        Then inside packet.lua you need to define a getFooPacket function to generate a packet of foo protocol.
-        
-        pkt.getFooPacket = createStack("eth","ip4","udp","FOO")
-        ```
-        Apart from this you may need to incorporate following changes as well:
-        -  if the header has a length member, adapt packetSetLength; 
-        - if the packet has a checksum, adapt createStack (loop at end of function) and packetCalculateChecksums
+2. If you used any default headers then add the corresponding next layer headers to the `resolveNextHeader` function of the default header.
+   * Let's say you wanted to add protocol _foo_ on top of the standard UDP layer. Then you need to modify MoonGen/libmoon/lua/proto/udp.lua so that _foo_ gets recognized while parsing the UDP packet. Search for the function `resolveNextHeader` in the file udp.lua. Over that you will find a map `mapNamePort`. Add the pair `foo == udp.PORT_FOO` to the map. Here, `udp.PORT_FOO` is a constant defined in the same file (udp.lua).
+    
+3. In the file MoonGen/libmoon/lua/packet.lua, register the packet header combinations using the `createStack` function.
+   * Say you have defined the layer _foo_ over UDP. Then inside the file packet.lua you need to define a `getFooPacket` function to generate a packet of the _foo_ protocol:
+            ```
+            pkt.getFooPacket = createStack("eth","ip4","udp","FOO")
+            ```
+4. Additional changes in MoonGen/libmoon/lua/packet.lua may also be required:
+   * if the header has a length field that depends on the next layer's length, then adapt the function `packetSetLength` 
+   * if the packet has a checksum, adapt `createStack` (the loop at end of function `createStack`) and `packetCalculateChecksums`
 
-     - MoonGen/libmoon/lua/proto/proto.lua: add PROTO.lua to the list so it gets loaded
+5. Add your protocol to MoonGen/libmoon/lua/proto/proto.lua so that it gets loaded : 
      ```
-     proto.<PROTOCOL NAME> = require "proto.<file containing protocol(remove .lua)>"
+     proto.<protocol name> = require "proto.<file containing protocol without the .lua extension)>"
      ```
-4. Now you can run any of the example (or otherwise) scripts in MoonGen by using the function `get<ProtoName>Packet()` instead of the usual `getUdpPacket()`.
+   * For example, the _foo_ protocol could be added as following:
+     ```
+     proto.foo = require "proto.foo"
+     ```
+6. Now you can run any of the examples (or otherwise scripts) in MoonGen by using the function `get<ProtoName>Packet()` instead of the usual `getUdpPacket()`.
+   * For example, to get a packet of the protocol _foo_, use `getFooPacket()` which was defined in step #3 above.
 
 ## Wireshark (Tshark) Lua Dissector
 
