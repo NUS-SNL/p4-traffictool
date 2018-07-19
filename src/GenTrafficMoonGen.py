@@ -14,14 +14,18 @@ DEBUG = False
 # merges padding field with the next field
 def merge_padding(data):
     for header_type in data["header_types"]:
-        temp_list=[header_type["fields"][0]]
-        for i in range(1,len(header_type["fields"])):
-            if (temp_list[-1][0][:4]=="_pad"):
-                temp_list=temp_list[:-1]
-                temp_list.append([header_type["fields"][i][0], header_type["fields"][i-1][1]+header_type["fields"][i][1]])
-            else:
-                temp_list.append(header_type["fields"][i])
-        header_type["fields"] = temp_list
+        try:                                                        # try except added to prevent falling into error when scalars_0 has 0 fields
+            temp_list=[header_type["fields"][0]]
+            for i in range(1,len(header_type["fields"])):
+                if (temp_list[-1][0][:4]=="_pad"):
+                    temp_list=temp_list[:-1]
+                    temp_list.append([header_type["fields"][i][0], header_type["fields"][i-1][1]+header_type["fields"][i][1]])
+                else:
+                    temp_list.append(header_type["fields"][i])
+            header_type["fields"] = temp_list
+        except:
+            pass
+        
     return data
 
 # open file to load json data
@@ -32,9 +36,9 @@ try:
     if (DESTINATION[-1] != '/'):
         DESTINATION += '/'
 
-except IndexError:
-    print ("Incorrect argument specification")
-    exit(0)
+# except IndexError:
+#     print ("Incorrect argument specification")
+#     exit(0)
 except IOError:
     print ("Incorrect file specification")
     exit(0)

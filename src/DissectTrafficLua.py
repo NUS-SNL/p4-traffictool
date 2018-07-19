@@ -171,7 +171,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 
             fout.write("\t\tsubtree:add(%s_%s,tostring(buffer(%d,%d):bitfield(%d,%d)))\n" %(header_lower,field[0],bytefield1,bytefield2,bitfield1,bitfield2))
         except TypeError:
-            field[1] = int(input('Variable length field ' + field[0] + ' detected in ' + header + '. Enter its length\n'))
+            field[1] = int(input('Variable length field "' + field[0] + '" detected in "' + header + '". Enter its length\n'))
             bitfield1, bitfield2 = bit_count, field[1]      
             bytefield1, bytefield2 = byte_count, int((bit_count + field[1])/8)
             if (field[0]==next_state_key):

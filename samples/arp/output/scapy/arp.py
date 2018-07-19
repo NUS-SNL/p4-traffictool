@@ -4,49 +4,49 @@ from scapy.all import *
 class Ethernet(Packet):
 	name = 'ethernet'
 	fields_desc = [
-		XBitField(dstAddr, 0, 48),
-		XBitField(srcAddr, 0, 48),
-		ShortField(etherType, 0),
+		XBitField('dstAddr', 0, 48),
+		XBitField('srcAddr', 0, 48),
+		XShortField('etherType', 0),
 	]
 class Arp(Packet):
 	name = 'arp'
 	fields_desc = [
-		ShortField(htype, 0),
-		ShortField(ptype, 0),
-		ByteField(hlen, 0),
-		ByteField(plen, 0),
-		ShortField(oper, 0),
+		XShortField('htype', 0),
+		XShortField('ptype', 0),
+		XByteField('hlen', 0),
+		XByteField('plen', 0),
+		XShortField('oper', 0),
 	]
 class Arp_ipv4(Packet):
 	name = 'arp_ipv4'
 	fields_desc = [
-		XBitField(sha, 0, 48),
-		IntField(spa, 0),
-		XBitField(tha, 0, 48),
-		IntField(tpa, 0),
+		XBitField('sha', 0, 48),
+		XLongField('spa', 0),
+		XBitField('tha', 0, 48),
+		XLongField('tpa', 0),
 	]
 class Ipv4(Packet):
 	name = 'ipv4'
 	fields_desc = [
-		XBitField(version, 0, 4),
-		XBitField(ihl, 0, 4),
-		ByteField(diffserv, 0),
-		ShortField(totalLen, 0),
-		ShortField(identification, 0),
-		XBitField(flags, 0, 3),
-		XBitField(fragOffset, 0, 13),
-		ByteField(ttl, 0),
-		ByteField(protocol, 0),
-		ShortField(hdrChecksum, 0),
-		IntField(srcAddr, 0),
-		IntField(dstAddr, 0),
+		XBitField('version', 0, 4),
+		XBitField('ihl', 0, 4),
+		XByteField('diffserv', 0),
+		XShortField('totalLen', 0),
+		XShortField('identification', 0),
+		XBitField('flags', 0, 3),
+		XBitField('fragOffset', 0, 13),
+		XByteField('ttl', 0),
+		XByteField('protocol', 0),
+		XShortField('hdrChecksum', 0),
+		XLongField('srcAddr', 0),
+		XLongField('dstAddr', 0),
 	]
 class Icmp(Packet):
 	name = 'icmp'
 	fields_desc = [
-		ByteField(type, 0),
-		ByteField(code, 0),
-		ShortField(checksum, 0),
+		XByteField('type', 0),
+		XByteField('code', 0),
+		XShortField('checksum', 0),
 	]
 
 ##bindings
@@ -56,7 +56,7 @@ bind_layers(Arp, Arp_ipv4, htype = 0x000108000604)
 bind_layers(Ipv4, Icmp, protocol = 0x01)
 
 ##packet_list
-possible_packets = [
+possible_packets_ = [
 	(Ethernet()),
 	(Ethernet()/Ipv4()),
 	(Ethernet()/Arp()),

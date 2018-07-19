@@ -12,23 +12,27 @@ UDP_DETECT = False
 DEBUG = False
 
 # merges padding field with the next field
-def pre_processing_check(data):
+def merge_padding(data):
     for header_type in data["header_types"]:
-        temp_list=[header_type["fields"][0]]
-        for i in range(1,len(header_type["fields"])):
-            if (temp_list[-1][0][:4]=="_pad"):
-                temp_list=temp_list[:-1]
-                temp_list.append([header_type["fields"][i][0], header_type["fields"][i-1][1]+header_type["fields"][i][1]])
-            else:
-                temp_list.append(header_type["fields"][i])
-        header_type["fields"] = temp_list
+        try:                                                        # try except added to prevent falling into error when scalars_0 has 0 fields
+            temp_list=[header_type["fields"][0]]
+            for i in range(1,len(header_type["fields"])):
+                if (temp_list[-1][0][:4]=="_pad"):
+                    temp_list=temp_list[:-1]
+                    temp_list.append([header_type["fields"][i][0], header_type["fields"][i-1][1]+header_type["fields"][i][1]])
+                else:
+                    temp_list.append(header_type["fields"][i])
+            header_type["fields"] = temp_list
+        except:
+            pass
+        
     return data
 
 
 # open file to load json data
 # standardize destination path
 try:
-    data = pre_processing_check(json.load(open(sys.argv[1])))
+    data = merge_padding(json.load(open(sys.argv[1])))
     DESTINATION = sys.argv[2]
     if (DESTINATION[-1] != '/'):
         DESTINATION += '/'
@@ -271,7 +275,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         try:
             fout_header.write("\t\t%s \t %s;\n" %(predict_type(field[1]),field[0]))
         except TypeError:
-            field[1] = int(input('Variable length field ' + field[0] + ' detected in ' + header + '. Enter its length\n'))
+            field[1] = int(input('Variable length field "' + field[0] + '" detected in "' + header + '". Enter its length\n'))
             fout_header.write("\t\t%s \t %s;\n" %(predict_type(field[1]),field[0]))
     
     fout_header.write("\t};\n\n")
