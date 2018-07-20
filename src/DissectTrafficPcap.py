@@ -267,7 +267,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_header.write("#ifndef %s\n" %("P4_"+header.upper()+"_LAYER"))
     fout_header.write("#define %s\n\n" %("P4_"+header.upper()+"_LAYER"))
     fout_header.write("#include \"Layer.h\"\n")
-    fout_header.write("#ifdef defined(WIN32) || defined(WINx64)\n#include <winsock2.h>\n#elif LINUX\n#include <in.h>\n#endif\n\n")
+    fout_header.write("#if defined(WIN32) || defined(WINx64)\n#include <winsock2.h>\n#elif LINUX\n#include <in.h>\n#endif\n\n")
     fout_header.write("namespace pcpp{\n\t#pragma pack(push,1)\n")
     fout_header.write("\tstruct %s{\n" %(header.lower()+"hdr"))
     
@@ -302,7 +302,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_header.close()
 
     fout_source.write("#define LOG_MODULE PacketLogModule%sLayer\n\n" %(header.capitalize()))
-    fout_source.write("#include \"%sLayer.h\"\n" %(header.capitalize()))
+    fout_source.write("#include \"%s.h\"\n" %(destination[destination.rfind('/')+1:]))
     fout_source.write("#include \"PayloadLayer.h\"\n#include \"IpUtils.h\"\n#include \"Logger.h\"\n")
     fout_source.write("#include <string.h>\n#include <sstream>\n#include <endian.h>\n\n")
     fout_source.write("namespace pcpp{\n")
@@ -320,7 +320,9 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         fout_source.write("\tvoid %sLayer::set%s(%s value){\n" %(header.capitalize(), str(field[0]).capitalize(), predict_input_type(field[1])))
         fout_source.write("\t\t%shdr* hdrdata = (%shdr*)m_Data;\n" %(header.lower(),header.lower()))
         if (field[1]==24 or field[1]==40 or field[1]==48):
-            fout_source.write("\t\tUINT%d_SET(value,hdrdata->%s);\n"%(field[1],field[0]))
+            fout_source.write("\t\tUINT%d_HTON(value,hdrdata->%s);\n"%(field[1],field[0]))
+        else:
+            fout_source.write("\t\thdrdata->%s = %s(%s);\n" %(field[0],host_network_conversion(field), field[0]))
         fout_source.write("\t}\n")
        
     default_next_transition = None
@@ -357,9 +359,10 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         if (default_next_transition!=None):
             fout_source.write("\t\telse\n")
             if (default_next_transition=="final"):
-                fout_source.write("\t\t\tm_NextLayer = new PayloadLayer(m_Data + sizeof(%shdr), m_DataLen - sizeof(%shdr), this, m_Packet);\n\t}\n" %(header.lower(),header.lower()))
+                fout_source.write("\t\t\tm_NextLayer = new PayloadLayer(m_Data + sizeof(%shdr), m_DataLen - sizeof(%shdr), this, m_Packet);\n" %(header.lower(),header.lower()))
             else:
-                fout_source.write("\t\t\tm_NextLayer = new default_next_transition(m_Data + sizeof(%shdr), m_DataLen - sizeof(%shdr), this, m_Packet);\n\t}\n" %(header.lower(),header.lower()))
+                fout_source.write("\t\t\tm_NextLayer = new default_next_transition(m_Data + sizeof(%shdr), m_DataLen - sizeof(%shdr), this, m_Packet);\n" %(header.lower(),header.lower()))
+    fout_source.write("\t}\n")
 
     fout_source.write("\n\tstd::string %sLayer::toString(){}\n\n" %(header.capitalize()))
     fout_source.write("}")
@@ -405,7 +408,7 @@ def remove_headers(l):
     l_dash=[]
     for i in l:
         if ((i=='final') or (i=='ethernet' and ETHER_DETECT) or (i=='ipv4' and IPv4_DETECT) or (i=='ipv6' and IPv6_DETECT) or (i=='tcp' and TCP_DETECT) or (i=='udp' and UDP_DETECT) )==False:
-            l_dash.append(i)
+            l_dash.append(str(i))
     return l_dash
 for k,v in d.iteritems():
     d[k]=remove_headers(d[k])

@@ -412,7 +412,7 @@ def remove_headers(l):
     l_dash=[]
     for i in l:
         if ((i=='final') or (i=='ethernet' and ETHER_DETECT) or (i=='ipv4' and IPv4_DETECT) or (i=='ipv6' and IPv6_DETECT) or (i=='tcp' and TCP_DETECT) or (i=='udp' and UDP_DETECT) )==False:
-            l_dash.append(i)
+            l_dash.append(str(i))
     return l_dash
 for k,v in d.iteritems():
     d[k]=remove_headers(d[k])
