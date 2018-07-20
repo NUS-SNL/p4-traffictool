@@ -71,8 +71,7 @@ The code for PcapPlusPlus would be generated in the output directory inside a su
 2. If you have used any standard PcapPlusPlus headers (e.g. Ethernet, IPv4, etc.) and if any of the new custom headers are the "next" layers, then add the new custom headers to the `parseNextLayer` function of the standard header.
    * For example, if a new custom header _foo_ appears after the Ethernet layer and is identified by etherType `0x123`, then add a new switch case inside the function `EthLayer::parseNextLayer()` in Packet++/src/EthLayer.cpp. 
 
-3. [Optional] Add the newly generated protocol(s) to the `enum ProtocolType` inside Packet++/header/ProtocolType.h. Note that the `enum ProtocolType` specifies a separate bit for each protocol. This step is necessary if you planning to parse PcapPlusPlus' "rawPacket" partially upto a certain protocol layer.
-   * For example, a function call like `pcpp::Packet parsedPacket(&rawPacket, pcpp::FOO);` will parse only until the protocol _foo_. Here `pcpp::FOO` comes from the `enum ProtocolType`.
+3. Add the newly generated protocol(s) to the `enum ProtocolType` inside Packet++/header/ProtocolType.h. The `enum ProtocolType` specifies a separate bit for each protocol. So if the already defined last protocol in the `enum ProtocolType` has value 0x20000000, then to add a newly generated protocol _foo_, add `P4_FOO = 0x40000000` to the enum.
 
 4. Now recompile PcapPlusPlus and also install it (if you are accessing it from a central location):
 ```
