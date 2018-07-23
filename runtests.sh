@@ -33,6 +33,7 @@ if [[ "$foo" = "2048" ]]; then
 	echo "Tests passed"
 else
 	echo "Could not parse correctly with lua_dissector"
+	exit 1
 fi
 rm -r scapy
 rm basic_tunnel.py

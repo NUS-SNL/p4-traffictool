@@ -162,7 +162,7 @@ def find_data_headers(headers, header_types):
                 require_correction.append(corrected_data)
     if len(require_correction)>0:
         for incorrect_header in require_correction:
-            print("Non byte-aligned fields found in %s" %(str(incorrect_header["name"])))
+            print("ERROR: Non byte-aligned fields found in %s" %(str(incorrect_header["name"])))
             print("Correct the following fields to make them byte-aligned:")
             print(map(str,incorrect_header["fields"]))
         exit(1)

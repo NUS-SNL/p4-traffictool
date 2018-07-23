@@ -3,6 +3,7 @@ import sys
 import os
 
 DEBUG = False
+MAX_PATH_LENGTH = 10
 
 # to maintain compatibility
 global input
@@ -82,7 +83,7 @@ def find_data_headers(headers, header_types):
             header_ports.append(name)
             header_dict[name] = search_header_type(
                 header_types, headers[header_id]["header_type"])
-    header_ports = remove_duplicates(header_ports)
+    
 
     header_types = []
     for i in header_ports:
@@ -124,6 +125,39 @@ def make_control_graph(parsers):
             print(i)
     return graph
 
+# find all possible header orderings that are valid
+def possible_paths(init, control_graph, length_till_now):
+    if (init == 'final'):
+        return [['final']]
+    if (length_till_now == MAX_PATH_LENGTH):
+        return []
+    temp = []
+    possible_stops = [i[-1] for i in control_graph if i[0] == init]
+    paths = []
+    for i in possible_stops:
+        temp += (possible_paths(i, control_graph, length_till_now+1))
+    for i in temp:
+        paths.append([init] + i)
+    return paths
+
+def topo_sort_headers(control_graph, header_ports, header_types):
+    paths = possible_paths('ethernet', control_graph, 0)
+    h_ports={}
+    for i in range(len(header_ports)):
+        h_ports[header_ports[i]]=header_types[i]
+    mega_path = []
+    for path in paths:
+        mega_path+=path
+    mega_path=remove_duplicates(mega_path)
+    
+    sorted_header_ports = []
+    sorted_header_types = []
+    for i in mega_path:
+        if i in h_ports:
+            sorted_header_ports.append(i)
+            sorted_header_types.append(h_ports[i])
+    return (sorted_header_ports,sorted_header_types)
+    
 # makes the actual lua script given the relevant header type and next and previous state transition information
 def make_template(control_graph, header, header_type, destination, header_ports):
     fout = open(destination, 'w')
@@ -214,6 +248,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 
 control_graph = make_control_graph(data["parsers"])
 header_ports, header_types = find_data_headers(data["headers"], data["header_types"])
+header_ports, header_types = topo_sort_headers(control_graph, header_ports, header_types)
 fout = open(DESTINATION+"init.lua",'w')
 try:
 	local_name = data["program"]
