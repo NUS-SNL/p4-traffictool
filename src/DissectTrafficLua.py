@@ -202,6 +202,8 @@ def make_template(control_graph, header, header_type, destination, header_ports)
             if (field[1]%8!=0):
                 bytefield2+=1
             bit_count = (bit_count + field[1])%8
+            if (bytefield2>((field[1])/8+1)):
+                bytefield2=(field[1])/8+1
 
             fout.write("\t\tsubtree:add(%s_%s,tostring(buffer(%d,%d):bitfield(%d,%d)))\n" %(header_lower,field[0],bytefield1,bytefield2,bitfield1,bitfield2))
         except TypeError:
@@ -214,6 +216,8 @@ def make_template(control_graph, header, header_type, destination, header_ports)
             if (field[1]%8!=0):
                 bytefield2+=1
             bit_count = (bit_count + field[1])%8
+            if (bytefield2>((field[1])/8+1)):
+                bytefield2=(field[1])/8+1
 
             fout.write("\t\tsubtree:add(%s_%s,tostring(buffer(%d,%d):bitfield(%d,%d)))\n" %(header_lower,field[0],bytefield1,bytefield2,bitfield1,bitfield2))
             
