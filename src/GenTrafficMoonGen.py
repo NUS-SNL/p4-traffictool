@@ -371,7 +371,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         fout.write("\n-----------------------------------------------------\n")
         fout.write("---- Metatypes")
         fout.write("\n-----------------------------------------------------\n")
-        fout.write("ffi.metatype('union bitfield_24',bitfield24)\nffi.metatype('union bitfield_40',bitfield40)\nffi.metatype('union bitfield_48',bitfield48)")
+        fout.write("ffi.metatype('union bitfield_24',bitfield24)\nffi.metatype('union bitfield_40',bitfield40)\nffi.metatype('union bitfield_48',bitfield48)\n")
         fout.write("%s.metatype = %sHeader\n" %(headerUpper, headerUpper))
         fout.write("\nreturn %s" %(headerUpper))
 
