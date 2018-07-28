@@ -66,21 +66,23 @@ The code for PcapPlusPlus would be generated in the output directory inside a su
 *  A function named parseNextLayer which determines the next header to be parsed depending on the value of the "selector" field in the current header.
 
 ### Integration and Usage with PcapPlusPlus
-1. Copy the header (.h) files of custom P4-defined protocol(s) to packet++/header directory and the C++ (.cpp) files to Packet++/source directory inside your PcapPlusPlus source tree.
+1. Copy the files `uint24_t.h`,`uint40_t.h` and `uint48_t.h` present in the `templates` directory of the tool to `packet++/header` inside you PcapPlusPlus source tree. These files contain definitions for 24, 40 and 48 bit datatypes.
 
-2. If you have used any standard PcapPlusPlus headers (e.g. Ethernet, IPv4, etc.) and if any of the new custom headers are the "next" layers, then add the new custom headers to the `parseNextLayer` function of the standard header.
+2. Copy the header (.h) files of custom P4-defined protocol(s) to packet++/header directory and the C++ (.cpp) files to Packet++/source directory inside your PcapPlusPlus source tree.
+
+3. If you have used any standard PcapPlusPlus headers (e.g. Ethernet, IPv4, etc.) and if any of the new custom headers are the "next" layers, then add the new custom headers to the `parseNextLayer` function of the standard header.
    * For example, if a new custom header _foo_ appears after the Ethernet layer and is identified by etherType `0x123`, then add a new switch case inside the function `EthLayer::parseNextLayer()` in Packet++/src/EthLayer.cpp. 
 
-3. Add the newly generated protocol(s) to the `enum ProtocolType` inside Packet++/header/ProtocolType.h. The `enum ProtocolType` specifies a separate bit for each protocol. So if the already defined last protocol in the `enum ProtocolType` has value 0x20000000, then to add a newly generated protocol _foo_, add `P4_FOO = 0x40000000` to the enum.
+4. Add the newly generated protocol(s) to the `enum ProtocolType` inside Packet++/header/ProtocolType.h. The `enum ProtocolType` specifies a separate bit for each protocol. So if the already defined last protocol in the `enum ProtocolType` has value 0x20000000, then to add a newly generated protocol _foo_, add `P4_FOO = 0x40000000` to the enum.
 
-4. Now recompile PcapPlusPlus and also install it (if you are accessing it from a central location):
+5. Now recompile PcapPlusPlus and also install it (if you are accessing it from a central location):
 ```
 make clean
 make all [-j4]
 sudo make install
 ```
 
-5. For using the new P4-defined layers in your PcapPlusPlus "application", simply include the header (.h) files of the required layer(s) in your C++ program and call the constructor, getters, setters, etc. in the usual way of using PcapPlusPlus.
+6. For using the new P4-defined layers in your PcapPlusPlus application", simply include the header (.h) files of the required layer(s) in your C++ program and call the constructor, getters, setters, etc. in the usual way of using PcapPlusPlus.
 
 ## MoonGen
 

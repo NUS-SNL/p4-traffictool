@@ -105,34 +105,34 @@ def find_data_headers(headers, header_types):
                 temp = input().strip()
                 if (temp == 'y'):
                     ETHER_DETECT = True
-                    print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/EthLayer.cpp\n")
+                    #print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/EthLayer.cpp\n")
             elif (name=='ipv4'):
                 print("\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ")
                 temp = input().strip()
                 if (temp == 'y'):
                     IPv4_DETECT = True
-                    print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/IPv4Layer.cpp\n")
+                    #print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/IPv4Layer.cpp\n")
 
             elif (name=='ipv6'):
                 print("\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ")
                 temp = input().strip()
                 if (temp == 'y'):
                     IPv6_DETECT = True
-                    print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/IPv6Layer.cpp\n")
+                    #print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/IPv6Layer.cpp\n")
 
             elif (name=='tcp'):
                 print("\nTCP header detected, would you like the standard TCP header to be used(y/n) : ")
                 temp = input().strip()
                 if (temp == 'y'):
                     TCP_DETECT = True
-                    print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/TcpLayer.cpp\n")
+                    #print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/TcpLayer.cpp\n")
 
             elif (name=='udp'):
                 print("\nUDP header detected, would you like the standard UDP header to be used(y/n) :")
                 temp = input().strip()
                 if (temp == 'y'):
                     UDP_DETECT = True
-                    print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/UdpLayer.cpp\n")
+                    #print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/UdpLayer.cpp\n")
 
     header_ports = list(set(header_ports))
 
@@ -363,6 +363,9 @@ def make_template(control_graph, header, header_type, destination, header_ports)
                 fout_source.write("\t\t\tm_NextLayer = new PayloadLayer(m_Data + sizeof(%shdr), m_DataLen - sizeof(%shdr), this, m_Packet);\n" %(header.lower(),header.lower()))
             else:
                 fout_source.write("\t\t\tm_NextLayer = new default_next_transition(m_Data + sizeof(%shdr), m_DataLen - sizeof(%shdr), this, m_Packet);\n" %(header.lower(),header.lower()))
+    else:
+        fout_source.write("\t\tm_NextLayer = new PayloadLayer(m_Data + sizeof(%shdr), m_DataLen - sizeof(%shdr), this, m_Packet);\n" %(header.lower(),header.lower()))
+
     fout_source.write("\t}\n")
 
     fout_source.write("\n\tstd::string %sLayer::toString(){ return ""; }\n\n" %(header.capitalize()))
@@ -400,6 +403,13 @@ d={ 'ethernet':[],
     'udp':[]
     }
 
+file_map = { 
+            'ethernet' : 'PcapPlusPlus/Packet++/src/EthLayer.cpp',
+            'ipv4' : 'PcapPlusPlus/Packet++/src/IPv4Layer.cpp',
+            'ipv6' : 'PcapPlusPlus/Packet++/src/IPv6Layer.cpp',
+            'tcp' : 'PcapPlusPlus/Packet++/src/TcpLayer.cpp',
+            'udp' : 'PcapPlusPlus/Packet++/src/UdpLayer.cpp'
+            }
 for i in range(len(control_graph)):
     edge=control_graph[i]
     if ((edge[0]=='ethernet' and ETHER_DETECT) or (edge[0]=='ipv4' and IPv4_DETECT) or (edge[0]=='ipv6' and IPv6_DETECT) or (edge[0]=='tcp' and TCP_DETECT) or (edge[0]=='udp' and UDP_DETECT)):
@@ -413,6 +423,6 @@ def remove_headers(l):
     return l_dash
 for k,v in d.iteritems():
     d[k]=remove_headers(d[k])
-table=[[k,v] for k,v in d.iteritems() if len(v)>0]
-print ("---------------------------------------------------------------------")
-print (tabulate(table, headers =['Standard headers used', 'Headers to be added in parseNextLayer']))
+table=[[file_map[k],v] for k,v in d.iteritems() if len(v)>0]
+print('\n')
+print (tabulate(table, headers =['Standard headers\' src file to be modified', 'Headers to be added in parseNextLayer']))

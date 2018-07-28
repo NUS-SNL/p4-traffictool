@@ -101,34 +101,34 @@ def find_data_headers(headers, header_types):
                 temp = input().strip()
                 if (temp == 'y'):
                     ETHER_DETECT = True
-                    print("\nAdd the next layers in the function resolveNextHeader of MoonGen/libmoon/lua/proto/ethernet.lua (if they are not default)\n")
+                    #print("\nAdd the next layers in the function resolveNextHeader of MoonGen/libmoon/lua/proto/ethernet.lua (if they are not default)\n")
             elif (name=='ipv4'):
                 print("\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ")
                 temp = input().strip()
                 if (temp == 'y'):
                     IPv4_DETECT = True
-                    print("\nAdd the next layers in the function resolveNextHeader of MoonGen/libmoon/lua/proto/ip4.lua (if they are not default)\n")
+                    #print("\nAdd the next layers in the function resolveNextHeader of MoonGen/libmoon/lua/proto/ip4.lua (if they are not default)\n")
 
             elif (name=='ipv6'):
                 print("\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ")
                 temp = input().strip()
                 if (temp == 'y'):
                     IPv6_DETECT = True
-                    print("\nAdd the next layers in the function resolveNextHeader of MoonGen/libmoon/lua/proto/ip6.lua (if they are not default)\n")
+                    #print("\nAdd the next layers in the function resolveNextHeader of MoonGen/libmoon/lua/proto/ip6.lua (if they are not default)\n")
 
             elif (name=='tcp'):
                 print("\nTCP header detected, would you like the standard TCP header to be used(y/n) : ")
                 temp = input().strip()
                 if (temp == 'y'):
                     TCP_DETECT = True
-                    print("\nAdd the next layers in the function resolveNextHeader of MoonGen/libmoon/lua/proto/tcp.lua (if they are not default)\n")
+                    #print("\nAdd the next layers in the function resolveNextHeader of MoonGen/libmoon/lua/proto/tcp.lua (if they are not default)\n")
 
             elif (name=='udp'):
                 print("\nUDP header detected, would you like the standard UDP header to be used(y/n) :")
                 temp = input().strip()
                 if (temp == 'y'):
                     UDP_DETECT = True
-                    print("\nAdd the next layers in the function resolveNextHeader of MoonGen/libmoon/lua/proto/udp.lua (if they are not default)\n")
+                    #print("\nAdd the next layers in the function resolveNextHeader of MoonGen/libmoon/lua/proto/udp.lua (if they are not default)\n")
 
     header_ports = list(set(header_ports))
 
@@ -403,6 +403,15 @@ d={ 'ethernet':[],
     'udp':[]
     }
 
+file_map = {
+            'ethernet' : 'MoonGen/libmoon/lua/proto/ethernet.lua',
+            'ipv4' : 'MoonGen/libmoon/lua/proto/ip4.lua',
+            'ipv6' : 'MoonGen/libmoon/lua/proto/ip6.lua',
+            'tcp' : 'MoonGen/libmoon/lua/proto/tcp.lua',
+            'udp' : 'MoonGen/libmoon/lua/proto/udp.lua'
+
+            }
+
 for i in range(len(control_graph)):
     edge=control_graph[i]
     if ((edge[0]=='ethernet' and ETHER_DETECT) or (edge[0]=='ipv4' and IPv4_DETECT) or (edge[0]=='ipv6' and IPv6_DETECT) or (edge[0]=='tcp' and TCP_DETECT) or (edge[0]=='udp' and UDP_DETECT)):
@@ -416,6 +425,6 @@ def remove_headers(l):
     return l_dash
 for k,v in d.iteritems():
     d[k]=remove_headers(d[k])
-table=[[k,v] for k,v in d.iteritems() if len(v)>0]
+table=[[file_map[k],v] for k,v in d.iteritems() if len(v)>0]
 print ("---------------------------------------------------------------------")
-print (tabulate(table, headers =['Standard headers used', 'Headers to be added in resolveNextHeader']))
+print (tabulate(table, headers =['Standard headers\' src file to be modified', 'Headers to be added in resolveNextHeader']))
