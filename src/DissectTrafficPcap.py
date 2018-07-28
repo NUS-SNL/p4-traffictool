@@ -267,6 +267,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_header.write("#ifndef %s\n" %("P4_"+header.upper()+"_LAYER"))
     fout_header.write("#define %s\n\n" %("P4_"+header.upper()+"_LAYER"))
     fout_header.write("#include \"Layer.h\"\n")
+    fout_header.write('#include "uint24_t.h"\n#include "uint40_t.h"\n#include "uint48_t.h"\n')
     fout_header.write("#if defined(WIN32) || defined(WINx64)\n#include <winsock2.h>\n#elif LINUX\n#include <in.h>\n#endif\n\n")
     fout_header.write("namespace pcpp{\n\t#pragma pack(push,1)\n")
     fout_header.write("\tstruct %s{\n" %(header.lower()+"hdr"))
@@ -294,7 +295,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_header.write("\n\t\t inline %shdr* get%sHeader() { return (%shdr*)m_Data; }\n\n" %(header.lower(), header.capitalize(), header.lower()))
     fout_header.write("\t\t void parseNextLayer();\n\n")
     fout_header.write("\t\t inline size_t getHeaderLen() { return sizeof(%shdr); }\n\n" %(header.lower()))
-    fout_header.write("\t\t void computeCalculateField() {}\n\n")
+    fout_header.write("\t\t void computeCalculateFields() {}\n\n")
     fout_header.write("\t\t std::string toString();\n\n")
     fout_header.write("\t\t OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }\n\n")
     fout_header.write("\t};\n")
@@ -322,7 +323,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         if (field[1]==24 or field[1]==40 or field[1]==48):
             fout_source.write("\t\tUINT%d_HTON(value,hdrdata->%s);\n"%(field[1],field[0]))
         else:
-            fout_source.write("\t\thdrdata->%s = %s(%s);\n" %(field[0],host_network_conversion(field), field[0]))
+            fout_source.write("\t\thdrdata->%s = %s(value);\n" %(field[0],host_network_conversion(field)))
         fout_source.write("\t}\n")
        
     default_next_transition = None
@@ -364,7 +365,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
                 fout_source.write("\t\t\tm_NextLayer = new default_next_transition(m_Data + sizeof(%shdr), m_DataLen - sizeof(%shdr), this, m_Packet);\n" %(header.lower(),header.lower()))
     fout_source.write("\t}\n")
 
-    fout_source.write("\n\tstd::string %sLayer::toString(){}\n\n" %(header.capitalize()))
+    fout_source.write("\n\tstd::string %sLayer::toString(){ return ""; }\n\n" %(header.capitalize()))
     fout_source.write("}")
 
 
@@ -413,4 +414,5 @@ def remove_headers(l):
 for k,v in d.iteritems():
     d[k]=remove_headers(d[k])
 table=[[k,v] for k,v in d.iteritems() if len(v)>0]
-print tabulate(table, headers =['Standard headers used', 'Headers to be added in resolveNextHeader'])
+print ("---------------------------------------------------------------------")
+print (tabulate(table, headers =['Standard headers used', 'Headers to be added in parseNextLayer']))

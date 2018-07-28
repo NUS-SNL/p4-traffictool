@@ -417,4 +417,5 @@ def remove_headers(l):
 for k,v in d.iteritems():
     d[k]=remove_headers(d[k])
 table=[[k,v] for k,v in d.iteritems() if len(v)>0]
-print tabulate(table, headers =['Standard headers used', 'Headers to be added in resolveNextHeader'])
+print ("---------------------------------------------------------------------")
+print (tabulate(table, headers =['Standard headers used', 'Headers to be added in resolveNextHeader']))
