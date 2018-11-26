@@ -98,11 +98,11 @@ end
 
 
 -----------------------------------------------------
----- ICMP header and constants 
+---- icmp header and constants 
 -----------------------------------------------------
-local ICMP = {}
+local icmp = {}
 
-ICMP.headerFormat = [[
+icmp.headerFormat = [[
 	uint8_t 	 type;
 	uint8_t 	 code;
 	uint16_t 	 checksum;
@@ -110,53 +110,53 @@ ICMP.headerFormat = [[
 
 
 -- variable length fields
-ICMP.headerVariableMember = nil
+icmp.headerVariableMember = nil
 
--- Module for ICMP_address struct
-local ICMPHeader = initHeader()
-ICMPHeader.__index = ICMPHeader
+-- Module for icmp_address struct
+local icmpHeader = initHeader()
+icmpHeader.__index = icmpHeader
 
 
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
-function ICMPHeader:getTYPE()
+function icmpHeader:getTYPE()
 	return (self.type)
 end
 
-function ICMPHeader:getTYPEstring()
+function icmpHeader:getTYPEstring()
 	return self:getTYPE()
 end
 
-function ICMPHeader:setTYPE(int)
+function icmpHeader:setTYPE(int)
 	int = int or 0
 	self.type = (int)
 end
 
 
-function ICMPHeader:getCODE()
+function icmpHeader:getCODE()
 	return (self.code)
 end
 
-function ICMPHeader:getCODEstring()
+function icmpHeader:getCODEstring()
 	return self:getCODE()
 end
 
-function ICMPHeader:setCODE(int)
+function icmpHeader:setCODE(int)
 	int = int or 0
 	self.code = (int)
 end
 
 
-function ICMPHeader:getCHECKSUM()
+function icmpHeader:getCHECKSUM()
 	return hton16(self.checksum)
 end
 
-function ICMPHeader:getCHECKSUMstring()
+function icmpHeader:getCHECKSUMstring()
 	return self:getCHECKSUM()
 end
 
-function ICMPHeader:setCHECKSUM(int)
+function icmpHeader:setCHECKSUM(int)
 	int = int or 0
 	self.checksum = hton16(int)
 end
@@ -167,9 +167,9 @@ end
 ---- Functions for full header
 -----------------------------------------------------
 -- Set all members of the PROTO header
-function ICMPHeader:fill(args,pre)
+function icmpHeader:fill(args,pre)
 	args = args or {}
-	pre = pre or 'ICMP'
+	pre = pre or 'icmp'
 
 	self:setTYPE(args[pre .. 'TYPE'])
 	self:setCODE(args[pre .. 'CODE'])
@@ -177,8 +177,8 @@ function ICMPHeader:fill(args,pre)
 end
 
 -- Retrieve the values of all members
-function ICMPHeader:get(pre)
-	pre = pre or 'ICMP'
+function icmpHeader:get(pre)
+	pre = pre or 'icmp'
 
 	local args = {}
 	args[pre .. 'TYPE'] = self:getTYPE()
@@ -188,8 +188,8 @@ function ICMPHeader:get(pre)
 	return args
 end
 
-function ICMPHeader:getString()
-	return 'ICMP \n'
+function icmpHeader:getString()
+	return 'icmp \n'
 		.. 'TYPE' .. self:getTYPEString() .. '\n'
 		.. 'CODE' .. self:getCODEString() .. '\n'
 		.. 'CHECKSUM' .. self:getCHECKSUMString() .. '\n'
@@ -198,7 +198,7 @@ end
 -- Dictionary for next level headers
 local nextHeaderResolve = {
 }
-function ICMPHeader:resolveNextHeader()
+function icmpHeader:resolveNextHeader()
 	return nil
 end
 
@@ -208,6 +208,7 @@ end
 -----------------------------------------------------
 ffi.metatype('union bitfield_24',bitfield24)
 ffi.metatype('union bitfield_40',bitfield40)
-ffi.metatype('union bitfield_48',bitfield48)ICMP.metatype = ICMPHeader
+ffi.metatype('union bitfield_48',bitfield48)
+icmp.metatype = icmpHeader
 
-return ICMP
+return icmp

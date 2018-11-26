@@ -40,5 +40,6 @@ typedef unsigned char uint24_t[3];
     #define UINT24_HTON(a,b) UINT24_COPY(a,b)
 #endif
 
+#define UINT24_NTOH(a,b) UINT24_HTON(a,b)
 
 #endif 

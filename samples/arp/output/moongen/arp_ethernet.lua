@@ -98,11 +98,11 @@ end
 
 
 -----------------------------------------------------
----- ETHERNET header and constants 
+---- ethernet header and constants 
 -----------------------------------------------------
-local ETHERNET = {}
+local ethernet = {}
 
-ETHERNET.headerFormat = [[
+ethernet.headerFormat = [[
 	union bitfield_48 	 dstAddr;
 	union bitfield_48 	 srcAddr;
 	uint16_t 	 etherType;
@@ -110,53 +110,53 @@ ETHERNET.headerFormat = [[
 
 
 -- variable length fields
-ETHERNET.headerVariableMember = nil
+ethernet.headerVariableMember = nil
 
--- Module for ETHERNET_address struct
-local ETHERNETHeader = initHeader()
-ETHERNETHeader.__index = ETHERNETHeader
+-- Module for ethernet_address struct
+local ethernetHeader = initHeader()
+ethernetHeader.__index = ethernetHeader
 
 
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
-function ETHERNETHeader:getDSTADDR()
+function ethernetHeader:getDSTADDR()
 	return (self.dstAddr:get())
 end
 
-function ETHERNETHeader:getDSTADDRstring()
+function ethernetHeader:getDSTADDRstring()
 	return self:getDSTADDR()
 end
 
-function ETHERNETHeader:setDSTADDR(int)
+function ethernetHeader:setDSTADDR(int)
 	int = int or 0
 	self.dstAddr:set(int)
 end
 
 
-function ETHERNETHeader:getSRCADDR()
+function ethernetHeader:getSRCADDR()
 	return (self.srcAddr:get())
 end
 
-function ETHERNETHeader:getSRCADDRstring()
+function ethernetHeader:getSRCADDRstring()
 	return self:getSRCADDR()
 end
 
-function ETHERNETHeader:setSRCADDR(int)
+function ethernetHeader:setSRCADDR(int)
 	int = int or 0
 	self.srcAddr:set(int)
 end
 
 
-function ETHERNETHeader:getETHERTYPE()
+function ethernetHeader:getETHERTYPE()
 	return hton16(self.etherType)
 end
 
-function ETHERNETHeader:getETHERTYPEstring()
+function ethernetHeader:getETHERTYPEstring()
 	return self:getETHERTYPE()
 end
 
-function ETHERNETHeader:setETHERTYPE(int)
+function ethernetHeader:setETHERTYPE(int)
 	int = int or 0
 	self.etherType = hton16(int)
 end
@@ -167,9 +167,9 @@ end
 ---- Functions for full header
 -----------------------------------------------------
 -- Set all members of the PROTO header
-function ETHERNETHeader:fill(args,pre)
+function ethernetHeader:fill(args,pre)
 	args = args or {}
-	pre = pre or 'ETHERNET'
+	pre = pre or 'ethernet'
 
 	self:setDSTADDR(args[pre .. 'DSTADDR'])
 	self:setSRCADDR(args[pre .. 'SRCADDR'])
@@ -177,8 +177,8 @@ function ETHERNETHeader:fill(args,pre)
 end
 
 -- Retrieve the values of all members
-function ETHERNETHeader:get(pre)
-	pre = pre or 'ETHERNET'
+function ethernetHeader:get(pre)
+	pre = pre or 'ethernet'
 
 	local args = {}
 	args[pre .. 'DSTADDR'] = self:getDSTADDR()
@@ -188,8 +188,8 @@ function ETHERNETHeader:get(pre)
 	return args
 end
 
-function ETHERNETHeader:getString()
-	return 'ETHERNET \n'
+function ethernetHeader:getString()
+	return 'ethernet \n'
 		.. 'DSTADDR' .. self:getDSTADDRString() .. '\n'
 		.. 'SRCADDR' .. self:getSRCADDRString() .. '\n'
 		.. 'ETHERTYPE' .. self:getETHERTYPEString() .. '\n'
@@ -200,7 +200,7 @@ local nextHeaderResolve = {
 	IPV4 = 0x0800,
 	ARP = 0x0806,
 }
-function ETHERNETHeader:resolveNextHeader()
+function ethernetHeader:resolveNextHeader()
 	local key = self:getETHERTYPE()
 	for name, value in pairs(nextHeaderResolve) do
 		if key == value then
@@ -216,6 +216,7 @@ end
 -----------------------------------------------------
 ffi.metatype('union bitfield_24',bitfield24)
 ffi.metatype('union bitfield_40',bitfield40)
-ffi.metatype('union bitfield_48',bitfield48)ETHERNET.metatype = ETHERNETHeader
+ffi.metatype('union bitfield_48',bitfield48)
+ethernet.metatype = ethernetHeader
 
-return ETHERNET
+return ethernet

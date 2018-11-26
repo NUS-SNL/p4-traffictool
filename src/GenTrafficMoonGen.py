@@ -224,10 +224,16 @@ def network_host_conversion(field):
         return ""
     if (field[1]<=16):
         return "ntoh16"
+    if (field[1]<=24):
+        return ""
     if (field[1]<=32):
         return "ntoh"
+    if (field[1]<=40):
+        return ""
+    if (field[1]<=48):
+        return ""
     if (field[1]<=64):
-        return "ntoh64"
+        return "hton64"
     return "-- fill blank here"
 
 def host_network_conversion(field):

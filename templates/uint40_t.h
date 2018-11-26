@@ -48,5 +48,6 @@ typedef unsigned char uint40_t[5];
   #define UINT40_HTON(a,b)  UINT40_COPY(a,b)
 #endif
 
+#define UINT40_NTOH(a,b) UINT40_HTON(a,b)
 
 #endif 

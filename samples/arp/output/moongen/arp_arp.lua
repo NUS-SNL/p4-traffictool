@@ -98,11 +98,11 @@ end
 
 
 -----------------------------------------------------
----- ARP header and constants 
+---- arp header and constants 
 -----------------------------------------------------
-local ARP = {}
+local arp = {}
 
-ARP.headerFormat = [[
+arp.headerFormat = [[
 	uint16_t 	 htype;
 	uint16_t 	 ptype;
 	uint8_t 	 hlen;
@@ -112,81 +112,81 @@ ARP.headerFormat = [[
 
 
 -- variable length fields
-ARP.headerVariableMember = nil
+arp.headerVariableMember = nil
 
--- Module for ARP_address struct
-local ARPHeader = initHeader()
-ARPHeader.__index = ARPHeader
+-- Module for arp_address struct
+local arpHeader = initHeader()
+arpHeader.__index = arpHeader
 
 
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
-function ARPHeader:getHTYPE()
+function arpHeader:getHTYPE()
 	return hton16(self.htype)
 end
 
-function ARPHeader:getHTYPEstring()
+function arpHeader:getHTYPEstring()
 	return self:getHTYPE()
 end
 
-function ARPHeader:setHTYPE(int)
+function arpHeader:setHTYPE(int)
 	int = int or 0
 	self.htype = hton16(int)
 end
 
 
-function ARPHeader:getPTYPE()
+function arpHeader:getPTYPE()
 	return hton16(self.ptype)
 end
 
-function ARPHeader:getPTYPEstring()
+function arpHeader:getPTYPEstring()
 	return self:getPTYPE()
 end
 
-function ARPHeader:setPTYPE(int)
+function arpHeader:setPTYPE(int)
 	int = int or 0
 	self.ptype = hton16(int)
 end
 
 
-function ARPHeader:getHLEN()
+function arpHeader:getHLEN()
 	return (self.hlen)
 end
 
-function ARPHeader:getHLENstring()
+function arpHeader:getHLENstring()
 	return self:getHLEN()
 end
 
-function ARPHeader:setHLEN(int)
+function arpHeader:setHLEN(int)
 	int = int or 0
 	self.hlen = (int)
 end
 
 
-function ARPHeader:getPLEN()
+function arpHeader:getPLEN()
 	return (self.plen)
 end
 
-function ARPHeader:getPLENstring()
+function arpHeader:getPLENstring()
 	return self:getPLEN()
 end
 
-function ARPHeader:setPLEN(int)
+function arpHeader:setPLEN(int)
 	int = int or 0
 	self.plen = (int)
 end
 
 
-function ARPHeader:getOPER()
+function arpHeader:getOPER()
 	return hton16(self.oper)
 end
 
-function ARPHeader:getOPERstring()
+function arpHeader:getOPERstring()
 	return self:getOPER()
 end
 
-function ARPHeader:setOPER(int)
+function arpHeader:setOPER(int)
 	int = int or 0
 	self.oper = hton16(int)
 end
@@ -197,9 +197,9 @@ end
 ---- Functions for full header
 -----------------------------------------------------
 -- Set all members of the PROTO header
-function ARPHeader:fill(args,pre)
+function arpHeader:fill(args,pre)
 	args = args or {}
-	pre = pre or 'ARP'
+	pre = pre or 'arp'
 
 	self:setHTYPE(args[pre .. 'HTYPE'])
 	self:setPTYPE(args[pre .. 'PTYPE'])
@@ -209,8 +209,8 @@ function ARPHeader:fill(args,pre)
 end
 
 -- Retrieve the values of all members
-function ARPHeader:get(pre)
-	pre = pre or 'ARP'
+function arpHeader:get(pre)
+	pre = pre or 'arp'
 
 	local args = {}
 	args[pre .. 'HTYPE'] = self:getHTYPE()
@@ -222,8 +222,8 @@ function ARPHeader:get(pre)
 	return args
 end
 
-function ARPHeader:getString()
-	return 'ARP \n'
+function arpHeader:getString()
+	return 'arp \n'
 		.. 'HTYPE' .. self:getHTYPEString() .. '\n'
 		.. 'PTYPE' .. self:getPTYPEString() .. '\n'
 		.. 'HLEN' .. self:getHLENString() .. '\n'
@@ -235,7 +235,7 @@ end
 local nextHeaderResolve = {
 	ARP_IPV4 = 0x000108000604,
 }
-function ARPHeader:resolveNextHeader()
+function arpHeader:resolveNextHeader()
 	local key = self:getHTYPE()
 	for name, value in pairs(nextHeaderResolve) do
 		if key == value then
@@ -251,6 +251,7 @@ end
 -----------------------------------------------------
 ffi.metatype('union bitfield_24',bitfield24)
 ffi.metatype('union bitfield_40',bitfield40)
-ffi.metatype('union bitfield_48',bitfield48)ARP.metatype = ARPHeader
+ffi.metatype('union bitfield_48',bitfield48)
+arp.metatype = arpHeader
 
-return ARP
+return arp

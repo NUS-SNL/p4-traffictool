@@ -54,5 +54,6 @@ typedef unsigned char uint48_t[6];
   #define UINT48_HTON(a,b)   UINT48_COPY(a,b)
 #endif
 
+#define UINT48_NTOH(a,b) UINT48_HTON(a,b)
 
 #endif 

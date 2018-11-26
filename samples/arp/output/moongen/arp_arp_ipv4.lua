@@ -98,11 +98,11 @@ end
 
 
 -----------------------------------------------------
----- ARP_IPV4 header and constants 
+---- arp_ipv4 header and constants 
 -----------------------------------------------------
-local ARP_IPV4 = {}
+local arp_ipv4 = {}
 
-ARP_IPV4.headerFormat = [[
+arp_ipv4.headerFormat = [[
 	union bitfield_48 	 sha;
 	uint32_t 	 spa;
 	union bitfield_48 	 tha;
@@ -111,67 +111,67 @@ ARP_IPV4.headerFormat = [[
 
 
 -- variable length fields
-ARP_IPV4.headerVariableMember = nil
+arp_ipv4.headerVariableMember = nil
 
--- Module for ARP_IPV4_address struct
-local ARP_IPV4Header = initHeader()
-ARP_IPV4Header.__index = ARP_IPV4Header
+-- Module for arp_ipv4_address struct
+local arp_ipv4Header = initHeader()
+arp_ipv4Header.__index = arp_ipv4Header
 
 
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
-function ARP_IPV4Header:getSHA()
+function arp_ipv4Header:getSHA()
 	return (self.sha:get())
 end
 
-function ARP_IPV4Header:getSHAstring()
+function arp_ipv4Header:getSHAstring()
 	return self:getSHA()
 end
 
-function ARP_IPV4Header:setSHA(int)
+function arp_ipv4Header:setSHA(int)
 	int = int or 0
 	self.sha:set(int)
 end
 
 
-function ARP_IPV4Header:getSPA()
+function arp_ipv4Header:getSPA()
 	return hton(self.spa)
 end
 
-function ARP_IPV4Header:getSPAstring()
+function arp_ipv4Header:getSPAstring()
 	return self:getSPA()
 end
 
-function ARP_IPV4Header:setSPA(int)
+function arp_ipv4Header:setSPA(int)
 	int = int or 0
 	self.spa = hton(int)
 end
 
 
-function ARP_IPV4Header:getTHA()
+function arp_ipv4Header:getTHA()
 	return (self.tha:get())
 end
 
-function ARP_IPV4Header:getTHAstring()
+function arp_ipv4Header:getTHAstring()
 	return self:getTHA()
 end
 
-function ARP_IPV4Header:setTHA(int)
+function arp_ipv4Header:setTHA(int)
 	int = int or 0
 	self.tha:set(int)
 end
 
 
-function ARP_IPV4Header:getTPA()
+function arp_ipv4Header:getTPA()
 	return hton(self.tpa)
 end
 
-function ARP_IPV4Header:getTPAstring()
+function arp_ipv4Header:getTPAstring()
 	return self:getTPA()
 end
 
-function ARP_IPV4Header:setTPA(int)
+function arp_ipv4Header:setTPA(int)
 	int = int or 0
 	self.tpa = hton(int)
 end
@@ -182,9 +182,9 @@ end
 ---- Functions for full header
 -----------------------------------------------------
 -- Set all members of the PROTO header
-function ARP_IPV4Header:fill(args,pre)
+function arp_ipv4Header:fill(args,pre)
 	args = args or {}
-	pre = pre or 'ARP_IPV4'
+	pre = pre or 'arp_ipv4'
 
 	self:setSHA(args[pre .. 'SHA'])
 	self:setSPA(args[pre .. 'SPA'])
@@ -193,8 +193,8 @@ function ARP_IPV4Header:fill(args,pre)
 end
 
 -- Retrieve the values of all members
-function ARP_IPV4Header:get(pre)
-	pre = pre or 'ARP_IPV4'
+function arp_ipv4Header:get(pre)
+	pre = pre or 'arp_ipv4'
 
 	local args = {}
 	args[pre .. 'SHA'] = self:getSHA()
@@ -205,8 +205,8 @@ function ARP_IPV4Header:get(pre)
 	return args
 end
 
-function ARP_IPV4Header:getString()
-	return 'ARP_IPV4 \n'
+function arp_ipv4Header:getString()
+	return 'arp_ipv4 \n'
 		.. 'SHA' .. self:getSHAString() .. '\n'
 		.. 'SPA' .. self:getSPAString() .. '\n'
 		.. 'THA' .. self:getTHAString() .. '\n'
@@ -216,7 +216,7 @@ end
 -- Dictionary for next level headers
 local nextHeaderResolve = {
 }
-function ARP_IPV4Header:resolveNextHeader()
+function arp_ipv4Header:resolveNextHeader()
 	return nil
 end
 
@@ -226,6 +226,7 @@ end
 -----------------------------------------------------
 ffi.metatype('union bitfield_24',bitfield24)
 ffi.metatype('union bitfield_40',bitfield40)
-ffi.metatype('union bitfield_48',bitfield48)ARP_IPV4.metatype = ARP_IPV4Header
+ffi.metatype('union bitfield_48',bitfield48)
+arp_ipv4.metatype = arp_ipv4Header
 
-return ARP_IPV4
+return arp_ipv4
