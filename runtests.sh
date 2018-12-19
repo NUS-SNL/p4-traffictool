@@ -24,7 +24,7 @@ rm -r tests1
 rm -r tests2
 rm -rf wireshark
 rm -f tests_data.pcap
-yes n| ../p4-traffictool.sh -json ../samples/basic_tunnel/basic_tunnel.json -o . --scapy --wireshark
+yes n| ../p4-traffictool.sh -json ../samples/basic_tunnel/basic_tunnel.json -o . --scapy --wireshark > /dev/null
 cp scapy/basic_tunnel.py basic_tunnel.py
 python testscript.py
 foo="$(tshark -X lua_script:wireshark/init.lua -r tests_data.pcap -Tfields -e p4_mytunnel.proto_id)"

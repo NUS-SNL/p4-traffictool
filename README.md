@@ -29,7 +29,7 @@ git clone https://github.com/djin31/p4-traffictool.git
 To perform a sanity check that the code produced by the tool is compatible with the tools available on your system you can use `./runtests.sh`. It runs the tool with a sample p4 program and its corresponding json file to produce scapy codes and checks that they are equivalent.
 It then uses the generated scapy code to produce a pcap file `tests_data.pcap`. Then it generates the lua dissector and uses it with tshark to parse the pcap file and checks if the fields are parsed correctly.
 
-Fulfilling all the above required tests prints `Tests passed`. This ensures that the tool is compatible with the wireshark and scapy installation on your system.
+Fulfilling all the above required tests prints `Tests passed`. This ensures that the tool is compatible with the wireshark and scapy installation on your system. If your system is missing `p4c` or `p4c-bm2-ss` then suitable error message is displayed before `Tests passed`.
 
 Use `./runtests.sh clean` to wipe out all the code and pcap file generated from the tests directory.
 
