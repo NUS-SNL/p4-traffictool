@@ -10,8 +10,8 @@ if [[ "$1" == clean ]]; then
 fi
 mkdir -p tests/tests1
 mkdir -p tests/tests2
-yes n| ./p4-traffictools.sh -json samples/basic_tunnel/basic_tunnel.json -o tests/tests1 --scapy --wireshark > /dev/null
-yes n| ./p4-traffictools.sh -p4 samples/basic_tunnel/basic_tunnel.p4 -o tests/tests2 --scapy --wireshark > /dev/null
+yes n| ./p4-traffictool.sh -json samples/basic_tunnel/basic_tunnel.json -o tests/tests1 --scapy --wireshark > /dev/null
+yes n| ./p4-traffictool.sh -p4 samples/basic_tunnel/basic_tunnel.p4 -o tests/tests2 --scapy --wireshark > /dev/null
 
 
 foo="$(cmp -s tests/tests1/scapy/*.py tests/tests1/scapy/*.py)"
@@ -24,7 +24,7 @@ rm -r tests1
 rm -r tests2
 rm -rf wireshark
 rm -f tests_data.pcap
-yes n| ../p4-traffictools.sh -json ../samples/basic_tunnel/basic_tunnel.json -o . --scapy --wireshark
+yes n| ../p4-traffictool.sh -json ../samples/basic_tunnel/basic_tunnel.json -o . --scapy --wireshark
 cp scapy/basic_tunnel.py basic_tunnel.py
 python testscript.py
 foo="$(tshark -X lua_script:wireshark/init.lua -r tests_data.pcap -Tfields -e p4_mytunnel.proto_id)"

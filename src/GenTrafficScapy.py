@@ -141,36 +141,31 @@ def make_classes(data, fout):
         if (headers[header_id]['metadata']) == False:
             header_ports.append(correct_name(headers[header_id]['name']))
             if (headers[header_id]['name']=='ethernet'):
-                print("\nEthernet header detected, would you like the standard ethernet header to be used(y/n) :")
-                temp = input().strip()
+                temp = input("\nEthernet header detected, would you like the standard ethernet header to be used(y/n) : ").strip()
                 if (temp == 'y'):
                     ETHER_DETECT = True
                 else:
                     make_header(headers, header_types, header_id, checksums, calculations, fout)
             elif (headers[header_id]['name']=='ipv4'):
-                print("\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ")
-                temp = input().strip()
+                temp = input("\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ").strip()
                 if (temp == 'y'):
                     IPv4_DETECT = True
                 else:
                     make_header(headers, header_types, header_id, checksums, calculations, fout)
             elif (headers[header_id]['name']=='ipv6'):
-                print("\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ")
-                temp = input().strip()
+                temp = input("\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ").strip()
                 if (temp == 'y'):
                     IPv6_DETECT = True
                 else:
                     make_header(headers, header_types, header_id, checksums, calculations, fout)
             elif (headers[header_id]['name']=='tcp'):
-                print("\nTCP header detected, would you like the standard TCP header to be used(y/n) : ")
-                temp = input().strip()
+                temp = input("\nTCP header detected, would you like the standard TCP header to be used(y/n) : ").strip()
                 if (temp == 'y'):
                     TCP_DETECT = True
                 else:
                     make_header(headers, header_types, header_id, checksums, calculations, fout)
             elif (headers[header_id]['name']=='udp'):
-                print("\nUDP header detected, would you like the standard UDP header to be used(y/n) :")
-                temp = input().strip()
+                temp = input("\nUDP header detected, would you like the standard UDP header to be used(y/n) : ").strip()
                 if (temp == 'y'):
                     UDP_DETECT = True
                 else:

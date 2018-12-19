@@ -6,18 +6,18 @@
 
 ## Scapy
 
-[Scapy](https://scapy.net) is a powerful Python-based interactive packet manipulation program and library. The p4-traffictools generates code for Scapy such that your p4-defined protocol stack can be used in packet generation, packet capture, as well as parsing and dissecting packets (_on-wire_ or from a pcap file).
+[Scapy](https://scapy.net) is a powerful Python-based interactive packet manipulation program and library. The p4-traffictool generates code for Scapy such that your p4-defined protocol stack can be used in packet generation, packet capture, as well as parsing and dissecting packets (_on-wire_ or from a pcap file).
 
 ### Generating code for Scapy
-Use the top-level script `p4-traffictools.sh` as following:
+Use the top-level script `p4-traffictool.sh` as following:
     
 ```    
-./p4-traffictools.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --scapy 
+./p4-traffictool.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --scapy 
 ```
 If standard headers (Ethernet, IPv4, etc.) are detected, the user will be asked if s/he wants to use Scapy's built-in headers instead of re-defining them.
 
 The user would also be asked to specify the length of the variable length field (if any is used). This length should be a multiple of 8 to ensure that the header is byte aligned.
-A fixed length field would be produced for the current run of p4-traffictools. In order to modify this length, the user needs to rerun p4-traffictools. Note that this is a limitation of the target tool and p4-traffictools merely provides an option to choose the fixed length.
+A fixed length field would be produced for the current run of p4-traffictool. In order to modify this length, the user needs to rerun p4-traffictool. Note that this is a limitation of the target tool and p4-traffictool merely provides an option to choose the fixed length.
 
 
 #### Generated Code
@@ -50,14 +50,14 @@ The code for Scapy would be generated in the output directory inside a subdirect
 [PcapPlusPlus](http://seladb.github.io/PcapPlusPlus-Doc) is a multiplatform C++ network sniffing and packet parsing/crafting framework. It provides a very fast and efficient method for crafting and parsing network packets.
 
 ### Generating code for PcapPlusPlus
-Use the top-level script `p4-traffictools.sh` as following:
+Use the top-level script `p4-traffictool.sh` as following:
 ```
-./p4-traffictools.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --pcpp 
+./p4-traffictool.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --pcpp 
 ```
 If standard headers (Ethernet, IPv4, etc.) are detected, the user will be asked if s/he wants to use PcapPlusPlus' built-in headers instead of re-defining them.
 
 The user would also be asked to specify the length of variable length field(s) (if any is used). This length should be a multiple of 8 to ensure that the header is byte aligned.
-A fixed length field would be produced for the current run of p4-traffictools. In order to modify this length, the user needs to rerun p4-traffictools. Note that this is a limitation of PcapPlusPlus and p4-traffictools merely provides an option to choose the fixed length.
+A fixed length field would be produced for the current run of p4-traffictool. In order to modify this length, the user needs to rerun p4-traffictool. Note that this is a limitation of PcapPlusPlus and p4-traffictool merely provides an option to choose the fixed length.
 
 #### Generated Code
 The code for PcapPlusPlus would be generated in the output directory inside a subdirectory "pcapplusplus". It consists of C++ header and source file(s) defining class(es) for custom P4-defined protocol header(s). The code contains:
@@ -90,7 +90,7 @@ sudo make install
 
 ### Generating code for MoonGen
 ```
-./p4-traffictools.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --moongen 
+./p4-traffictool.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --moongen 
 ```
 If standard headers (Ethernet, IPv4, etc.) are detected, the user will be asked if s/he wants to use MoonGen's built-in headers instead of re-defining them.
 
@@ -131,11 +131,11 @@ The code for MoonGen would be generated in the output directory inside a subdire
 
 ### Generating code for Wireshark Lua dissector backend
 ```
-./p4-traffictools.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --wireshark
+./p4-traffictool.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --wireshark
 ```
 
 The user would also be asked to specify the length of the variable length field (if any is used). This length should be a multiple of 8 to ensure that the header is byte aligned.
-A fixed length field would be produced for the current run of p4-traffictools. In order to modify this length, the user needs to rerun p4-traffictools. Note that this is a limitation of the target tool and p4-traffictools merely provides an option to choose the fixed length.
+A fixed length field would be produced for the current run of p4-traffictool. In order to modify this length, the user needs to rerun p4-traffictool. Note that this is a limitation of the target tool and p4-traffictool merely provides an option to choose the fixed length.
 
 #### Generated Code
 The code for Lua dissector would be generated in the output directory inside a subdirectory "lua_dissector". It consists of lua files corresponding to each protocol. Each file contains:

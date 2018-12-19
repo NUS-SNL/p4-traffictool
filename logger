@@ -1,5 +1,5 @@
 ------------------------------------
-P4_SOURCE /home/deepanshu/p4-traffictools/samples/arp/arp.p4
+P4_SOURCE /home/deepanshu/p4-traffictool/samples/arp/arp.p4
 JSONSOURCE 
 SCAPY true
 WIRESHARK true
@@ -146,7 +146,7 @@ Correct the following fields to make them byte-aligned:
 ------------------------------------
 
 ------------------------------------
-P4_SOURCE /home/deepanshu/p4-traffictools/samples/basic_tunnel/basic_tunnel.p4
+P4_SOURCE /home/deepanshu/p4-traffictool/samples/basic_tunnel/basic_tunnel.p4
 JSONSOURCE 
 SCAPY true
 WIRESHARK true
@@ -269,7 +269,7 @@ Correct the following fields to make them byte-aligned:
 ------------------------------------
 
 ------------------------------------
-P4_SOURCE /home/deepanshu/p4-traffictools/samples/dummy-for-dissector/dissector_dummy.p4
+P4_SOURCE /home/deepanshu/p4-traffictool/samples/dummy-for-dissector/dissector_dummy.p4
 JSONSOURCE 
 SCAPY true
 WIRESHARK true
@@ -282,10 +282,10 @@ OUTPUT DIR samples/dummy-for-dissector/output
 
 ----------------------------------
 Compiling p4 source ...
-/home/deepanshu/p4-traffictools/samples/dummy-for-dissector/dissector_dummy.p4(46): warning: Could not infer type for egress_spec, using bit<8>
+/home/deepanshu/p4-traffictool/samples/dummy-for-dissector/dissector_dummy.p4(46): warning: Could not infer type for egress_spec, using bit<8>
 action forward(newSrcMAC, newDstMAC, egress_spec) {
                                      ^^^^^^^^^^^
-/home/deepanshu/p4-traffictools/samples/dummy-for-dissector/dissector_dummy.p4(54): warning: -1: negative value with unsigned type
+/home/deepanshu/p4-traffictool/samples/dummy-for-dissector/dissector_dummy.p4(54): warning: -1: negative value with unsigned type
     add_to_field(ipv4.ttl, -1);
                             ^
 Compilation successful with p4c-bm2-ss
@@ -438,7 +438,7 @@ Correct the following fields to make them byte-aligned:
 ------------------------------------
 
 ------------------------------------
-P4_SOURCE /home/deepanshu/p4-traffictools/samples/heavy_hitter/heavy_hitter.p4
+P4_SOURCE /home/deepanshu/p4-traffictool/samples/heavy_hitter/heavy_hitter.p4
 JSONSOURCE 
 SCAPY true
 WIRESHARK true
@@ -451,7 +451,7 @@ OUTPUT DIR samples/heavy_hitter/output
 
 ----------------------------------
 Compiling p4 source ...
-/home/deepanshu/p4-traffictools/samples/heavy_hitter/heavy_hitter.p4(61): warning: -1: negative value with unsigned type
+/home/deepanshu/p4-traffictool/samples/heavy_hitter/heavy_hitter.p4(61): warning: -1: negative value with unsigned type
     add_to_field(ipv4.ttl, -1);
                             ^
 Compilation successful with p4c-bm2-ss
@@ -634,7 +634,7 @@ usage: p4c [-h] [-V] [-v] [-###] [-Xpreprocessor <arg>] [-Xp4c <arg>]
 p4c: error: No input specified.
 Compilation with p4c failed.. exiting
 ------------------------------------
-P4_SOURCE /home/deepanshu/p4-traffictools/samples/mri/mri.p4
+P4_SOURCE /home/deepanshu/p4-traffictool/samples/mri/mri.p4
 JSONSOURCE 
 SCAPY true
 WIRESHARK true
@@ -811,7 +811,7 @@ Correct the following fields to make them byte-aligned:
 ------------------------------------
 
 ------------------------------------
-P4_SOURCE /home/deepanshu/p4-traffictools/samples/simple_nat/simple_nat.p4
+P4_SOURCE /home/deepanshu/p4-traffictool/samples/simple_nat/simple_nat.p4
 JSONSOURCE 
 SCAPY true
 WIRESHARK true
@@ -824,10 +824,10 @@ OUTPUT DIR samples/simple_nat/output
 
 ----------------------------------
 Compiling p4 source ...
-/home/deepanshu/p4-traffictools/samples/simple_nat/simple_nat.p4:148:10: warning: missing terminating ' character
+/home/deepanshu/p4-traffictool/samples/simple_nat/simple_nat.p4:148:10: warning: missing terminating ' character
          8'0;
           ^
-/home/deepanshu/p4-traffictools/samples/simple_nat/simple_nat.p4(280): warning: -1: negative value with unsigned type
+/home/deepanshu/p4-traffictool/samples/simple_nat/simple_nat.p4(280): warning: -1: negative value with unsigned type
     add_to_field(ipv4.ttl, -1);
                             ^
 Compilation successful with p4c-bm2-ss
@@ -967,7 +967,7 @@ Correct the following fields to make them byte-aligned:
 ------------------------------------
 
 ------------------------------------
-P4_SOURCE /home/deepanshu/p4-traffictools/samples/simple_router/simple_router.p4
+P4_SOURCE /home/deepanshu/p4-traffictool/samples/simple_router/simple_router.p4
 JSONSOURCE 
 SCAPY true
 WIRESHARK true
@@ -980,7 +980,7 @@ OUTPUT DIR samples/simple_router/output
 
 ----------------------------------
 Compiling p4 source ...
-/home/deepanshu/p4-traffictools/samples/simple_router/simple_router.p4(107): warning: -1: negative value with unsigned type
+/home/deepanshu/p4-traffictool/samples/simple_router/simple_router.p4(107): warning: -1: negative value with unsigned type
     add_to_field(ipv4.ttl, -1);
                             ^
 Compilation successful with p4c-bm2-ss
@@ -1077,7 +1077,7 @@ Correct the following fields to make them byte-aligned:
 ------------------------------------
 
 ------------------------------------
-P4_SOURCE /home/deepanshu/p4-traffictools/samples/src_routing/src_routing.p4
+P4_SOURCE /home/deepanshu/p4-traffictool/samples/src_routing/src_routing.p4
 JSONSOURCE 
 SCAPY true
 WIRESHARK true
@@ -1287,10 +1287,10 @@ Correct the following fields to make them byte-aligned:
 
 ----------------------------------
 Compiling p4 source ...
-/home/deepanshu/p4-traffictools/samples/dummy-for-dissector/dissector_dummy.p4(46): warning: Could not infer type for egress_spec, using bit<8>
+/home/deepanshu/p4-traffictool/samples/dummy-for-dissector/dissector_dummy.p4(46): warning: Could not infer type for egress_spec, using bit<8>
 action forward(newSrcMAC, newDstMAC, egress_spec) {
                                      ^^^^^^^^^^^
-/home/deepanshu/p4-traffictools/samples/dummy-for-dissector/dissector_dummy.p4(54): warning: -1: negative value with unsigned type
+/home/deepanshu/p4-traffictool/samples/dummy-for-dissector/dissector_dummy.p4(54): warning: -1: negative value with unsigned type
     add_to_field(ipv4.ttl, -1);
                             ^
 Compilation successful with p4c-bm2-ss
@@ -1340,7 +1340,7 @@ Correct the following fields to make them byte-aligned:
 
 ----------------------------------
 Compiling p4 source ...
-/home/deepanshu/p4-traffictools/samples/heavy_hitter/heavy_hitter.p4(61): warning: -1: negative value with unsigned type
+/home/deepanshu/p4-traffictool/samples/heavy_hitter/heavy_hitter.p4(61): warning: -1: negative value with unsigned type
     add_to_field(ipv4.ttl, -1);
                             ^
 Compilation successful with p4c-bm2-ss
@@ -1482,10 +1482,10 @@ Correct the following fields to make them byte-aligned:
 
 ----------------------------------
 Compiling p4 source ...
-/home/deepanshu/p4-traffictools/samples/simple_nat/simple_nat.p4:148:10: warning: missing terminating ' character
+/home/deepanshu/p4-traffictool/samples/simple_nat/simple_nat.p4:148:10: warning: missing terminating ' character
          8'0;
           ^
-/home/deepanshu/p4-traffictools/samples/simple_nat/simple_nat.p4(280): warning: -1: negative value with unsigned type
+/home/deepanshu/p4-traffictool/samples/simple_nat/simple_nat.p4(280): warning: -1: negative value with unsigned type
     add_to_field(ipv4.ttl, -1);
                             ^
 Compilation successful with p4c-bm2-ss
@@ -1535,7 +1535,7 @@ Correct the following fields to make them byte-aligned:
 
 ----------------------------------
 Compiling p4 source ...
-/home/deepanshu/p4-traffictools/samples/simple_router/simple_router.p4(107): warning: -1: negative value with unsigned type
+/home/deepanshu/p4-traffictool/samples/simple_router/simple_router.p4(107): warning: -1: negative value with unsigned type
     add_to_field(ipv4.ttl, -1);
                             ^
 Compilation successful with p4c-bm2-ss
@@ -1614,7 +1614,7 @@ Correct the following fields to make them byte-aligned:
 
 ----------------------------------
 Compiling p4 source ...
-/home/deepanshu/p4-traffictools/samples/tlv_parsing/tlv_parsing.p4(118): warning: 20: value does not fit in 4 bits
+/home/deepanshu/p4-traffictool/samples/tlv_parsing/tlv_parsing.p4(118): warning: 20: value does not fit in 4 bits
     set_metadata(my_metadata.parse_ipv4_counter, ipv4_base.ihl * 4 - 20);
                                                                      ^^
 warning: The order of headers in deparser is not uniquely determined by parser!

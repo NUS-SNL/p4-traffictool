@@ -55,35 +55,30 @@ def find_data_headers(headers, header_types):
 
             # functionality to use common headers to be added
             if (name=='ethernet'):
-                print("\nEthernet header detected, would you like the standard ethernet header to be used(y/n) :")
-                temp = input().strip()
+                temp = input("\nEthernet header detected, would you like the standard ethernet header to be used(y/n) : ").strip()
                 if (temp == 'y'):
                     ETHER_DETECT = True
                     #print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/EthLayer.cpp\n")
             elif (name=='ipv4'):
-                print("\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ")
-                temp = input().strip()
+                temp = input("\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ").strip()
                 if (temp == 'y'):
                     IPv4_DETECT = True
                     #print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/IPv4Layer.cpp\n")
 
             elif (name=='ipv6'):
-                print("\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ")
-                temp = input().strip()
+                temp = input("\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ").strip()
                 if (temp == 'y'):
                     IPv6_DETECT = True
                     #print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/IPv6Layer.cpp\n")
 
             elif (name=='tcp'):
-                print("\nTCP header detected, would you like the standard TCP header to be used(y/n) : ")
-                temp = input().strip()
+                temp = input("\nTCP header detected, would you like the standard TCP header to be used(y/n) : ").strip()
                 if (temp == 'y'):
                     TCP_DETECT = True
                     #print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/TcpLayer.cpp\n")
 
             elif (name=='udp'):
-                print("\nUDP header detected, would you like the standard UDP header to be used(y/n) :")
-                temp = input().strip()
+                temp = input("\nUDP header detected, would you like the standard UDP header to be used(y/n) : ").strip()
                 if (temp == 'y'):
                     UDP_DETECT = True
                     #print("\nAdd the next layers in the function parseNextLayer of PcapPlusPlus/Packet++/src/UdpLayer.cpp\n")
