@@ -22,12 +22,12 @@ fi
 cd tests
 rm -r tests1
 rm -r tests2
-rm -rf lua_dissector
+rm -rf wireshark
 rm -f tests_data.pcap
 yes n| ../p4-traffictools.sh -json ../samples/basic_tunnel/basic_tunnel.json -o . --scapy --wireshark
 cp scapy/basic_tunnel.py basic_tunnel.py
 python testscript.py
-foo="$(tshark -X lua_script:lua_dissector/init.lua -r tests_data.pcap -Tfields -e p4_mytunnel.proto_id)"
+foo="$(tshark -X lua_script:wireshark/init.lua -r tests_data.pcap -Tfields -e p4_mytunnel.proto_id)"
 foo=${foo: -4}
 if [[ "$foo" = "2048" ]]; then 
 	echo "Tests passed"

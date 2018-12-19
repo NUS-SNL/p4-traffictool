@@ -17,7 +17,7 @@ typedef unsigned char uint48_t[6];
   uint48[5] = (unsigned char)((value) >> 40);   \
 
 // copies value of one UINT48 to other
-#define UINT40_COPY(uint48, value)               \
+#define UINT48_COPY(uint48, value)               \
   uint48[0] = value[0];           \
   uint48[1] = value[1];           \
   uint48[2] = value[2];           \

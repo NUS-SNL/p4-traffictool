@@ -1,6 +1,7 @@
 import json
 import sys
 import re
+from common import *
 
 # Maximum possible headers within a packet, hyperparameter with default value as 10
 MAX_PATH_LENGTH = 10
@@ -20,17 +21,11 @@ multi_headers = []
 array_match = re.compile('[a-z A-Z 0-9 _ -]+''[''[0-9]+'']')
 
 # open file to load json data
-try:
-    data = json.load(open(sys.argv[1]))
-    DESTINATION = sys.argv[2]
-    if DESTINATION[-1]!='/':
-        DESTINATION+='/'
-except IndexError:
-    print ("Incorrect argument specification")
-    exit(0)
-except IOError:
-    print ("Incorrect file specification")
-    exit(0)
+# standardize destination path
+data = read_jsondata(sys.argv[1])
+DESTINATION = sys.argv[2]
+if (DESTINATION[-1] != '/'):
+    DESTINATION += '/'
 
 # check if max path length has been set
 if (len(sys.argv)>3):
@@ -43,28 +38,6 @@ if (len(sys.argv)>3):
 if (len(sys.argv)>3):
     if (sys.argv[-1]=='-d'):
         DEBUG = True
-
-# assign valid name to state depending on which header it extracts
-def valid_name(state):
-    if len(state["parser_ops"]) > 0:
-        if type(state["parser_ops"][0]["parameters"][0]["value"]) is list:
-            return state["parser_ops"][0]["parameters"][0]["value"][0]
-        else:
-            return state["parser_ops"][0]["parameters"][0]["value"]
-    else:
-        return state["name"]
-
-# search for valid state name in the parse states
-def search_state(parser, name):
-    for state in parser["parse_states"]:
-        if (state["name"] == name):
-            return valid_name(state)
-
-# search for header type given the header_type_name specified in header definition
-def search_header_type(header_types, name):
-    for header_type in header_types:
-        if (header_type["name"] == name):
-            return header_type
 
 # find all possible header orderings that are valid
 def possible_paths(init, control_graph, length_till_now):
@@ -215,29 +188,8 @@ def make_classes(data, fout):
 
     return header_ports
 
-# make a control graph for all possible state transitions
-# returns the list of edges in graph
-def make_control_graph(parsers):
-    graph = []
-    for parser in parsers:
-        for state in parser["parse_states"]:
-            name = valid_name(state)
-            if len(state["transition_key"]) > 0:
-                for transition in state["transitions"]:
-                    if transition["next_state"] != None:
-                        graph.append([  name, 
-                                        state["transition_key"][0]["value"][1], 
-                                        transition["value"], 
-                                        search_state(parser, transition["next_state"])
-                                    ])
-                    else:
-                        graph.append([name, None, None, "final"])
-            else:
-                if state["transitions"][0]["next_state"] != None:
-                    graph.append([name, None, None, search_state(
-                        parser, state["transitions"][0]["next_state"])])
-                else:
-                    graph.append([name, None, None, "final"])
+# correct graph for inbuilt headers
+def correct_graph(graph):
     for i in range(len(graph)):
         edge=graph[i]
         if (edge[0]=='ethernet' and ETHER_DETECT):
@@ -251,12 +203,6 @@ def make_control_graph(parsers):
         elif (edge[0]=='udp' and UDP_DETECT):
             edge[1]='dport'
         graph[i]=edge
-
-
-    if (DEBUG):
-        print("\nEdges in the control_graph\n")
-        for i in graph:
-            print(i)
     return graph
 
 # defines bindings based on control graph
@@ -356,7 +302,7 @@ def make_template(json_data, destination):
         header_ports = make_classes(json_data, fout)
 
         #building metadata
-        control_graph = make_control_graph(json_data["parsers"])
+        control_graph = correct_graph(make_control_graph(json_data["parsers"], DEBUG))
         init_states = []
         for parser in json_data["parsers"]:
             init_states.append(search_state(parser,parser["init_state"]))

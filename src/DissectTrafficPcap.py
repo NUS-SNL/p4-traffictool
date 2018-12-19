@@ -2,6 +2,8 @@ import json
 import sys
 import os
 from tabulate import tabulate
+from common import *
+
 # global variables for common header types
 ETHER_DETECT = False
 IPv4_DETECT = False
@@ -11,38 +13,12 @@ UDP_DETECT = False
 
 DEBUG = False
 
-# merges padding field with the next field
-def merge_padding(data):
-    for header_type in data["header_types"]:
-        try:                                                        # try except added to prevent falling into error when scalars_0 has 0 fields
-            temp_list=[header_type["fields"][0]]
-            for i in range(1,len(header_type["fields"])):
-                if (temp_list[-1][0][:4]=="_pad"):
-                    temp_list=temp_list[:-1]
-                    temp_list.append([header_type["fields"][i][0], header_type["fields"][i-1][1]+header_type["fields"][i][1]])
-                else:
-                    temp_list.append(header_type["fields"][i])
-            header_type["fields"] = temp_list
-        except:
-            pass
-        
-    return data
-
-
 # open file to load json data
 # standardize destination path
-try:
-    data = merge_padding(json.load(open(sys.argv[1])))
-    DESTINATION = sys.argv[2]
-    if (DESTINATION[-1] != '/'):
-        DESTINATION += '/'
-        
-except IndexError:
-    print ("Incorrect argument specification")
-    exit(0)
-except IOError:
-    print ("Incorrect file specification")
-    exit(0)
+data = merge_padding(read_jsondata(sys.argv[1]))
+DESTINATION = sys.argv[2]
+if (DESTINATION[-1] != '/'):
+    DESTINATION += '/'
 
 # check if debug mode activated or not
 if (len(sys.argv) > 3):
@@ -51,28 +27,6 @@ if (len(sys.argv) > 3):
 
 # variable to store the list of tables created by the scripts
 tables_created = []
-
-# assign valid name to state depending on which header it extracts
-def valid_state_name(state):
-    if len(state["parser_ops"]) > 0:
-        if type(state["parser_ops"][0]["parameters"][0]["value"]) is list:
-            return state["parser_ops"][0]["parameters"][0]["value"][0]
-        else:
-            return state["parser_ops"][0]["parameters"][0]["value"]
-    else:
-        return state["name"]
-
-# search for valid state name in the parse states
-def search_state(parser, name):
-    for state in parser["parse_states"]:
-        if (state["name"] == name):
-            return valid_state_name(state)
-
-# search for header type given the header_type_name specified in header definition
-def search_header_type(header_types, name):
-    for header_type in header_types:
-        if (header_type["name"] == name):
-            return header_type
 
 # find headers and their types which appear within a packet i.e. are not metadata
 def find_data_headers(headers, header_types):
@@ -167,36 +121,6 @@ def find_data_headers(headers, header_types):
             print(map(str,incorrect_header["fields"]))
         exit(1)
     return (header_ports, header_types)
-
-# make a control graph for all possible state transitions
-# returns the list of edges in graph
-def make_control_graph(parsers):
-    graph = []
-    for parser in parsers:
-        for state in parser["parse_states"]:
-            name = valid_state_name(state)
-            if len(state["transition_key"]) > 0:
-                for transition in state["transitions"]:
-                    if transition["next_state"] != None:
-                        graph.append([name,
-                                      state["transition_key"][0]["value"][1],
-                                      transition["value"],
-                                      search_state(
-                                          parser, transition["next_state"])
-                                      ])
-                    else:
-                        graph.append([name, None, None, "final"])
-            else:
-                if state["transitions"][0]["next_state"] != None:
-                    graph.append([name, None, None, search_state(
-                        parser, state["transitions"][0]["next_state"])])
-                else:
-                    graph.append([name, None, None, "final"])
-    if (DEBUG):
-        print("\nEdges in the control_graph\n")
-        for i in graph:
-            print(i)
-    return graph
 
 # copies template file contents 
 def copy_template(fout):
@@ -372,7 +296,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_source.write("}")
 
 
-control_graph = make_control_graph(data["parsers"])
+control_graph = make_control_graph(data["parsers"], DEBUG)
 header_ports, header_types = find_data_headers(
     data["headers"], data["header_types"])
 try:
