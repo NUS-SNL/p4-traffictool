@@ -174,7 +174,7 @@ else
 
 fi
 
-# DIR stores the path to p4-pktcodegen script, this is required for calling backend scripts
+# DIR stores the path to p4-traffictool script, this is required for calling backend scripts
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" 
 
 if [[ "$DEBUG_MODE" = true ]]; then
