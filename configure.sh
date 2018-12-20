@@ -3,7 +3,8 @@
 install_compiler() { 
 	echo "Could not find either of p4c or p4c-bm2-ss"
 	echo "Find setup scripts for p4c here https://github.com/jafingerhut/p4-guide"
-	echo "Without compiler you can use the tool only with pre compiled json files as input"
+	echo "Without compiler you can use p4-traffictool only with pre compiled json files as input"
+	echo "------------------"
 }
 
 echo "Checking Python"
@@ -36,4 +37,4 @@ if [[ $DETECT_P4 != "0" ]]; then
 else
 	echo "P4 Compiler OK"
 fi
-echo "Run ./install.sh to install"
+echo "Run ./install.sh to install p4-traffictool"
