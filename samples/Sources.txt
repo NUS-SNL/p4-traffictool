@@ -1,0 +1,33 @@
+P4D2 2017 Spring Exercises
+https://github.com/BEsdn/P4-tutorials/tree/master/P4D2_2017_Spring/exercises
+---------------------------------------------------
+arp
+mri
+ipv4_forward
+---------------------------------------------------
+
+P4D2 2018 East Exercises
+https://github.com/BEsdn/P4-tutorials/tree/master/P4D2_2018_East/exercises
+---------------------------------------------------
+basic_tunnel
+src_routing
+---------------------------------------------------
+
+https://github.com/BEsdn/P4-tutorials/tree/master/examples
+---------------------------------------------------
+tlv_parsing
+simple_nat
+
+https://github.com/BEsdn/P4-tutorials/tree/efe6a5586deb9ff61380f466ff7f94498cd24ea8/SIGCOMM_2016/heavy_hitter
+---------------------------------------------------
+heavy_hitter
+
+https://github.com/BEsdn/P4-tutorials/tree/efe6a5586deb9ff61380f466ff7f94498cd24ea8/SIGCOMM_2017/exercises/hula
+---------------------------------------------------
+hula
+
+https://github.com/BEsdn/P4-tutorials/tree/efe6a5586deb9ff61380f466ff7f94498cd24ea8/workshop_05_2016/ecmp
+---------------------------------------------------
+simple_router
+
+dummy is a simple code with headers and parsers file which can be tweaked for testing different usecases

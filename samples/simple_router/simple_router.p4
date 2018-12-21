@@ -38,6 +38,22 @@ header_type ipv4_t {
     }
 }
 
+header_type tcp_t {
+    fields {
+        srcPort : 16;
+        dstPort : 16;
+        seqNo : 32;
+        ackNo : 32;
+        dataOffset : 4;
+        res : 3;
+        ecn : 3;
+        ctrl : 6;
+        window : 16;
+        checksum : 16;
+        urgentPtr : 16;
+    }
+}
+
 parser start {
     return parse_ethernet;
 }
@@ -83,8 +99,20 @@ calculated_field ipv4.hdrChecksum  {
     update ipv4_checksum;
 }
 
+#define IP_PROTOCOLS_TCP 6
+
 parser parse_ipv4 {
     extract(ipv4);
+    return select(latest.protocol) {
+        IP_PROTOCOLS_TCP : parse_tcp;
+        default: ingress;
+    }
+}
+
+header tcp_t tcp;
+
+parser parse_tcp {
+    extract(tcp);
     return ingress;
 }
 
@@ -96,6 +124,7 @@ action _drop() {
 header_type routing_metadata_t {
     fields {
         nhop_ipv4 : 32;
+        // TODO: if you need extra metadata for ECMP, define it here
     }
 }
 
@@ -103,7 +132,7 @@ metadata routing_metadata_t routing_metadata;
 
 action set_nhop(nhop_ipv4, port) {
     modify_field(routing_metadata.nhop_ipv4, nhop_ipv4);
-    modify_field(standard_metadata.egress_port, port);
+    modify_field(standard_metadata.egress_spec, port);
     add_to_field(ipv4.ttl, -1);
 }
 
@@ -150,6 +179,7 @@ table send_frame {
 
 control ingress {
     if(valid(ipv4) and ipv4.ttl > 0) {
+        // TODO: implement ECMP here
         apply(ipv4_lpm);
         apply(forward);
     }
@@ -158,5 +188,3 @@ control ingress {
 control egress {
     apply(send_frame);
 }
-
-
