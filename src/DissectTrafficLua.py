@@ -139,11 +139,12 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         try:
             bitfield1, bitfield2 = bit_count, field[1]      
             bytefield1, bytefield2 = byte_count, int((bit_count + field[1])/8)
+            if (field[1]%8!=0):
+                bytefield2+=1
             if (field[0]==next_state_key):
                 transition_param += [bytefield1,bytefield2,bitfield1,bitfield2]
             byte_count += int((bit_count + field[1])/8)
-            if (field[1]%8!=0):
-                bytefield2+=1
+            
             bit_count = (bit_count + field[1])%8
             if (bytefield2>((field[1])/8+1)):
                 bytefield2=(field[1])/8+1
@@ -153,11 +154,12 @@ def make_template(control_graph, header, header_type, destination, header_ports)
             field[1] = int(input('Variable length field "' + field[0] + '" detected in "' + header + '". Enter its length\n'))
             bitfield1, bitfield2 = bit_count, field[1]      
             bytefield1, bytefield2 = byte_count, int((bit_count + field[1])/8)
+            if (field[1]%8!=0):
+                bytefield2+=1
             if (field[0]==next_state_key):
                 transition_param += [bytefield1,bytefield2,bitfield1,bitfield2]
             byte_count += int((bit_count + field[1])/8)
-            if (field[1]%8!=0):
-                bytefield2+=1
+            
             bit_count = (bit_count + field[1])%8
             if (bytefield2>((field[1])/8+1)):
                 bytefield2=(field[1])/8+1
@@ -178,20 +180,28 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     
     fout.write("\nprint( (require 'debug').getinfo(1).source )\n")
 
-    fout.write("\n-- protocol registration\n")
+    fout.write("\n-- creation of table for next layer(if required)\n")
+    if (next_state_key!='' and next_state_key!=None):
+        fout.write("local newdissectortable = DissectorTable.new('%s.%s','%s.%s',ftypes.STRING)" %("p4_"+header, next_state_key,"P4_"+header.upper(), next_state_key.upper()))
+        tables_created.append((header,next_state_key))
+    else:
+        fout.write("\n-- No table required")
+
+    fout.write("\n\n-- protocol registration\n")
     for entry in control_graph:
         if (header==entry[-1] and entry[0] in header_ports and entry[1]!=None):
             if (entry[0]!='ethernet'):
+                if (entry[2]=='default'):
+                    entry[2]='0x0'
                 fout.write("my_table = DissectorTable.get('%s.%s')\n" %("p4_"+entry[0], entry[1]))
                 fout.write("my_table:add(%s,%s)\n" %(entry[2],header_lower))
             else:
+                if (entry[2]=='default'):
+                    entry[2]='0x0'
                 fout.write("my_table = DissectorTable.get('ethertype')\n")
                 fout.write("my_table:add(%s,%s)\n" %(entry[2],header_lower))
 
-    fout.write("\n-- creation of table for next layer(if required)\n")
-    if (next_state_key!='' and next_state_key!=None):
-        fout.write("\nlocal newdissectortable = DissectorTable.new('%s.%s','%s.%s',ftypes.STRING)" %("p4_"+header, next_state_key,"P4_"+header.upper(), next_state_key.upper()))
-        tables_created.append((header,next_state_key))
+    
 
 control_graph = make_control_graph(data["parsers"], DEBUG)
 header_ports, header_types = find_data_headers(data["headers"], data["header_types"])

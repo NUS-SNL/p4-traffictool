@@ -21,18 +21,16 @@ class Ipv4(Packet):
 		XByteField('ttl', 0),
 		XByteField('protocol', 0),
 		XShortField('hdrChecksum', 0),
-		XLongField('srcAddr', 0),
-		XLongField('dstAddr', 0),
+		XIntField('srcAddr', 0),
+		XIntField('dstAddr', 0),
 	]
-	#update hdrChecksum over [[u'ipv4', u'version'], [u'ipv4', u'ihl'], [u'ipv4', u'diffserv'], [u'ipv4', u'totalLen'], [u'ipv4', u'identification'], [u'ipv4', u'flags'], [u'ipv4', u'fragOffset'], [u'ipv4', u'ttl'], [u'ipv4', u'protocol'], [u'ipv4', u'srcAddr'], [u'ipv4', u'dstAddr']] using csum16 in post_build method
-
 class Tcp(Packet):
 	name = 'tcp'
 	fields_desc = [
 		XShortField('srcPort', 0),
 		XShortField('dstPort', 0),
-		XLongField('seqNo', 0),
-		XLongField('ackNo', 0),
+		XIntField('seqNo', 0),
+		XIntField('ackNo', 0),
 		XBitField('dataOffset', 0, 4),
 		XBitField('res', 0, 3),
 		XBitField('ecn', 0, 3),

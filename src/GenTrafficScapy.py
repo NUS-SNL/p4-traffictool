@@ -120,6 +120,15 @@ def make_header(headers, header_types, header_id, checksums, calculations, fout)
     if (chksum):
         fout.write("\t#update %s over %s using %s in post_build method\n\n" %(target,fields,algo))
 
+def remove_number(headers):
+    unique_headers = {}
+    for header in headers:
+        name = header['name']
+        if name.find('[')!=(-1):
+            header['name'] = name[:name.find('[')]
+        unique_headers[header['name']] = header
+    return unique_headers.keys(),unique_headers.values()
+
 # defines various header types and check if any common header type can be substituted in its place, calls make_header function
 def make_classes(data, fout):
     global ETHER_DETECT
@@ -128,8 +137,8 @@ def make_classes(data, fout):
     global TCP_DETECT
     global UDP_DETECT
 
-    header_ports = []
-    headers = data["headers"]
+    
+    header_ports, headers = remove_number(data["headers"])
     header_types = data["header_types"]
     checksums = data["checksums"]
     calculations = data["calculations"]
@@ -141,7 +150,7 @@ def make_classes(data, fout):
         except NameError:
             pass
         if (headers[header_id]['metadata']) == False:
-            header_ports.append(correct_name(headers[header_id]['name']))
+            # header_ports.append(correct_name(headers[header_id]['name']))
             if (headers[header_id]['name']=='ethernet'):
                 temp = input("\nEthernet header detected, would you like the standard ethernet header to be used(y/n) : ").strip()
                 if (temp == 'y'):
@@ -259,22 +268,7 @@ def make_packets(header_ports, init_states, control_graph, fout):
     for i in paths[:-1]:
         fout.write("\t(%s)),\n" % (string_packet(header_ports,i)))
     fout.write("\t(%s))\n" % (string_packet(header_ports,paths[-1])))
-    fout.write("]\n")
-
-# rectifies array names for inbuilt header types
-def change_names(header_ports, control_graph, init_states, old, new):
-    for i in range(len(header_ports)):
-        if (header_ports[i]==old):
-            header_ports[i]=new
-    for i in range(len(control_graph)):
-        if (control_graph[i][0]==old):
-            control_graph[i][0]=new
-        if (control_graph[i][-1]==old):
-            control_graph[i][-1]=new
-    for i in range(len(init_states)):
-        if (init_states[i]==old):
-            init_states[i]=new
-    return (header_ports,control_graph,init_states)                
+    fout.write("]\n")                
 
 def correct_metadata(header_ports, control_graph, init_states):
     if (ETHER_DETECT):
