@@ -120,14 +120,18 @@ if [[ "$DEBUG_MODE" = true ]]; then
     print_arguments
 fi
 
-if [[ "$SCAPY" = false  &&  "$MOONGEN" = false &&  "$PCAPPLUSPLUS" = false &&  "$WIRESHARK" = false ]] ; then
-    echo "No Target specified"
-    usage 2
-fi
-
 if [[ "$JSON_DETECT" = false && "$P4_DETECT" = false ]]; then
     echo "No source specified"
     usage 2
+fi
+
+if [[ "$SCAPY" = false  &&  "$MOONGEN" = false &&  "$PCAPPLUSPLUS" = false &&  "$WIRESHARK" = false ]] ; then
+    # echo "No Target specified"
+    # usage 2
+    SCAPY=true
+    MOONGEN=true
+    PCAPPLUSPLUS=true
+    WIRESHARK=true
 fi
 
 if [ "$JSON_DETECT" = false ]; then

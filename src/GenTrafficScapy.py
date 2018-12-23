@@ -88,6 +88,8 @@ def detect_field_type(field):
     elif (field[1]==16):
         return ("XShortField('"+field[0]+"', 0)")
     elif (field[1]==32):
+        return ("XIntField('"+field[0]+"', 0)")
+    elif (field[1]==64):
         return ("XLongField('"+field[0]+"', 0)")
     else:
         return ("XBitField('"+field[0]+"', 0, "+ str(field[1])+")")

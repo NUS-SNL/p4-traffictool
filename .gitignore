@@ -2,3 +2,5 @@
 *.p4i
 *.p4rt
 tests/*.pcap
+*.pcap
+samples/*/output/*

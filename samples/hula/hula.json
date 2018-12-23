@@ -1,0 +1,2269 @@
+{
+  "header_types" : [
+    {
+      "name" : "scalars_0",
+      "id" : 0,
+      "fields" : [
+        ["tmp_0", 16, false],
+        ["tmp_1", 32, false],
+        ["tmp_2", 16, false],
+        ["tmp_3", 32, false],
+        ["tmp", 16, false],
+        ["old_qdepth", 15, false],
+        ["old_digest", 32, false],
+        ["flow_hash", 16, false],
+        ["port_1", 16, false],
+        ["metadata.index", 32, false],
+        ["_padding_0", 1, false]
+      ]
+    },
+    {
+      "name" : "standard_metadata",
+      "id" : 1,
+      "fields" : [
+        ["ingress_port", 9, false],
+        ["egress_spec", 9, false],
+        ["egress_port", 9, false],
+        ["clone_spec", 32, false],
+        ["instance_type", 32, false],
+        ["drop", 1, false],
+        ["recirculate_port", 16, false],
+        ["packet_length", 32, false],
+        ["enq_timestamp", 32, false],
+        ["enq_qdepth", 19, false],
+        ["deq_timedelta", 32, false],
+        ["deq_qdepth", 19, false],
+        ["ingress_global_timestamp", 48, false],
+        ["egress_global_timestamp", 48, false],
+        ["lf_field_list", 32, false],
+        ["mcast_grp", 16, false],
+        ["resubmit_flag", 32, false],
+        ["egress_rid", 16, false],
+        ["checksum_error", 1, false],
+        ["recirculate_flag", 32, false],
+        ["_padding", 5, false]
+      ]
+    },
+    {
+      "name" : "ethernet_t",
+      "id" : 2,
+      "fields" : [
+        ["dstAddr", 48, false],
+        ["srcAddr", 48, false],
+        ["etherType", 16, false]
+      ]
+    },
+    {
+      "name" : "ipv4_t",
+      "id" : 3,
+      "fields" : [
+        ["version", 4, false],
+        ["ihl", 4, false],
+        ["diffserv", 8, false],
+        ["totalLen", 16, false],
+        ["identification", 16, false],
+        ["flags", 3, false],
+        ["fragOffset", 13, false],
+        ["ttl", 8, false],
+        ["protocol", 8, false],
+        ["hdrChecksum", 16, false],
+        ["srcAddr", 32, false],
+        ["dstAddr", 32, false]
+      ]
+    },
+    {
+      "name" : "udp_t",
+      "id" : 4,
+      "fields" : [
+        ["srcPort", 16, false],
+        ["dstPort", 16, false],
+        ["length_", 16, false],
+        ["checksum", 16, false]
+      ]
+    },
+    {
+      "name" : "hula_t",
+      "id" : 5,
+      "fields" : [
+        ["dir", 1, false],
+        ["qdepth", 15, false],
+        ["digest", 32, false]
+      ]
+    },
+    {
+      "name" : "srcRoute_t",
+      "id" : 6,
+      "fields" : [
+        ["bos", 1, false],
+        ["port", 15, false]
+      ]
+    }
+  ],
+  "headers" : [
+    {
+      "name" : "scalars",
+      "id" : 0,
+      "header_type" : "scalars_0",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "standard_metadata",
+      "id" : 1,
+      "header_type" : "standard_metadata",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "ethernet",
+      "id" : 2,
+      "header_type" : "ethernet_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "ipv4",
+      "id" : 3,
+      "header_type" : "ipv4_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "udp",
+      "id" : 4,
+      "header_type" : "udp_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "hula",
+      "id" : 5,
+      "header_type" : "hula_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "srcRoutes[0]",
+      "id" : 6,
+      "header_type" : "srcRoute_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "srcRoutes[1]",
+      "id" : 7,
+      "header_type" : "srcRoute_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "srcRoutes[2]",
+      "id" : 8,
+      "header_type" : "srcRoute_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "srcRoutes[3]",
+      "id" : 9,
+      "header_type" : "srcRoute_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "srcRoutes[4]",
+      "id" : 10,
+      "header_type" : "srcRoute_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "srcRoutes[5]",
+      "id" : 11,
+      "header_type" : "srcRoute_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "srcRoutes[6]",
+      "id" : 12,
+      "header_type" : "srcRoute_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "srcRoutes[7]",
+      "id" : 13,
+      "header_type" : "srcRoute_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "srcRoutes[8]",
+      "id" : 14,
+      "header_type" : "srcRoute_t",
+      "metadata" : false,
+      "pi_omit" : true
+    }
+  ],
+  "header_stacks" : [
+    {
+      "name" : "srcRoutes",
+      "id" : 0,
+      "header_type" : "srcRoute_t",
+      "size" : 9,
+      "header_ids" : [6, 7, 8, 9, 10, 11, 12, 13, 14]
+    }
+  ],
+  "header_union_types" : [],
+  "header_unions" : [],
+  "header_union_stacks" : [],
+  "field_lists" : [],
+  "errors" : [],
+  "enums" : [],
+  "parsers" : [
+    {
+      "name" : "parser",
+      "id" : 0,
+      "init_state" : "start",
+      "parse_states" : [
+        {
+          "name" : "start",
+          "id" : 0,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ethernet"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x2345",
+              "mask" : null,
+              "next_state" : "parse_hula"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x0800",
+              "mask" : null,
+              "next_state" : "parse_ipv4"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_hula",
+          "id" : 1,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "hula"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : "parse_srcRouting"
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "parse_srcRouting",
+          "id" : 2,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "stack",
+                  "value" : "srcRoutes"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x01",
+              "mask" : null,
+              "next_state" : "parse_ipv4"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : "parse_srcRouting"
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "stack_field",
+              "value" : ["srcRoutes", "bos"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_ipv4",
+          "id" : 3,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ipv4"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x11",
+              "mask" : null,
+              "next_state" : "parse_udp"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "protocol"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_udp",
+          "id" : 4,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "udp"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
+        }
+      ]
+    }
+  ],
+  "parse_vsets" : [],
+  "deparsers" : [
+    {
+      "name" : "deparser",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "hula/hula.p4",
+        "line" : 428,
+        "column" : 8,
+        "source_fragment" : "MyDeparser"
+      },
+      "order" : ["ethernet", "hula", "srcRoutes[0]", "srcRoutes[1]", "srcRoutes[2]", "srcRoutes[3]", "srcRoutes[4]", "srcRoutes[5]", "srcRoutes[6]", "srcRoutes[7]", "srcRoutes[8]", "ipv4", "udp"]
+    }
+  ],
+  "meter_arrays" : [],
+  "counter_arrays" : [],
+  "register_arrays" : [
+    {
+      "name" : "MyIngress.srcindex_qdepth_reg",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "hula/hula.p4",
+        "line" : 150,
+        "column" : 27,
+        "source_fragment" : "srcindex_qdepth_reg"
+      },
+      "size" : 32,
+      "bitwidth" : 15
+    },
+    {
+      "name" : "MyIngress.srcindex_digest_reg",
+      "id" : 1,
+      "source_info" : {
+        "filename" : "hula/hula.p4",
+        "line" : 156,
+        "column" : 27,
+        "source_fragment" : "srcindex_digest_reg"
+      },
+      "size" : 32,
+      "bitwidth" : 32
+    },
+    {
+      "name" : "MyIngress.dstindex_nhop_reg",
+      "id" : 2,
+      "source_info" : {
+        "filename" : "hula/hula.p4",
+        "line" : 159,
+        "column" : 26,
+        "source_fragment" : "dstindex_nhop_reg"
+      },
+      "size" : 32,
+      "bitwidth" : 16
+    },
+    {
+      "name" : "MyIngress.flow_port_reg",
+      "id" : 3,
+      "source_info" : {
+        "filename" : "hula/hula.p4",
+        "line" : 162,
+        "column" : 29,
+        "source_fragment" : "flow_port_reg"
+      },
+      "size" : 65536,
+      "bitwidth" : 16
+    }
+  ],
+  "calculations" : [
+    {
+      "name" : "calc",
+      "id" : 0,
+      "algo" : "crc16",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["udp", "srcPort"]
+        }
+      ]
+    },
+    {
+      "name" : "calc_0",
+      "id" : 1,
+      "source_info" : {
+        "filename" : "hula/hula.p4",
+        "line" : 406,
+        "column" : 1,
+        "source_fragment" : "update_checksum( ..."
+      },
+      "algo" : "csum16",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "version"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ihl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "diffserv"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "totalLen"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "identification"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "flags"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "fragOffset"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ttl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "protocol"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
+        }
+      ]
+    }
+  ],
+  "learn_lists" : [],
+  "actions" : [
+    {
+      "name" : "NoAction",
+      "id" : 0,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "MyIngress.drop",
+      "id" : 1,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "drop",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 166,
+            "column" : 8,
+            "source_fragment" : "mark_to_drop()"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.drop",
+      "id" : 2,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "drop",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 166,
+            "column" : 8,
+            "source_fragment" : "mark_to_drop()"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.drop",
+      "id" : 3,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "drop",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 166,
+            "column" : 8,
+            "source_fragment" : "mark_to_drop()"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.drop",
+      "id" : 4,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "drop",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 166,
+            "column" : 8,
+            "source_fragment" : "mark_to_drop()"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.nop",
+      "id" : 5,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "MyIngress.update_ttl",
+      "id" : 6,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "ttl"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["ipv4", "ttl"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xff"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 173,
+            "column" : 8,
+            "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl - 1"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.set_dmac",
+      "id" : 7,
+      "runtime_data" : [
+        {
+          "name" : "dstAddr",
+          "bitwidth" : 48
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "srcAddr"]
+            },
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 177,
+            "column" : 8,
+            "source_fragment" : "hdr.ethernet.srcAddr = hdr.ethernet.dstAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 178,
+            "column" : 8,
+            "source_fragment" : "hdr.ethernet.dstAddr = dstAddr"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.srcRoute_nhop",
+      "id" : 8,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["srcRoutes[0]", "port"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x01ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 183,
+            "column" : 8,
+            "source_fragment" : "standard_metadata.egress_spec = (bit<9>)hdr.srcRoutes[0].port"
+          }
+        },
+        {
+          "op" : "pop",
+          "parameters" : [
+            {
+              "type" : "header_stack",
+              "value" : "srcRoutes"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x1"
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 184,
+            "column" : 8,
+            "source_fragment" : "hdr.srcRoutes.pop_front(1)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.srcRoute_nhop",
+      "id" : 9,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["srcRoutes[0]", "port"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x01ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 183,
+            "column" : 8,
+            "source_fragment" : "standard_metadata.egress_spec = (bit<9>)hdr.srcRoutes[0].port"
+          }
+        },
+        {
+          "op" : "pop",
+          "parameters" : [
+            {
+              "type" : "header_stack",
+              "value" : "srcRoutes"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x1"
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 184,
+            "column" : 8,
+            "source_fragment" : "hdr.srcRoutes.pop_front(1)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.hula_dst",
+      "id" : 10,
+      "runtime_data" : [
+        {
+          "name" : "index",
+          "bitwidth" : 32
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.index"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 192,
+            "column" : 8,
+            "source_fragment" : "meta.index = index"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.hula_set_nhop",
+      "id" : 11,
+      "runtime_data" : [
+        {
+          "name" : "index",
+          "bitwidth" : 32
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_0"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["standard_metadata", "ingress_port"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 200,
+            "column" : 39,
+            "source_fragment" : "(bit<16>)standard_metadata.ingress_port"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.dstindex_nhop_reg"
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_0"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 200,
+            "column" : 8,
+            "source_fragment" : "dstindex_nhop_reg.write(index, (bit<16>)standard_metadata.ingress_port)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.hula_get_nhop",
+      "id" : 12,
+      "runtime_data" : [
+        {
+          "name" : "index",
+          "bitwidth" : 32
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.dstindex_nhop_reg"
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 206,
+            "column" : 7,
+            "source_fragment" : "dstindex_nhop_reg.read(tmp, index)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "tmp"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x01ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 207,
+            "column" : 7,
+            "source_fragment" : "standard_metadata.egress_spec = (bit<9>)tmp"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.change_best_path_at_dst",
+      "id" : 13,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.srcindex_qdepth_reg"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.index"]
+            },
+            {
+              "type" : "field",
+              "value" : ["hula", "qdepth"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 212,
+            "column" : 8,
+            "source_fragment" : "srcindex_qdepth_reg.write(meta.index, hdr.hula.qdepth)"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.srcindex_digest_reg"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.index"]
+            },
+            {
+              "type" : "field",
+              "value" : ["hula", "digest"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 213,
+            "column" : 8,
+            "source_fragment" : "srcindex_digest_reg.write(meta.index, hdr.hula.digest)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.return_hula_to_src",
+      "id" : 14,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["hula", "dir"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x01"
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 222,
+            "column" : 8,
+            "source_fragment" : "hdr.hula.dir = 1"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "ingress_port"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 223,
+            "column" : 8,
+            "source_fragment" : "standard_metadata.egress_spec = standard_metadata.ingress_port"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act",
+      "id" : 15,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.srcindex_qdepth_reg"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.index"]
+            },
+            {
+              "type" : "field",
+              "value" : ["hula", "qdepth"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 331,
+            "column" : 32,
+            "source_fragment" : "srcindex_qdepth_reg.write(meta.index, hdr.hula.qdepth)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_0",
+      "id" : 16,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "old_digest"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.srcindex_digest_reg"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.index"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 329,
+            "column" : 28,
+            "source_fragment" : "srcindex_digest_reg.read(old_digest, meta.index)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_1",
+      "id" : 17,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "old_qdepth"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.srcindex_qdepth_reg"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.index"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 316,
+            "column" : 24,
+            "source_fragment" : "srcindex_qdepth_reg.read(old_qdepth, meta.index)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_2",
+      "id" : 18,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_1"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "flow_hash"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 362,
+            "column" : 36,
+            "source_fragment" : "(bit<32>)flow_hash"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_2"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["standard_metadata", "egress_spec"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 362,
+            "column" : 56,
+            "source_fragment" : "(bit<16>)standard_metadata.egress_spec"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.flow_port_reg"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_1"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_2"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 362,
+            "column" : 16,
+            "source_fragment" : "flow_port_reg.write((bit<32>)flow_hash, (bit<16>)standard_metadata.egress_spec)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_3",
+      "id" : 19,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "port_1"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x01ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 365,
+            "column" : 16,
+            "source_fragment" : "standard_metadata.egress_spec = (bit<9>)port"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_4",
+      "id" : 20,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "modify_field_with_hash_based_offset",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "flow_hash"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x0000"
+            },
+            {
+              "type" : "calculation",
+              "value" : "calc"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00010000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 348,
+            "column" : 12,
+            "source_fragment" : "hash( ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_3"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "flow_hash"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 357,
+            "column" : 37,
+            "source_fragment" : "(bit<32>)flow_hash"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "port_1"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.flow_port_reg"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_3"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 357,
+            "column" : 12,
+            "source_fragment" : "flow_port_reg.read(port, (bit<32>)flow_hash)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_5",
+      "id" : 21,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["hula", "qdepth"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["standard_metadata", "deq_qdepth"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x7fff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 394,
+            "column" : 16,
+            "source_fragment" : "hdr.hula.qdepth = (qdepth_t)standard_metadata.deq_qdepth"
+          }
+        }
+      ]
+    }
+  ],
+  "pipelines" : [
+    {
+      "name" : "ingress",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "hula/hula.p4",
+        "line" : 142,
+        "column" : 8,
+        "source_fragment" : "MyIngress"
+      },
+      "init_table" : "node_2",
+      "tables" : [
+        {
+          "name" : "MyIngress.hula_fwd",
+          "id" : 0,
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 231,
+            "column" : 10,
+            "source_fragment" : "hula_fwd"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "hdr.ipv4.dstAddr",
+              "target" : ["ipv4", "dstAddr"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "hdr.ipv4.srcAddr",
+              "target" : ["ipv4", "srcAddr"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 33,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [10, 8],
+          "actions" : ["MyIngress.hula_dst", "MyIngress.srcRoute_nhop"],
+          "base_default_next" : "node_23",
+          "next_tables" : {
+            "MyIngress.hula_dst" : "tbl_act",
+            "MyIngress.srcRoute_nhop" : "node_23"
+          },
+          "default_entry" : {
+            "action_id" : 8,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_act",
+          "id" : 1,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [17],
+          "actions" : ["act_1"],
+          "base_default_next" : "node_6",
+          "next_tables" : {
+            "act_1" : "node_6"
+          },
+          "default_entry" : {
+            "action_id" : 17,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_change_best_path_at_dst",
+          "id" : 2,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [13],
+          "actions" : ["MyIngress.change_best_path_at_dst"],
+          "base_default_next" : "tbl_return_hula_to_src",
+          "next_tables" : {
+            "MyIngress.change_best_path_at_dst" : "tbl_return_hula_to_src"
+          },
+          "default_entry" : {
+            "action_id" : 13,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_return_hula_to_src",
+          "id" : 3,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [14],
+          "actions" : ["MyIngress.return_hula_to_src"],
+          "base_default_next" : "node_23",
+          "next_tables" : {
+            "MyIngress.return_hula_to_src" : "node_23"
+          },
+          "default_entry" : {
+            "action_id" : 14,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_act_0",
+          "id" : 4,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [16],
+          "actions" : ["act_0"],
+          "base_default_next" : "node_10",
+          "next_tables" : {
+            "act_0" : "node_10"
+          },
+          "default_entry" : {
+            "action_id" : 16,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_act_1",
+          "id" : 5,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [15],
+          "actions" : ["act"],
+          "base_default_next" : "tbl_drop",
+          "next_tables" : {
+            "act" : "tbl_drop"
+          },
+          "default_entry" : {
+            "action_id" : 15,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_drop",
+          "id" : 6,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [3],
+          "actions" : ["MyIngress.drop"],
+          "base_default_next" : "node_23",
+          "next_tables" : {
+            "MyIngress.drop" : "node_23"
+          },
+          "default_entry" : {
+            "action_id" : 3,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "MyIngress.hula_bwd",
+          "id" : 7,
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 249,
+            "column" : 10,
+            "source_fragment" : "hula_bwd"
+          },
+          "key" : [
+            {
+              "match_type" : "lpm",
+              "name" : "hdr.ipv4.dstAddr",
+              "target" : ["ipv4", "dstAddr"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "lpm",
+          "type" : "simple",
+          "max_size" : 32,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [11, 0],
+          "actions" : ["MyIngress.hula_set_nhop", "NoAction"],
+          "base_default_next" : "MyIngress.hula_src",
+          "next_tables" : {
+            "MyIngress.hula_set_nhop" : "MyIngress.hula_src",
+            "NoAction" : "MyIngress.hula_src"
+          },
+          "default_entry" : {
+            "action_id" : 0,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "MyIngress.hula_src",
+          "id" : 8,
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 264,
+            "column" : 10,
+            "source_fragment" : "hula_src"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "hdr.ipv4.srcAddr",
+              "target" : ["ipv4", "srcAddr"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 2,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [1, 9],
+          "actions" : ["MyIngress.drop", "MyIngress.srcRoute_nhop"],
+          "base_default_next" : "node_23",
+          "next_tables" : {
+            "MyIngress.drop" : "node_23",
+            "MyIngress.srcRoute_nhop" : "node_23"
+          },
+          "default_entry" : {
+            "action_id" : 9,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_act_2",
+          "id" : 9,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [20],
+          "actions" : ["act_4"],
+          "base_default_next" : "node_17",
+          "next_tables" : {
+            "act_4" : "node_17"
+          },
+          "default_entry" : {
+            "action_id" : 20,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "MyIngress.hula_nhop",
+          "id" : 10,
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 279,
+            "column" : 10,
+            "source_fragment" : "hula_nhop"
+          },
+          "key" : [
+            {
+              "match_type" : "lpm",
+              "name" : "hdr.ipv4.dstAddr",
+              "target" : ["ipv4", "dstAddr"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "lpm",
+          "type" : "simple",
+          "max_size" : 32,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [12, 2],
+          "actions" : ["MyIngress.hula_get_nhop", "MyIngress.drop"],
+          "base_default_next" : "tbl_act_3",
+          "next_tables" : {
+            "MyIngress.hula_get_nhop" : "tbl_act_3",
+            "MyIngress.drop" : "tbl_act_3"
+          },
+          "default_entry" : {
+            "action_id" : 2,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_act_3",
+          "id" : 11,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [18],
+          "actions" : ["act_2"],
+          "base_default_next" : "MyIngress.dmac",
+          "next_tables" : {
+            "act_2" : "MyIngress.dmac"
+          },
+          "default_entry" : {
+            "action_id" : 18,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_act_4",
+          "id" : 12,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [19],
+          "actions" : ["act_3"],
+          "base_default_next" : "MyIngress.dmac",
+          "next_tables" : {
+            "act_3" : "MyIngress.dmac"
+          },
+          "default_entry" : {
+            "action_id" : 19,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "MyIngress.dmac",
+          "id" : 13,
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 294,
+            "column" : 10,
+            "source_fragment" : "dmac"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "standard_metadata.egress_spec",
+              "target" : ["standard_metadata", "egress_spec"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 16,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [7, 5],
+          "actions" : ["MyIngress.set_dmac", "MyIngress.nop"],
+          "base_default_next" : "node_23",
+          "next_tables" : {
+            "MyIngress.set_dmac" : "node_23",
+            "MyIngress.nop" : "node_23"
+          },
+          "default_entry" : {
+            "action_id" : 5,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_drop_0",
+          "id" : 14,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [4],
+          "actions" : ["MyIngress.drop"],
+          "base_default_next" : "node_23",
+          "next_tables" : {
+            "MyIngress.drop" : "node_23"
+          },
+          "default_entry" : {
+            "action_id" : 4,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_update_ttl",
+          "id" : 15,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [6],
+          "actions" : ["MyIngress.update_ttl"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "MyIngress.update_ttl" : null
+          },
+          "default_entry" : {
+            "action_id" : 6,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        }
+      ],
+      "action_profiles" : [],
+      "conditionals" : [
+        {
+          "name" : "node_2",
+          "id" : 0,
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 307,
+            "column" : 12,
+            "source_fragment" : "hdr.hula.isValid()"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "d2b",
+              "left" : null,
+              "right" : {
+                "type" : "field",
+                "value" : ["hula", "$valid$"]
+              }
+            }
+          },
+          "true_next" : "node_3",
+          "false_next" : "node_15"
+        },
+        {
+          "name" : "node_3",
+          "id" : 1,
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 308,
+            "column" : 16,
+            "source_fragment" : "hdr.hula.dir == 0"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["hula", "dir"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x00"
+              }
+            }
+          },
+          "true_next" : "MyIngress.hula_fwd",
+          "false_next" : "MyIngress.hula_bwd"
+        },
+        {
+          "name" : "node_6",
+          "id" : 2,
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 318,
+            "column" : 28,
+            "source_fragment" : "old_qdepth > hdr.hula.qdepth"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : ">",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "old_qdepth"]
+              },
+              "right" : {
+                "type" : "field",
+                "value" : ["hula", "qdepth"]
+              }
+            }
+          },
+          "true_next" : "tbl_change_best_path_at_dst",
+          "false_next" : "tbl_act_0"
+        },
+        {
+          "name" : "node_10",
+          "id" : 3,
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 330,
+            "column" : 32,
+            "source_fragment" : "old_digest == hdr.hula.digest"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "old_digest"]
+              },
+              "right" : {
+                "type" : "field",
+                "value" : ["hula", "digest"]
+              }
+            }
+          },
+          "true_next" : "tbl_act_1",
+          "false_next" : "tbl_drop"
+        },
+        {
+          "name" : "node_15",
+          "id" : 4,
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 346,
+            "column" : 18,
+            "source_fragment" : "hdr.ipv4.isValid()"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "d2b",
+              "left" : null,
+              "right" : {
+                "type" : "field",
+                "value" : ["ipv4", "$valid$"]
+              }
+            }
+          },
+          "true_next" : "tbl_act_2",
+          "false_next" : "tbl_drop_0"
+        },
+        {
+          "name" : "node_17",
+          "id" : 5,
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 359,
+            "column" : 16,
+            "source_fragment" : "port == 0"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "port_1"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x0000"
+              }
+            }
+          },
+          "true_next" : "MyIngress.hula_nhop",
+          "false_next" : "tbl_act_4"
+        },
+        {
+          "name" : "node_23",
+          "id" : 6,
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 374,
+            "column" : 12,
+            "source_fragment" : "hdr.ipv4.isValid()"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "d2b",
+              "left" : null,
+              "right" : {
+                "type" : "field",
+                "value" : ["ipv4", "$valid$"]
+              }
+            }
+          },
+          "false_next" : null,
+          "true_next" : "tbl_update_ttl"
+        }
+      ]
+    },
+    {
+      "name" : "egress",
+      "id" : 1,
+      "source_info" : {
+        "filename" : "hula/hula.p4",
+        "line" : 384,
+        "column" : 8,
+        "source_fragment" : "MyEgress"
+      },
+      "init_table" : "node_27",
+      "tables" : [
+        {
+          "name" : "tbl_act_5",
+          "id" : 16,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [21],
+          "actions" : ["act_5"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "act_5" : null
+          },
+          "default_entry" : {
+            "action_id" : 21,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        }
+      ],
+      "action_profiles" : [],
+      "conditionals" : [
+        {
+          "name" : "node_27",
+          "id" : 7,
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 388,
+            "column" : 12,
+            "source_fragment" : "hdr.hula.isValid() && hdr.hula.dir == 0"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "and",
+              "left" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "d2b",
+                  "left" : null,
+                  "right" : {
+                    "type" : "field",
+                    "value" : ["hula", "$valid$"]
+                  }
+                }
+              },
+              "right" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "==",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["hula", "dir"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x00"
+                  }
+                }
+              }
+            }
+          },
+          "false_next" : null,
+          "true_next" : "node_28"
+        },
+        {
+          "name" : "node_28",
+          "id" : 8,
+          "source_info" : {
+            "filename" : "hula/hula.p4",
+            "line" : 391,
+            "column" : 16,
+            "source_fragment" : "hdr.hula.qdepth < (qdepth_t)standard_metadata.deq_qdepth"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "<",
+              "left" : {
+                "type" : "field",
+                "value" : ["hula", "qdepth"]
+              },
+              "right" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["standard_metadata", "deq_qdepth"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x7fff"
+                  }
+                }
+              }
+            }
+          },
+          "false_next" : null,
+          "true_next" : "tbl_act_5"
+        }
+      ]
+    }
+  ],
+  "checksums" : [
+    {
+      "name" : "cksum",
+      "id" : 0,
+      "target" : ["ipv4", "hdrChecksum"],
+      "type" : "generic",
+      "calculation" : "calc_0",
+      "if_cond" : {
+        "type" : "expression",
+        "value" : {
+          "op" : "d2b",
+          "left" : null,
+          "right" : {
+            "type" : "field",
+            "value" : ["ipv4", "$valid$"]
+          }
+        }
+      }
+    }
+  ],
+  "force_arith" : [],
+  "extern_instances" : [],
+  "field_aliases" : [
+    [
+      "queueing_metadata.enq_timestamp",
+      ["standard_metadata", "enq_timestamp"]
+    ],
+    [
+      "queueing_metadata.enq_qdepth",
+      ["standard_metadata", "enq_qdepth"]
+    ],
+    [
+      "queueing_metadata.deq_timedelta",
+      ["standard_metadata", "deq_timedelta"]
+    ],
+    [
+      "queueing_metadata.deq_qdepth",
+      ["standard_metadata", "deq_qdepth"]
+    ],
+    [
+      "intrinsic_metadata.ingress_global_timestamp",
+      ["standard_metadata", "ingress_global_timestamp"]
+    ],
+    [
+      "intrinsic_metadata.egress_global_timestamp",
+      ["standard_metadata", "egress_global_timestamp"]
+    ],
+    [
+      "intrinsic_metadata.lf_field_list",
+      ["standard_metadata", "lf_field_list"]
+    ],
+    [
+      "intrinsic_metadata.mcast_grp",
+      ["standard_metadata", "mcast_grp"]
+    ],
+    [
+      "intrinsic_metadata.resubmit_flag",
+      ["standard_metadata", "resubmit_flag"]
+    ],
+    [
+      "intrinsic_metadata.egress_rid",
+      ["standard_metadata", "egress_rid"]
+    ],
+    [
+      "intrinsic_metadata.recirculate_flag",
+      ["standard_metadata", "recirculate_flag"]
+    ]
+  ],
+  "program" : "hula/hula.p4",
+  "__meta__" : {
+    "version" : [2, 18],
+    "compiler" : "https://github.com/p4lang/p4c"
+  }
+}
