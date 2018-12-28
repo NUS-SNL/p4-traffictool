@@ -175,9 +175,8 @@ def host_network_conversion(field):
     return "-- fill blank here"
 
 # makes the actual lua script given the relevant header type and next and previous state transition information
-def make_template(control_graph, header, header_type, destination, header_ports):
-    
-        headerUpper = header.lower()
+def make_template(control_graph, header, header_type, destination, header_ports, local_name):
+        headerUpper = local_name + header.lower()
         fout = open(destination,"w")
         fout.write("--Template for addition of new protocol '%s'\n\n" %(header))
         copy_template(fout)
@@ -279,7 +278,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         fout.write("-- Dictionary for next level headers\n")
         fout.write("local nextHeaderResolve = {\n")
         for transition in next_transitions:
-            fout.write("\t%s = %s,\n" %(transition[0].upper(),transition[1]))
+            fout.write("\t%s = %s,\n" %((local_name + transition[0]).lower(),transition[1]))
         fout.write("}\n")
 
 
@@ -320,7 +319,7 @@ for i in range(len(header_ports)):
     destination = DESTINATION + local_name + "_" + \
         header_ports[i] + ".lua"
     make_template(
-        control_graph, header_ports[i], header_types[i], destination, header_ports)
+        control_graph, header_ports[i], header_types[i], destination, header_ports, local_name+"_")
 
 # next header addition info
 d={ 'ethernet':[],
