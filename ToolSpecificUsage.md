@@ -96,12 +96,12 @@ If standard headers (Ethernet, IPv4, etc.) are detected, the user will be asked 
 
 #### Generated Code
 The code for MoonGen would be generated in the output directory inside a subdirectory "moongen". It consists of Lua files corresponding to each protocol (header). Each file contains:
-*  Struct definitions for 24, 40 and 48 bits fields.
 *  Header struct definition.
 *  Getters, Setters and String function for each field of the protocol.
 *  A function named `resolveNextHeader` which determines the next header to be parsed depending on the value of the "selector" field in the current protocol.
 
 ### Integration and Usage with MoonGen
+0. Copy the file `templates/bitfields_def.lua` to the directory `MoonGen/libmoon/lua/`. This is just a one-time requirement. This file contains struct definitions for 24, 40 and 48 bits fields.
 1. Copy the newly generated protocol files (Lua files) to MoonGen/libmoon/lua/proto/    
 
 2. If you used any default headers then add the corresponding next layer headers to the `resolveNextHeader` function of the default header.
