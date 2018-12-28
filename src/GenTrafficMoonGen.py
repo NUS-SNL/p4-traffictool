@@ -294,10 +294,21 @@ def make_template(control_graph, header, header_type, destination, header_ports,
             fout.write("\treturn nil\n")
         fout.write("end\n\n")
 
+        fout.write("function %sHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)\n" %(headerUpper))
+        if (len(next_transitions)>0):
+            fout.write("\tif not namedArgs[pre .. '%s'] then\n" %(transition_key.upper()))
+            fout.write("\t\tfor name, _port in pairs(nextHeaderResolve) do\n")
+            fout.write("\t\t\tif nextHeader == name then\n")
+            fout.write("\t\t\t\tnamedArgs[pre .. '%s'] = _port\n" %(transition_key.upper()))
+            fout.write("\t\t\t\tbreak\n")
+            fout.write("\t\t\tend\n\t\tend\n\tend\n")
+        fout.write("\treturn namedArgs\n")
+        fout.write("end\n")
+
+
         fout.write("\n-----------------------------------------------------\n")
         fout.write("---- Metatypes")
         fout.write("\n-----------------------------------------------------\n")
-        fout.write("ffi.metatype('union bitfield_24',bitfield24)\nffi.metatype('union bitfield_40',bitfield40)\nffi.metatype('union bitfield_48',bitfield48)\n")
         fout.write("%s.metatype = %sHeader\n" %(headerUpper, headerUpper))
         fout.write("\nreturn %s" %(headerUpper))
 
