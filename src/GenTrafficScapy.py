@@ -270,6 +270,21 @@ def make_packets(header_ports, init_states, control_graph, fout):
     fout.write("\t(%s))\n" % (string_packet(header_ports,paths[-1])))
     fout.write("]\n")                
 
+# rectifies array names for inbuilt header types
+def change_names(header_ports, control_graph, init_states, old, new):
+    for i in range(len(header_ports)):
+        if (header_ports[i]==old):
+            header_ports[i]=new
+    for i in range(len(control_graph)):
+        if (control_graph[i][0]==old):
+            control_graph[i][0]=new
+        if (control_graph[i][-1]==old):
+            control_graph[i][-1]=new
+    for i in range(len(init_states)):
+        if (init_states[i]==old):
+            init_states[i]=new
+    return (header_ports,control_graph,init_states)
+    
 def correct_metadata(header_ports, control_graph, init_states):
     if (ETHER_DETECT):
         (header_ports,control_graph,init_states) = change_names(header_ports, control_graph, init_states, "ethernet", "Ether")
