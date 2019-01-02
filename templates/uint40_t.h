@@ -13,7 +13,7 @@ typedef unsigned char uint40_t[5];
   uint40[1] = (unsigned char)((value) >> 8);    \
   uint40[2] = (unsigned char)((value) >> 16);   \
   uint40[3] = (unsigned char)((value) >> 24);   \
-  uint40[4] = (unsigned char)((value) >> 32);   \
+  uint40[4] = (unsigned char)((value) >> 32);   
 
 // copies value of one UINT40 to other
 #define UINT40_COPY(uint40, value)               \
@@ -29,12 +29,12 @@ typedef unsigned char uint40_t[5];
   (uint40[1] << 8) +         \
   (uint40[2] << 16)+         \
   (uint40[3] << 24)+         \
-  (uint40[4] << 32);         \
+  (uint40[4] << 32);         
 
 
 // UINT40_PRINT: print 'uint40_t' as 3 bytes
 #define UINT40_PRINT(uint40) \
-  printf("%hhu %hhu %hhu %hhu %hhu \n", uint48[4], uint48[3],uint40[2], uint40[1], uint40[0]); \
+  printf("%hhu %hhu %hhu %hhu %hhu \n", uint40[4], uint40[3],uint40[2], uint40[1], uint40[0]); 
 
 
 #if (BYTE_ORDER==LITTLE_ENDIAN) 
@@ -43,7 +43,7 @@ typedef unsigned char uint40_t[5];
     a[1]=b[3];				\
     a[2]=b[2];				\
     a[3]=b[1];        \
-    a[4]=b[0];        \
+    a[4]=b[0];        
 #else
   #define UINT40_HTON(a,b)  UINT40_COPY(a,b)
 #endif
