@@ -139,22 +139,22 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         try:
             bitfield1, bitfield2 = bit_count, field[1]      
             bytefield1, bytefield2 = byte_count, int((bit_count + field[1])/8)
-            if (field[1]%8!=0):
+            if ((bit_count + field[1])%8!=0):
                 bytefield2+=1
             if (field[0]==next_state_key):
                 transition_param += [bytefield1,bytefield2,bitfield1,bitfield2]
             byte_count += int((bit_count + field[1])/8)
             
             bit_count = (bit_count + field[1])%8
-            if (bytefield2>((field[1])/8+1)):
-                bytefield2=(field[1])/8+1
+            # if (bytefield2>((field[1])/8+1)):
+            #     bytefield2=(field[1])/8+1
 
             fout.write("\t\tsubtree:add(%s_%s,tostring(buffer(%d,%d):bitfield(%d,%d)))\n" %(header_lower,field[0],bytefield1,bytefield2,bitfield1,bitfield2))
         except TypeError:
             field[1] = int(input('Variable length field "' + field[0] + '" detected in "' + header + '". Enter its length\n'))
             bitfield1, bitfield2 = bit_count, field[1]      
             bytefield1, bytefield2 = byte_count, int((bit_count + field[1])/8)
-            if (field[1]%8!=0):
+            if ((bit_count + field[1])%8!=0):
                 bytefield2+=1
             if (field[0]==next_state_key):
                 transition_param += [bytefield1,bytefield2,bitfield1,bitfield2]

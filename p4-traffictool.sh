@@ -126,12 +126,51 @@ if [[ "$JSON_DETECT" = false && "$P4_DETECT" = false ]]; then
 fi
 
 if [[ "$SCAPY" = false  &&  "$MOONGEN" = false &&  "$PCAPPLUSPLUS" = false &&  "$WIRESHARK" = false ]] ; then
-    # echo "No Target specified"
-    # usage 2
-    SCAPY=true
-    MOONGEN=true
-    PCAPPLUSPLUS=true
-    WIRESHARK=true
+    echo "No Target specified"
+    while true; do
+        read -p "Do you wish to generate Scapy code? [y/n] " yn
+        case $yn in
+            [Yy]* ) SCAPY=true; break;;
+            [Nn]* ) break;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+
+    while true; do
+        read -p "Do you wish to generate MoonGen code? [y/n] " yn
+        case $yn in
+            [Yy]* ) MOONGEN=true; break;;
+            [Nn]* ) break;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+
+    while true; do
+        read -p "Do you wish to generate WireShark code? [y/n] " yn
+        case $yn in
+            [Yy]* ) WIRESHARK=true; break;;
+            [Nn]* ) break;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+
+    while true; do
+        read -p "Do you wish to generate PcapPlusPlus code? [y/n] " yn
+        case $yn in
+            [Yy]* ) PCAPPLUSPLUS=true; break;;
+            [Nn]* ) break;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+
+    # SCAPY=true
+    # MOONGEN=true
+    # PCAPPLUSPLUS=true
+    # WIRESHARK=true
+fi
+
+if [[ "$SCAPY" = false  &&  "$MOONGEN" = false &&  "$PCAPPLUSPLUS" = false &&  "$WIRESHARK" = false ]] ; then
+    exit 0
 fi
 
 if [ "$JSON_DETECT" = false ]; then
