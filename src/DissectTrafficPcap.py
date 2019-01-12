@@ -208,7 +208,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_header.write("\n\t\t // Getters and Setters for fields\n")
 
     for field in header_type["fields"]:
-        fout_header.write("\t\t %s get%s();\n" %(predict_type(field[1]),str(field[0]).capitalize()))
+        fout_header.write("\t\t %s get%s();\n" %(predict_input_type(field[1]),str(field[0]).capitalize()))
         fout_header.write("\t\t void set%s(%s value);\n" %(str(field[0]).capitalize(),predict_input_type(field[1])))
     
     fout_header.write("\n\t\t inline %shdr* get%sHeader() { return (%shdr*)m_Data; }\n\n" %(header.lower(), header.capitalize(), header.lower()))
@@ -228,19 +228,26 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_source.write("namespace pcpp{\n")
 
     for field in header_type["fields"]:
-        fout_source.write("\t%s %sLayer::get%s(){\n" %(predict_type(field[1]), header.capitalize(), str(field[0]).capitalize()))
+        fout_source.write("\t%s %sLayer::get%s(){\n" %(predict_input_type(field[1]), header.capitalize(), str(field[0]).capitalize()))
         fout_source.write("\t\t%s %s;\n" %(predict_type(field[1]), field[0]))
         fout_source.write("\t\t%shdr* hdrdata = (%shdr*)m_Data;\n" %(header.lower(),header.lower()))
         if (field[1]==24 or field[1]==40 or field[1]==48):
-            fout_source.write("\t\tUINT%d_HTON(hdrdata->%s,%s);\n" %(field[1], field[0], field[0]))
+            fout_source.write("\t\tUINT%d_HTON(%s,hdrdata->%s);\n" %(field[1], field[0], field[0]))
+            # fout_source.write("\t\treturn (%s)(UINT%d_GET(%s));\n\t}\n\n" %(predict_input_type(field[1]),field[1],field[0]))
+            fout_source.write("\t\t%s return_val = UINT%d_GET(%s);\n"%(predict_input_type(field[1]),field[1],field[0]))
+            fout_source.write("\t\treturn return_val;\n\t}\n\n")
+
+
         else:
             fout_source.write("\t\t%s = %s(hdrdata->%s);\n" %(field[0],host_network_conversion(field), field[0]))
-        fout_source.write("\t\treturn %s;\n\t}\n\n" %(field[0]))
+            fout_source.write("\t\treturn %s;\n\t}\n\n" %(field[0]))
 
         fout_source.write("\tvoid %sLayer::set%s(%s value){\n" %(header.capitalize(), str(field[0]).capitalize(), predict_input_type(field[1])))
         fout_source.write("\t\t%shdr* hdrdata = (%shdr*)m_Data;\n" %(header.lower(),header.lower()))
         if (field[1]==24 or field[1]==40 or field[1]==48):
-            fout_source.write("\t\tUINT%d_HTON(value,hdrdata->%s);\n"%(field[1],field[0]))
+            fout_source.write("\t\tuint%d_t value_set;\n"%(field[1]))
+            fout_source.write("\t\tUINT%d_SET(value_set, value);\n"%(field[1]))
+            fout_source.write("\t\tUINT%d_HTON(hdrdata->%s, value_set);\n"%(field[1],field[0]))
         else:
             fout_source.write("\t\thdrdata->%s = %s(value);\n" %(field[0],host_network_conversion(field)))
         fout_source.write("\t}\n")
@@ -287,7 +294,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 
     fout_source.write("\t}\n")
 
-    fout_source.write("\n\tstd::string %sLayer::toString(){ return ""; }\n\n" %(header.capitalize()))
+    fout_source.write("\n\tstd::string %sLayer::toString(){ return \"\"; }\n\n" %(header.capitalize()))
     fout_source.write("}")
 
 
