@@ -203,8 +203,14 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_header.write("\t#pragma pack(pop)\n")
     fout_header.write("\tclass %sLayer: public Layer{\n" %(header.capitalize()))
     fout_header.write("\t\tpublic:\n")
-    fout_header.write("\t\t %sLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_%s;}\n" %(header.capitalize(), header.upper()))
+
+    # constructor to constuct packet from raw data
+    fout_header.write("\t\t%sLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_%s;}\n" %(header.capitalize(), header.upper()))
    
+    # default constructor for packet with empty raw data
+    fout_header.write("\t\t%sLayer(){\n\t\t\tm_DataLen = sizeof(%shdr);\n\t\t\tm_Data = new uint8_t[m_DataLen];\n\t\t\tmemset(m_Data, 0, m_DataLen);\n\t\t\tm_Protocol = P4_%s;\n\t\t}\n" %(header.capitalize(),header.lower(),header.upper()))
+
+
     fout_header.write("\n\t\t // Getters and Setters for fields\n")
 
     for field in header_type["fields"]:
