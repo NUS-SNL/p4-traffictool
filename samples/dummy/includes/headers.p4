@@ -78,13 +78,13 @@ header_type queueing_metadata_t { // 28 bytes
         _pad1: 16;
         egress_global_tstamp : 48;
 
-        _spare_pad_bits: 15;
+        _pad2: 15;
         markbit : 1;
 
-        _pad2: 13;
+        _pad3: 5;
         enq_qdepth: 19;
 
-        _pad3: 13;
+        _pad4: 5;
         deq_qdepth : 19;
     }
 }

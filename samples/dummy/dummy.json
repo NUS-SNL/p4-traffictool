@@ -1,875 +1,491 @@
 {
-    "__meta__": {
-        "version": [
-            2,
-            5
-        ],
-        "compiler": "https://github.com/p4lang/p4c-bm"
+  "header_types" : [
+    {
+      "name" : "scalars_0",
+      "id" : 0,
+      "fields" : [
+        ["metadata._meta_deq_qdepth0", 32, false],
+        ["metadata._meta_above_threshold1", 1, false],
+        ["metadata._meta_bytes_remaining", 32, false],
+        ["metadata._meta_bytes_remaining_0", 32, false],
+        ["metadata._meta_snapshot4", 1, false],
+        ["metadata._meta_pkt_size5", 32, false],
+        ["metadata._meta_write_ptr6", 16, false],
+        ["metadata._meta_read_ptr7", 16, false],
+        ["_padding_0", 6, false]
+      ]
     },
-    "header_types": [
+    {
+      "name" : "standard_metadata",
+      "id" : 1,
+      "fields" : [
+        ["ingress_port", 9, false],
+        ["egress_spec", 9, false],
+        ["egress_port", 9, false],
+        ["clone_spec", 32, false],
+        ["instance_type", 32, false],
+        ["drop", 1, false],
+        ["recirculate_port", 16, false],
+        ["packet_length", 32, false],
+        ["checksum_error", 1, false],
+        ["parser_error", 32, false],
+        ["_padding", 3, false]
+      ]
+    },
+    {
+      "name" : "ethernet_t",
+      "id" : 2,
+      "fields" : [
+        ["dstAddr", 48, false],
+        ["srcAddr", 48, false],
+        ["etherType", 16, false]
+      ]
+    },
+    {
+      "name" : "ipv4_t",
+      "id" : 3,
+      "fields" : [
+        ["version", 4, false],
+        ["ihl", 4, false],
+        ["diffserv", 8, false],
+        ["totalLen", 16, false],
+        ["identification", 16, false],
+        ["flags", 3, false],
+        ["fragOffset", 13, false],
+        ["ttl", 8, false],
+        ["protocol", 8, false],
+        ["hdrChecksum", 16, false],
+        ["srcAddr", 32, false],
+        ["dstAddr", 32, false]
+      ]
+    },
+    {
+      "name" : "queueing_metadata_t",
+      "id" : 4,
+      "fields" : [
+        ["flow_id", 16, false],
+        ["_pad0", 16, false],
+        ["ingress_global_tstamp", 48, false],
+        ["_pad1", 16, false],
+        ["egress_global_tstamp", 48, false],
+        ["_pad2", 15, false],
+        ["markbit", 1, false],
+        ["_pad3", 5, false],
+        ["enq_qdepth", 19, false],
+        ["_pad4", 5, false],
+        ["deq_qdepth", 19, false]
+      ]
+    },
+    {
+      "name" : "snapshot_debug_t",
+      "id" : 5,
+      "fields" : [
+        ["ingress_global_tstamp_hi_16", 16, false],
+        ["ingress_global_tstamp_lo_32", 32, false],
+        ["egress_global_tstamp_lo_32", 32, false],
+        ["enq_qdepth", 32, false],
+        ["deq_qdepth", 32, false],
+        ["_pad0", 16, false],
+        ["orig_egress_global_tstamp", 48, false],
+        ["_pad1", 16, false],
+        ["new_egress_global_tstamp", 48, false],
+        ["new_enq_tstamp", 32, false]
+      ]
+    },
+    {
+      "name" : "udp_t",
+      "id" : 6,
+      "fields" : [
+        ["srcPort", 16, false],
+        ["dstPort", 16, false],
+        ["hdr_length", 16, false],
+        ["checksum", 16, false]
+      ]
+    }
+  ],
+  "headers" : [
+    {
+      "name" : "scalars",
+      "id" : 0,
+      "header_type" : "scalars_0",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "standard_metadata",
+      "id" : 1,
+      "header_type" : "standard_metadata",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "ethernet",
+      "id" : 2,
+      "header_type" : "ethernet_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "ipv4",
+      "id" : 3,
+      "header_type" : "ipv4_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "q_meta",
+      "id" : 4,
+      "header_type" : "queueing_metadata_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "snapshot",
+      "id" : 5,
+      "header_type" : "snapshot_debug_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "udp",
+      "id" : 6,
+      "header_type" : "udp_t",
+      "metadata" : false,
+      "pi_omit" : true
+    }
+  ],
+  "header_stacks" : [],
+  "header_union_types" : [],
+  "header_unions" : [],
+  "header_union_stacks" : [],
+  "field_lists" : [],
+  "errors" : [
+    ["NoError", 1],
+    ["PacketTooShort", 2],
+    ["NoMatch", 3],
+    ["StackOutOfBounds", 4],
+    ["HeaderTooShort", 5],
+    ["ParserTimeout", 6]
+  ],
+  "enums" : [],
+  "parsers" : [
+    {
+      "name" : "parser",
+      "id" : 0,
+      "init_state" : "start",
+      "parse_states" : [
         {
-            "name": "standard_metadata_t",
-            "id": 0,
-            "fields": [
-                [
-                    "ingress_port",
-                    9
-                ],
-                [
-                    "packet_length",
-                    32
-                ],
-                [
-                    "egress_spec",
-                    9
-                ],
-                [
-                    "egress_port",
-                    9
-                ],
-                [
-                    "egress_instance",
-                    32
-                ],
-                [
-                    "instance_type",
-                    32
-                ],
-                [
-                    "clone_spec",
-                    32
-                ],
-                [
-                    "_padding",
-                    5
-                ]
-            ],
-            "length_exp": null,
-            "max_length": null
+          "name" : "parse_ethernet",
+          "id" : 0,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ethernet"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x0800",
+              "mask" : null,
+              "next_state" : "parse_ipv4"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            }
+          ]
         },
         {
-            "name": "ethernet_t",
-            "id": 1,
-            "fields": [
-                [
-                    "dstAddr",
-                    48
-                ],
-                [
-                    "srcAddr",
-                    48
-                ],
-                [
-                    "etherType",
-                    16
-                ]
-            ],
-            "length_exp": null,
-            "max_length": null
+          "name" : "parse_ipv4",
+          "id" : 1,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ipv4"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x11",
+              "mask" : null,
+              "next_state" : "parse_udp"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "protocol"]
+            }
+          ]
         },
         {
-            "name": "ipv4_t",
-            "id": 2,
-            "fields": [
-                [
-                    "version",
-                    4
-                ],
-                [
-                    "ihl",
-                    4
-                ],
-                [
-                    "diffserv",
-                    8
-                ],
-                [
-                    "totalLen",
-                    16
-                ],
-                [
-                    "identification",
-                    16
-                ],
-                [
-                    "flags",
-                    3
-                ],
-                [
-                    "fragOffset",
-                    13
-                ],
-                [
-                    "ttl",
-                    8
-                ],
-                [
-                    "protocol",
-                    8
-                ],
-                [
-                    "hdrChecksum",
-                    16
-                ],
-                [
-                    "srcAddr",
-                    32
-                ],
-                [
-                    "dstAddr",
-                    32
-                ]
-            ],
-            "length_exp": null,
-            "max_length": null
+          "name" : "parse_q_meta",
+          "id" : 2,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "q_meta"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
         },
         {
-            "name": "udp_t",
-            "id": 3,
-            "fields": [
-                [
-                    "srcPort",
-                    16
-                ],
-                [
-                    "dstPort",
-                    16
-                ],
-                [
-                    "hdr_length",
-                    16
-                ],
-                [
-                    "checksum",
-                    16
-                ]
-            ],
-            "length_exp": null,
-            "max_length": null
+          "name" : "parse_snapshot_debug",
+          "id" : 3,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "snapshot"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
         },
         {
-            "name": "queueing_metadata_t",
-            "id": 4,
-            "fields": [
-                [
-                    "flow_id",
-                    16
-                ],
-                [
-                    "_pad0",
-                    16
-                ],
-                [
-                    "ingress_global_tstamp",
-                    48
-                ],
-                [
-                    "_pad1",
-                    16
-                ],
-                [
-                    "egress_global_tstamp",
-                    48
-                ],
-                [
-                    "_spare_pad_bits",
-                    16
-                ],
-                [
-                    "markbit",
-                    8
-                ],
-                [
-                    "_pad2",
-                    16
-                ],
-                [
-                    "enq_qdepth",
-                    24
-                ],
-                [
-                    "_pad3",
-                    16
-                ],
-                [
-                    "deq_qdepth",
-                    24
-                ]
-            ],
-            "length_exp": null,
-            "max_length": null
+          "name" : "parse_udp",
+          "id" : 4,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "udp"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x1e61",
+              "mask" : null,
+              "next_state" : "parse_q_meta"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x22b8",
+              "mask" : null,
+              "next_state" : "parse_snapshot_debug"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["udp", "dstPort"]
+            }
+          ]
         },
         {
-            "name": "snapshot_debug_t",
-            "id": 5,
-            "fields": [
-                [
-                    "ingress_global_tstamp_hi_16",
-                    16
-                ],
-                [
-                    "ingress_global_tstamp_lo_32",
-                    32
-                ],
-                [
-                    "egress_global_tstamp_lo_32",
-                    32
-                ],
-                [
-                    "enq_qdepth",
-                    32
-                ],
-                [
-                    "deq_qdepth",
-                    32
-                ],
-                [
-                    "_pad0",
-                    16
-                ],
-                [
-                    "orig_egress_global_tstamp",
-                    48
-                ],
-                [
-                    "_pad1",
-                    16
-                ],
-                [
-                    "new_egress_global_tstamp",
-                    48
-                ],
-                [
-                    "new_enq_tstamp",
-                    32
-                ]
-            ],
-            "length_exp": null,
-            "max_length": null
+          "name" : "start",
+          "id" : 5,
+          "parser_ops" : [],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : "parse_ethernet"
+            }
+          ],
+          "transition_key" : []
         }
-    ],
-    "headers": [
+      ]
+    }
+  ],
+  "parse_vsets" : [],
+  "deparsers" : [
+    {
+      "name" : "deparser",
+      "id" : 0,
+      "order" : ["ethernet", "ipv4", "udp", "snapshot", "q_meta"]
+    }
+  ],
+  "meter_arrays" : [],
+  "counter_arrays" : [],
+  "register_arrays" : [],
+  "calculations" : [
+    {
+      "name" : "calc",
+      "id" : 0,
+      "algo" : "csum16",
+      "input" : [
         {
-            "name": "standard_metadata",
-            "id": 0,
-            "header_type": "standard_metadata_t",
-            "metadata": true
+          "type" : "field",
+          "value" : ["ipv4", "version"]
         },
         {
-            "name": "ethernet",
-            "id": 1,
-            "header_type": "ethernet_t",
-            "metadata": false
+          "type" : "field",
+          "value" : ["ipv4", "ihl"]
         },
         {
-            "name": "ipv4",
-            "id": 2,
-            "header_type": "ipv4_t",
-            "metadata": false
+          "type" : "field",
+          "value" : ["ipv4", "diffserv"]
         },
         {
-            "name": "udp",
-            "id": 3,
-            "header_type": "udp_t",
-            "metadata": false
+          "type" : "field",
+          "value" : ["ipv4", "totalLen"]
         },
         {
-            "name": "q_meta",
-            "id": 4,
-            "header_type": "queueing_metadata_t",
-            "metadata": false
+          "type" : "field",
+          "value" : ["ipv4", "identification"]
         },
         {
-            "name": "snapshot",
-            "id": 5,
-            "header_type": "snapshot_debug_t",
-            "metadata": false
+          "type" : "field",
+          "value" : ["ipv4", "flags"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "fragOffset"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ttl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "protocol"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
         }
-    ],
-    "header_stacks": [],
-    "parsers": [
+      ]
+    }
+  ],
+  "learn_lists" : [],
+  "actions" : [
+    {
+      "name" : "nop",
+      "id" : 0,
+      "runtime_data" : [],
+      "primitives" : []
+    }
+  ],
+  "pipelines" : [
+    {
+      "name" : "ingress",
+      "id" : 0,
+      "init_table" : "do_nothing",
+      "tables" : [
         {
-            "name": "parser",
-            "id": 0,
-            "init_state": "start",
-            "parse_states": [
-                {
-                    "name": "start",
-                    "id": 0,
-                    "parser_ops": [],
-                    "transition_key": [],
-                    "transitions": [
-                        {
-                            "type": "default",
-                            "value": null,
-                            "mask": null,
-                            "next_state": "parse_ethernet"
-                        }
-                    ]
-                },
-                {
-                    "name": "parse_ethernet",
-                    "id": 1,
-                    "parser_ops": [
-                        {
-                            "op": "extract",
-                            "parameters": [
-                                {
-                                    "type": "regular",
-                                    "value": "ethernet"
-                                }
-                            ]
-                        }
-                    ],
-                    "transition_key": [
-                        {
-                            "type": "field",
-                            "value": [
-                                "ethernet",
-                                "etherType"
-                            ]
-                        }
-                    ],
-                    "transitions": [
-                        {
-                            "type": "hexstr",
-                            "value": "0x0800",
-                            "mask": null,
-                            "next_state": "parse_ipv4"
-                        },
-                        {
-                            "type": "default",
-                            "value": null,
-                            "mask": null,
-                            "next_state": null
-                        }
-                    ]
-                },
-                {
-                    "name": "parse_ipv4",
-                    "id": 2,
-                    "parser_ops": [
-                        {
-                            "op": "extract",
-                            "parameters": [
-                                {
-                                    "type": "regular",
-                                    "value": "ipv4"
-                                }
-                            ]
-                        }
-                    ],
-                    "transition_key": [
-                        {
-                            "type": "field",
-                            "value": [
-                                "ipv4",
-                                "protocol"
-                            ]
-                        }
-                    ],
-                    "transitions": [
-                        {
-                            "type": "hexstr",
-                            "value": "0x11",
-                            "mask": null,
-                            "next_state": "parse_udp"
-                        },
-                        {
-                            "type": "default",
-                            "value": null,
-                            "mask": null,
-                            "next_state": null
-                        }
-                    ]
-                },
-                {
-                    "name": "parse_udp",
-                    "id": 3,
-                    "parser_ops": [
-                        {
-                            "op": "extract",
-                            "parameters": [
-                                {
-                                    "type": "regular",
-                                    "value": "udp"
-                                }
-                            ]
-                        }
-                    ],
-                    "transition_key": [
-                        {
-                            "type": "field",
-                            "value": [
-                                "udp",
-                                "dstPort"
-                            ]
-                        }
-                    ],
-                    "transitions": [
-                        {
-                            "type": "hexstr",
-                            "value": "0x1e61",
-                            "mask": null,
-                            "next_state": "parse_q_meta"
-                        },
-                        {
-                            "type": "hexstr",
-                            "value": "0x22b8",
-                            "mask": null,
-                            "next_state": "parse_snapshot_debug"
-                        },
-                        {
-                            "type": "default",
-                            "value": null,
-                            "mask": null,
-                            "next_state": null
-                        }
-                    ]
-                },
-                {
-                    "name": "parse_q_meta",
-                    "id": 4,
-                    "parser_ops": [
-                        {
-                            "op": "extract",
-                            "parameters": [
-                                {
-                                    "type": "regular",
-                                    "value": "q_meta"
-                                }
-                            ]
-                        }
-                    ],
-                    "transition_key": [],
-                    "transitions": [
-                        {
-                            "type": "default",
-                            "value": null,
-                            "mask": null,
-                            "next_state": null
-                        }
-                    ]
-                },
-                {
-                    "name": "parse_snapshot_debug",
-                    "id": 5,
-                    "parser_ops": [
-                        {
-                            "op": "extract",
-                            "parameters": [
-                                {
-                                    "type": "regular",
-                                    "value": "snapshot"
-                                }
-                            ]
-                        }
-                    ],
-                    "transition_key": [],
-                    "transitions": [
-                        {
-                            "type": "default",
-                            "value": null,
-                            "mask": null,
-                            "next_state": null
-                        }
-                    ]
-                }
-            ]
+          "name" : "do_nothing",
+          "id" : 0,
+          "source_info" : {
+            "filename" : "samples/dummy/dummy.p4",
+            "line" : 15,
+            "column" : 0,
+            "source_fragment" : "table do_nothing{ ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [0],
+          "actions" : ["nop"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "nop" : null
+          },
+          "default_entry" : {
+            "action_id" : 0,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
         }
-    ],
-    "parse_vsets": [],
-    "deparsers": [
-        {
-            "name": "deparser",
-            "id": 0,
-            "order": [
-                "ethernet",
-                "ipv4",
-                "udp",
-                "snapshot",
-                "q_meta"
-            ]
-        }
-    ],
-    "meter_arrays": [],
-    "actions": [
-        {
-            "name": "srcReWrite",
-            "id": 0,
-            "runtime_data": [
-                {
-                    "name": "newSrcIP",
-                    "bitwidth": 32
-                }
-            ],
-            "primitives": [
-                {
-                    "op": "modify_field",
-                    "parameters": [
-                        {
-                            "type": "field",
-                            "value": [
-                                "ipv4",
-                                "srcAddr"
-                            ]
-                        },
-                        {
-                            "type": "runtime_data",
-                            "value": 0
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "forward",
-            "id": 1,
-            "runtime_data": [
-                {
-                    "name": "newSrcMAC",
-                    "bitwidth": 48
-                },
-                {
-                    "name": "newDstMAC",
-                    "bitwidth": 48
-                }
-            ],
-            "primitives": [
-                {
-                    "op": "modify_field",
-                    "parameters": [
-                        {
-                            "type": "field",
-                            "value": [
-                                "ethernet",
-                                "dstAddr"
-                            ]
-                        },
-                        {
-                            "type": "runtime_data",
-                            "value": 1
-                        }
-                    ]
-                },
-                {
-                    "op": "modify_field",
-                    "parameters": [
-                        {
-                            "type": "field",
-                            "value": [
-                                "ethernet",
-                                "srcAddr"
-                            ]
-                        },
-                        {
-                            "type": "runtime_data",
-                            "value": 0
-                        }
-                    ]
-                },
-                {
-                    "op": "add_to_field",
-                    "parameters": [
-                        {
-                            "type": "field",
-                            "value": [
-                                "ipv4",
-                                "ttl"
-                            ]
-                        },
-                        {
-                            "type": "hexstr",
-                            "value": "-0x1"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "nop",
-            "id": 2,
-            "runtime_data": [],
-            "primitives": []
-        },
-        {
-            "name": "dstReWrite",
-            "id": 3,
-            "runtime_data": [
-                {
-                    "name": "newDstIP",
-                    "bitwidth": 32
-                }
-            ],
-            "primitives": [
-                {
-                    "op": "modify_field",
-                    "parameters": [
-                        {
-                            "type": "field",
-                            "value": [
-                                "ipv4",
-                                "dstAddr"
-                            ]
-                        },
-                        {
-                            "type": "runtime_data",
-                            "value": 0
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
-    "pipelines": [
-        {
-            "name": "ingress",
-            "id": 0,
-            "init_table": "src_rewrite",
-            "tables": [
-                {
-                    "name": "src_rewrite",
-                    "id": 0,
-                    "match_type": "exact",
-                    "type": "simple",
-                    "max_size": 16384,
-                    "with_counters": false,
-                    "direct_meters": null,
-                    "support_timeout": false,
-                    "key": [
-                        {
-                            "match_type": "exact",
-                            "target": [
-                                "ipv4",
-                                "srcAddr"
-                            ],
-                            "mask": null
-                        },
-                        {
-                            "match_type": "exact",
-                            "target": [
-                                "ipv4",
-                                "dstAddr"
-                            ],
-                            "mask": null
-                        }
-                    ],
-                    "actions": [
-                        "srcReWrite",
-                        "nop"
-                    ],
-                    "next_tables": {
-                        "srcReWrite": "dst_rewrite",
-                        "nop": "dst_rewrite"
-                    },
-                    "base_default_next": "dst_rewrite"
-                },
-                {
-                    "name": "dst_rewrite",
-                    "id": 1,
-                    "match_type": "exact",
-                    "type": "simple",
-                    "max_size": 16384,
-                    "with_counters": false,
-                    "direct_meters": null,
-                    "support_timeout": false,
-                    "key": [
-                        {
-                            "match_type": "exact",
-                            "target": [
-                                "ipv4",
-                                "dstAddr"
-                            ],
-                            "mask": null
-                        }
-                    ],
-                    "actions": [
-                        "dstReWrite",
-                        "nop"
-                    ],
-                    "next_tables": {
-                        "dstReWrite": "ipv4_forward",
-                        "nop": "ipv4_forward"
-                    },
-                    "base_default_next": "ipv4_forward"
-                },
-                {
-                    "name": "ipv4_forward",
-                    "id": 2,
-                    "match_type": "exact",
-                    "type": "simple",
-                    "max_size": 16384,
-                    "with_counters": false,
-                    "direct_meters": null,
-                    "support_timeout": false,
-                    "key": [
-                        {
-                            "match_type": "exact",
-                            "target": [
-                                "ipv4",
-                                "dstAddr"
-                            ],
-                            "mask": null
-                        }
-                    ],
-                    "actions": [
-                        "forward",
-                        "nop"
-                    ],
-                    "next_tables": {
-                        "forward": null,
-                        "nop": null
-                    },
-                    "base_default_next": null
-                }
-            ],
-            "action_profiles": [],
-            "conditionals": []
-        },
-        {
-            "name": "egress",
-            "id": 1,
-            "init_table": null,
-            "tables": [],
-            "action_profiles": [],
-            "conditionals": []
-        }
-    ],
-    "calculations": [
-        {
-            "name": "ipv4_chksum_calc",
-            "id": 0,
-            "input": [
-                {
-                    "type": "field",
-                    "value": [
-                        "ipv4",
-                        "version"
-                    ]
-                },
-                {
-                    "type": "field",
-                    "value": [
-                        "ipv4",
-                        "ihl"
-                    ]
-                },
-                {
-                    "type": "field",
-                    "value": [
-                        "ipv4",
-                        "diffserv"
-                    ]
-                },
-                {
-                    "type": "field",
-                    "value": [
-                        "ipv4",
-                        "totalLen"
-                    ]
-                },
-                {
-                    "type": "field",
-                    "value": [
-                        "ipv4",
-                        "identification"
-                    ]
-                },
-                {
-                    "type": "field",
-                    "value": [
-                        "ipv4",
-                        "flags"
-                    ]
-                },
-                {
-                    "type": "field",
-                    "value": [
-                        "ipv4",
-                        "fragOffset"
-                    ]
-                },
-                {
-                    "type": "field",
-                    "value": [
-                        "ipv4",
-                        "ttl"
-                    ]
-                },
-                {
-                    "type": "field",
-                    "value": [
-                        "ipv4",
-                        "protocol"
-                    ]
-                },
-                {
-                    "type": "field",
-                    "value": [
-                        "ipv4",
-                        "srcAddr"
-                    ]
-                },
-                {
-                    "type": "field",
-                    "value": [
-                        "ipv4",
-                        "dstAddr"
-                    ]
-                }
-            ],
-            "algo": "csum16"
-        }
-    ],
-    "checksums": [
-        {
-            "name": "ipv4.hdrChecksum|ipv4_chksum_calc",
-            "id": 0,
-            "target": [
-                "ipv4",
-                "hdrChecksum"
-            ],
-            "type": "generic",
-            "calculation": "ipv4_chksum_calc",
-            "if_cond": null
-        }
-    ],
-    "learn_lists": [],
-    "field_lists": [],
-    "counter_arrays": [],
-    "register_arrays": [],
-    "force_arith": [
-        [
-            "standard_metadata",
-            "ingress_port"
-        ],
-        [
-            "standard_metadata",
-            "packet_length"
-        ],
-        [
-            "standard_metadata",
-            "egress_spec"
-        ],
-        [
-            "standard_metadata",
-            "egress_port"
-        ],
-        [
-            "standard_metadata",
-            "egress_instance"
-        ],
-        [
-            "standard_metadata",
-            "instance_type"
-        ],
-        [
-            "standard_metadata",
-            "clone_spec"
-        ],
-        [
-            "standard_metadata",
-            "_padding"
-        ]
-    ]
+      ],
+      "action_profiles" : [],
+      "conditionals" : []
+    },
+    {
+      "name" : "egress",
+      "id" : 1,
+      "init_table" : null,
+      "tables" : [],
+      "action_profiles" : [],
+      "conditionals" : []
+    }
+  ],
+  "checksums" : [
+    {
+      "name" : "cksum",
+      "id" : 0,
+      "target" : ["ipv4", "hdrChecksum"],
+      "type" : "generic",
+      "calculation" : "calc",
+      "verify" : false,
+      "update" : true,
+      "if_cond" : {
+        "type" : "bool",
+        "value" : true
+      }
+    }
+  ],
+  "force_arith" : [],
+  "extern_instances" : [],
+  "field_aliases" : [],
+  "program" : "samples/dummy/dummy.json/dummy.p4i",
+  "__meta__" : {
+    "version" : [2, 18],
+    "compiler" : "https://github.com/p4lang/p4c"
+  }
 }
