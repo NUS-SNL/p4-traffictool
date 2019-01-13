@@ -185,6 +185,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_header.write("//Template for addition of new protocol '%s'\n\n" %(header))
     fout_header.write("#ifndef %s\n" %("P4_"+header.upper()+"_LAYER"))
     fout_header.write("#define %s\n\n" %("P4_"+header.upper()+"_LAYER"))
+    fout_header.write("#include <cstring>\n");
     fout_header.write("#include \"Layer.h\"\n")
     fout_header.write('#include "uint24_t.h"\n#include "uint40_t.h"\n#include "uint48_t.h"\n')
     fout_header.write("#if defined(WIN32) || defined(WINx64)\n#include <winsock2.h>\n#elif LINUX\n#include <in.h>\n#endif\n\n")
