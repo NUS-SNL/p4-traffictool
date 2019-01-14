@@ -123,6 +123,8 @@ def make_header(headers, header_types, header_id, checksums, calculations, fout)
 def remove_number(headers):
     unique_headers = {}
     for header in headers:
+        if header['metadata']:
+            continue
         name = header['name']
         if name.find('[')!=(-1):
             header['name'] = name[:name.find('[')]
