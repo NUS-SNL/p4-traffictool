@@ -216,8 +216,8 @@ def correct_graph(graph):
 # defines bindings based on control graph
 def make_parsers(control_graph, header_ports, fout):
     for edge in control_graph:
-        if (edge[0] in header_ports) and (edge[-1] in header_ports) and (edge[1]!=None) and (edge[2]!=None):
-            if (edge[2]!='default'): 
+        if (edge[0] in header_ports) and (edge[-1] in header_ports):
+            if (edge[2]!='default') and (edge[1]!=None) and (edge[2]!=None): 
                 fout.write("bind_layers(%s, %s, %s = %s)\n" % (capitalise(edge[0]), capitalise(edge[-1]), edge[1], edge[2]))
             else:
                 fout.write("bind_layers(%s,%s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))
