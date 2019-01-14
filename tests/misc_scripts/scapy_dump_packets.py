@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from scapy.all import *
-from arp import *
+from <insert generated scapy code file> import *
 import os
 
 os.system("rm -rf raw_dump.pcap")
