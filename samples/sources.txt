@@ -1,0 +1,28 @@
+P4D2 2017 Spring Exercises
+https://github.com/BEsdn/P4-tutorials/tree/master/P4D2_2017_Spring/exercises
+---------------------------------------------------
+mri
+---------------------------------------------------
+
+
+
+
+P4D2 2018 Easy Exercises
+https://github.com/BEsdn/P4-tutorials/tree/master/P4D2_2018_East/exercises
+---------------------------------------------------
+basic_tunnel
+src_routing
+---------------------------------------------------
+
+
+
+
+https://github.com/BEsdn/P4-tutorials/tree/efe6a5586deb9ff61380f466ff7f94498cd24ea8/SIGCOMM_2017/exercises/hula
+---------------------------------------------------
+hula
+
+
+
+qmetadata is a self-contributed sample
+
+
