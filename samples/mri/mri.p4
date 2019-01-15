@@ -39,8 +39,11 @@ header ipv4_t {
 }
 
 header ipv4_option_t {
+    bit<7> _pad0;
     bit<1> copyFlag;
+    bit<6> _pad1;
     bit<2> optClass;
+    bit<3> _pad2;
     bit<5> option;
     bit<8> optionLength;
 }

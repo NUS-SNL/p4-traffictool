@@ -4,15 +4,15 @@
       "name" : "scalars_0",
       "id" : 0,
       "fields" : [
-        ["tmp_0", 16, false],
+        ["tmp", 16, false],
         ["tmp_1", 32, false],
         ["tmp_2", 16, false],
         ["tmp_3", 32, false],
-        ["tmp", 16, false],
-        ["old_qdepth", 15, false],
-        ["old_digest", 32, false],
-        ["flow_hash", 16, false],
-        ["port_1", 16, false],
+        ["tmp_0", 16, false],
+        ["old_qdepth_0", 15, false],
+        ["old_digest_0", 32, false],
+        ["flow_hash_0", 16, false],
+        ["port_0", 16, false],
         ["metadata.index", 32, false],
         ["_padding_0", 1, false]
       ]
@@ -41,6 +41,7 @@
         ["egress_rid", 16, false],
         ["checksum_error", 1, false],
         ["recirculate_flag", 32, false],
+        ["parser_error", 32, false],
         ["_padding", 5, false]
       ]
     },
@@ -85,7 +86,9 @@
       "name" : "hula_t",
       "id" : 5,
       "fields" : [
+        ["_pad0", 7, false],
         ["dir", 1, false],
+        ["_pad1", 1, false],
         ["qdepth", 15, false],
         ["digest", 32, false]
       ]
@@ -94,7 +97,9 @@
       "name" : "srcRoute_t",
       "id" : 6,
       "fields" : [
+        ["_pad0", 7, false],
         ["bos", 1, false],
+        ["_pad1", 1, false],
         ["port", 15, false]
       ]
     }
@@ -219,7 +224,14 @@
   "header_unions" : [],
   "header_union_stacks" : [],
   "field_lists" : [],
-  "errors" : [],
+  "errors" : [
+    ["NoError", 1],
+    ["PacketTooShort", 2],
+    ["NoMatch", 3],
+    ["StackOutOfBounds", 4],
+    ["HeaderTooShort", 5],
+    ["ParserTimeout", 6]
+  ],
   "enums" : [],
   "parsers" : [
     {
@@ -390,8 +402,8 @@
       "name" : "deparser",
       "id" : 0,
       "source_info" : {
-        "filename" : "hula/hula.p4",
-        "line" : 428,
+        "filename" : "hula.p4",
+        "line" : 432,
         "column" : 8,
         "source_fragment" : "MyDeparser"
       },
@@ -405,8 +417,8 @@
       "name" : "MyIngress.srcindex_qdepth_reg",
       "id" : 0,
       "source_info" : {
-        "filename" : "hula/hula.p4",
-        "line" : 150,
+        "filename" : "hula.p4",
+        "line" : 154,
         "column" : 27,
         "source_fragment" : "srcindex_qdepth_reg"
       },
@@ -417,8 +429,8 @@
       "name" : "MyIngress.srcindex_digest_reg",
       "id" : 1,
       "source_info" : {
-        "filename" : "hula/hula.p4",
-        "line" : 156,
+        "filename" : "hula.p4",
+        "line" : 160,
         "column" : 27,
         "source_fragment" : "srcindex_digest_reg"
       },
@@ -429,8 +441,8 @@
       "name" : "MyIngress.dstindex_nhop_reg",
       "id" : 2,
       "source_info" : {
-        "filename" : "hula/hula.p4",
-        "line" : 159,
+        "filename" : "hula.p4",
+        "line" : 163,
         "column" : 26,
         "source_fragment" : "dstindex_nhop_reg"
       },
@@ -441,8 +453,8 @@
       "name" : "MyIngress.flow_port_reg",
       "id" : 3,
       "source_info" : {
-        "filename" : "hula/hula.p4",
-        "line" : 162,
+        "filename" : "hula.p4",
+        "line" : 166,
         "column" : 29,
         "source_fragment" : "flow_port_reg"
       },
@@ -474,8 +486,8 @@
       "name" : "calc_0",
       "id" : 1,
       "source_info" : {
-        "filename" : "hula/hula.p4",
-        "line" : 406,
+        "filename" : "hula.p4",
+        "line" : 410,
         "column" : 1,
         "source_fragment" : "update_checksum( ..."
       },
@@ -545,8 +557,8 @@
           "op" : "drop",
           "parameters" : [],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 166,
+            "filename" : "hula.p4",
+            "line" : 170,
             "column" : 8,
             "source_fragment" : "mark_to_drop()"
           }
@@ -562,8 +574,8 @@
           "op" : "drop",
           "parameters" : [],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 166,
+            "filename" : "hula.p4",
+            "line" : 170,
             "column" : 8,
             "source_fragment" : "mark_to_drop()"
           }
@@ -579,8 +591,8 @@
           "op" : "drop",
           "parameters" : [],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 166,
+            "filename" : "hula.p4",
+            "line" : 170,
             "column" : 8,
             "source_fragment" : "mark_to_drop()"
           }
@@ -596,8 +608,8 @@
           "op" : "drop",
           "parameters" : [],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 166,
+            "filename" : "hula.p4",
+            "line" : 170,
             "column" : 8,
             "source_fragment" : "mark_to_drop()"
           }
@@ -651,8 +663,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 173,
+            "filename" : "hula.p4",
+            "line" : 177,
             "column" : 8,
             "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl - 1"
           }
@@ -682,8 +694,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 177,
+            "filename" : "hula.p4",
+            "line" : 181,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.srcAddr = hdr.ethernet.dstAddr"
           }
@@ -701,8 +713,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 178,
+            "filename" : "hula.p4",
+            "line" : 182,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.dstAddr = dstAddr"
           }
@@ -740,8 +752,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 183,
+            "filename" : "hula.p4",
+            "line" : 187,
             "column" : 8,
             "source_fragment" : "standard_metadata.egress_spec = (bit<9>)hdr.srcRoutes[0].port"
           }
@@ -759,8 +771,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 184,
+            "filename" : "hula.p4",
+            "line" : 188,
             "column" : 8,
             "source_fragment" : "hdr.srcRoutes.pop_front(1)"
           }
@@ -798,8 +810,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 183,
+            "filename" : "hula.p4",
+            "line" : 187,
             "column" : 8,
             "source_fragment" : "standard_metadata.egress_spec = (bit<9>)hdr.srcRoutes[0].port"
           }
@@ -817,8 +829,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 184,
+            "filename" : "hula.p4",
+            "line" : 188,
             "column" : 8,
             "source_fragment" : "hdr.srcRoutes.pop_front(1)"
           }
@@ -848,8 +860,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 192,
+            "filename" : "hula.p4",
+            "line" : 196,
             "column" : 8,
             "source_fragment" : "meta.index = index"
           }
@@ -871,7 +883,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "tmp_0"]
+              "value" : ["scalars", "tmp"]
             },
             {
               "type" : "expression",
@@ -892,8 +904,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 200,
+            "filename" : "hula.p4",
+            "line" : 204,
             "column" : 39,
             "source_fragment" : "(bit<16>)standard_metadata.ingress_port"
           }
@@ -911,12 +923,12 @@
             },
             {
               "type" : "field",
-              "value" : ["scalars", "tmp_0"]
+              "value" : ["scalars", "tmp"]
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 200,
+            "filename" : "hula.p4",
+            "line" : 204,
             "column" : 8,
             "source_fragment" : "dstindex_nhop_reg.write(index, (bit<16>)standard_metadata.ingress_port)"
           }
@@ -938,7 +950,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "tmp"]
+              "value" : ["scalars", "tmp_0"]
             },
             {
               "type" : "register_array",
@@ -950,8 +962,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 206,
+            "filename" : "hula.p4",
+            "line" : 210,
             "column" : 7,
             "source_fragment" : "dstindex_nhop_reg.read(tmp, index)"
           }
@@ -971,7 +983,7 @@
                   "op" : "&",
                   "left" : {
                     "type" : "field",
-                    "value" : ["scalars", "tmp"]
+                    "value" : ["scalars", "tmp_0"]
                   },
                   "right" : {
                     "type" : "hexstr",
@@ -982,8 +994,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 207,
+            "filename" : "hula.p4",
+            "line" : 211,
             "column" : 7,
             "source_fragment" : "standard_metadata.egress_spec = (bit<9>)tmp"
           }
@@ -1012,8 +1024,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 212,
+            "filename" : "hula.p4",
+            "line" : 216,
             "column" : 8,
             "source_fragment" : "srcindex_qdepth_reg.write(meta.index, hdr.hula.qdepth)"
           }
@@ -1035,8 +1047,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 213,
+            "filename" : "hula.p4",
+            "line" : 217,
             "column" : 8,
             "source_fragment" : "srcindex_digest_reg.write(meta.index, hdr.hula.digest)"
           }
@@ -1061,8 +1073,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 222,
+            "filename" : "hula.p4",
+            "line" : 226,
             "column" : 8,
             "source_fragment" : "hdr.hula.dir = 1"
           }
@@ -1080,8 +1092,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 223,
+            "filename" : "hula.p4",
+            "line" : 227,
             "column" : 8,
             "source_fragment" : "standard_metadata.egress_spec = standard_metadata.ingress_port"
           }
@@ -1110,8 +1122,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 331,
+            "filename" : "hula.p4",
+            "line" : 335,
             "column" : 32,
             "source_fragment" : "srcindex_qdepth_reg.write(meta.index, hdr.hula.qdepth)"
           }
@@ -1128,7 +1140,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "old_digest"]
+              "value" : ["scalars", "old_digest_0"]
             },
             {
               "type" : "register_array",
@@ -1140,8 +1152,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 329,
+            "filename" : "hula.p4",
+            "line" : 333,
             "column" : 28,
             "source_fragment" : "srcindex_digest_reg.read(old_digest, meta.index)"
           }
@@ -1158,7 +1170,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "old_qdepth"]
+              "value" : ["scalars", "old_qdepth_0"]
             },
             {
               "type" : "register_array",
@@ -1170,8 +1182,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 316,
+            "filename" : "hula.p4",
+            "line" : 320,
             "column" : 24,
             "source_fragment" : "srcindex_qdepth_reg.read(old_qdepth, meta.index)"
           }
@@ -1198,7 +1210,7 @@
                   "op" : "&",
                   "left" : {
                     "type" : "field",
-                    "value" : ["scalars", "flow_hash"]
+                    "value" : ["scalars", "flow_hash_0"]
                   },
                   "right" : {
                     "type" : "hexstr",
@@ -1209,8 +1221,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 362,
+            "filename" : "hula.p4",
+            "line" : 366,
             "column" : 36,
             "source_fragment" : "(bit<32>)flow_hash"
           }
@@ -1241,8 +1253,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 362,
+            "filename" : "hula.p4",
+            "line" : 366,
             "column" : 56,
             "source_fragment" : "(bit<16>)standard_metadata.egress_spec"
           }
@@ -1264,8 +1276,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 362,
+            "filename" : "hula.p4",
+            "line" : 366,
             "column" : 16,
             "source_fragment" : "flow_port_reg.write((bit<32>)flow_hash, (bit<16>)standard_metadata.egress_spec)"
           }
@@ -1292,7 +1304,7 @@
                   "op" : "&",
                   "left" : {
                     "type" : "field",
-                    "value" : ["scalars", "port_1"]
+                    "value" : ["scalars", "port_0"]
                   },
                   "right" : {
                     "type" : "hexstr",
@@ -1303,8 +1315,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 365,
+            "filename" : "hula.p4",
+            "line" : 369,
             "column" : 16,
             "source_fragment" : "standard_metadata.egress_spec = (bit<9>)port"
           }
@@ -1321,7 +1333,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "flow_hash"]
+              "value" : ["scalars", "flow_hash_0"]
             },
             {
               "type" : "hexstr",
@@ -1337,8 +1349,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 348,
+            "filename" : "hula.p4",
+            "line" : 352,
             "column" : 12,
             "source_fragment" : "hash( ..."
           }
@@ -1358,7 +1370,7 @@
                   "op" : "&",
                   "left" : {
                     "type" : "field",
-                    "value" : ["scalars", "flow_hash"]
+                    "value" : ["scalars", "flow_hash_0"]
                   },
                   "right" : {
                     "type" : "hexstr",
@@ -1369,8 +1381,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 357,
+            "filename" : "hula.p4",
+            "line" : 361,
             "column" : 37,
             "source_fragment" : "(bit<32>)flow_hash"
           }
@@ -1380,7 +1392,7 @@
           "parameters" : [
             {
               "type" : "field",
-              "value" : ["scalars", "port_1"]
+              "value" : ["scalars", "port_0"]
             },
             {
               "type" : "register_array",
@@ -1392,8 +1404,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 357,
+            "filename" : "hula.p4",
+            "line" : 361,
             "column" : 12,
             "source_fragment" : "flow_port_reg.read(port, (bit<32>)flow_hash)"
           }
@@ -1431,8 +1443,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 394,
+            "filename" : "hula.p4",
+            "line" : 398,
             "column" : 16,
             "source_fragment" : "hdr.hula.qdepth = (qdepth_t)standard_metadata.deq_qdepth"
           }
@@ -1445,8 +1457,8 @@
       "name" : "ingress",
       "id" : 0,
       "source_info" : {
-        "filename" : "hula/hula.p4",
-        "line" : 142,
+        "filename" : "hula.p4",
+        "line" : 146,
         "column" : 8,
         "source_fragment" : "MyIngress"
       },
@@ -1456,8 +1468,8 @@
           "name" : "MyIngress.hula_fwd",
           "id" : 0,
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 231,
+            "filename" : "hula.p4",
+            "line" : 235,
             "column" : 10,
             "source_fragment" : "hula_fwd"
           },
@@ -1637,8 +1649,8 @@
           "name" : "MyIngress.hula_bwd",
           "id" : 7,
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 249,
+            "filename" : "hula.p4",
+            "line" : 253,
             "column" : 10,
             "source_fragment" : "hula_bwd"
           },
@@ -1674,8 +1686,8 @@
           "name" : "MyIngress.hula_src",
           "id" : 8,
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 264,
+            "filename" : "hula.p4",
+            "line" : 268,
             "column" : 10,
             "source_fragment" : "hula_src"
           },
@@ -1734,8 +1746,8 @@
           "name" : "MyIngress.hula_nhop",
           "id" : 10,
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 279,
+            "filename" : "hula.p4",
+            "line" : 283,
             "column" : 10,
             "source_fragment" : "hula_nhop"
           },
@@ -1817,8 +1829,8 @@
           "name" : "MyIngress.dmac",
           "id" : 13,
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 294,
+            "filename" : "hula.p4",
+            "line" : 298,
             "column" : 10,
             "source_fragment" : "dmac"
           },
@@ -1903,8 +1915,8 @@
           "name" : "node_2",
           "id" : 0,
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 307,
+            "filename" : "hula.p4",
+            "line" : 311,
             "column" : 12,
             "source_fragment" : "hdr.hula.isValid()"
           },
@@ -1926,8 +1938,8 @@
           "name" : "node_3",
           "id" : 1,
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 308,
+            "filename" : "hula.p4",
+            "line" : 312,
             "column" : 16,
             "source_fragment" : "hdr.hula.dir == 0"
           },
@@ -1952,8 +1964,8 @@
           "name" : "node_6",
           "id" : 2,
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 318,
+            "filename" : "hula.p4",
+            "line" : 322,
             "column" : 28,
             "source_fragment" : "old_qdepth > hdr.hula.qdepth"
           },
@@ -1963,7 +1975,7 @@
               "op" : ">",
               "left" : {
                 "type" : "field",
-                "value" : ["scalars", "old_qdepth"]
+                "value" : ["scalars", "old_qdepth_0"]
               },
               "right" : {
                 "type" : "field",
@@ -1978,8 +1990,8 @@
           "name" : "node_10",
           "id" : 3,
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 330,
+            "filename" : "hula.p4",
+            "line" : 334,
             "column" : 32,
             "source_fragment" : "old_digest == hdr.hula.digest"
           },
@@ -1989,7 +2001,7 @@
               "op" : "==",
               "left" : {
                 "type" : "field",
-                "value" : ["scalars", "old_digest"]
+                "value" : ["scalars", "old_digest_0"]
               },
               "right" : {
                 "type" : "field",
@@ -2004,8 +2016,8 @@
           "name" : "node_15",
           "id" : 4,
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 346,
+            "filename" : "hula.p4",
+            "line" : 350,
             "column" : 18,
             "source_fragment" : "hdr.ipv4.isValid()"
           },
@@ -2027,8 +2039,8 @@
           "name" : "node_17",
           "id" : 5,
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 359,
+            "filename" : "hula.p4",
+            "line" : 363,
             "column" : 16,
             "source_fragment" : "port == 0"
           },
@@ -2038,7 +2050,7 @@
               "op" : "==",
               "left" : {
                 "type" : "field",
-                "value" : ["scalars", "port_1"]
+                "value" : ["scalars", "port_0"]
               },
               "right" : {
                 "type" : "hexstr",
@@ -2053,8 +2065,8 @@
           "name" : "node_23",
           "id" : 6,
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 374,
+            "filename" : "hula.p4",
+            "line" : 378,
             "column" : 12,
             "source_fragment" : "hdr.ipv4.isValid()"
           },
@@ -2078,8 +2090,8 @@
       "name" : "egress",
       "id" : 1,
       "source_info" : {
-        "filename" : "hula/hula.p4",
-        "line" : 384,
+        "filename" : "hula.p4",
+        "line" : 388,
         "column" : 8,
         "source_fragment" : "MyEgress"
       },
@@ -2115,8 +2127,8 @@
           "name" : "node_27",
           "id" : 7,
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 388,
+            "filename" : "hula.p4",
+            "line" : 392,
             "column" : 12,
             "source_fragment" : "hdr.hula.isValid() && hdr.hula.dir == 0"
           },
@@ -2158,8 +2170,8 @@
           "name" : "node_28",
           "id" : 8,
           "source_info" : {
-            "filename" : "hula/hula.p4",
-            "line" : 391,
+            "filename" : "hula.p4",
+            "line" : 395,
             "column" : 16,
             "source_fragment" : "hdr.hula.qdepth < (qdepth_t)standard_metadata.deq_qdepth"
           },
@@ -2197,9 +2209,17 @@
     {
       "name" : "cksum",
       "id" : 0,
+      "source_info" : {
+        "filename" : "hula.p4",
+        "line" : 410,
+        "column" : 1,
+        "source_fragment" : "update_checksum( ..."
+      },
       "target" : ["ipv4", "hdrChecksum"],
       "type" : "generic",
       "calculation" : "calc_0",
+      "verify" : false,
+      "update" : true,
       "if_cond" : {
         "type" : "expression",
         "value" : {
@@ -2261,7 +2281,7 @@
       ["standard_metadata", "recirculate_flag"]
     ]
   ],
-  "program" : "hula/hula.p4",
+  "program" : "./hula.p4i",
   "__meta__" : {
     "version" : [2, 18],
     "compiler" : "https://github.com/p4lang/p4c"

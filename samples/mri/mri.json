@@ -1,86 +1,18 @@
 {
-  "program" : "./mri.p4i",
-  "__meta__" : {
-    "version" : [2, 18],
-    "compiler" : "https://github.com/p4lang/p4c"
-  },
   "header_types" : [
     {
       "name" : "scalars_0",
       "id" : 0,
       "fields" : [
         ["tmp", 1, false],
+        ["metadata._ingress_metadata_count0", 16, false],
+        ["metadata._parser_metadata_remaining1", 16, false],
         ["_padding_0", 7, false]
       ]
     },
     {
-      "name" : "ethernet_t",
-      "id" : 1,
-      "fields" : [
-        ["dstAddr", 48, false],
-        ["srcAddr", 48, false],
-        ["etherType", 16, false]
-      ]
-    },
-    {
-      "name" : "ipv4_t",
-      "id" : 2,
-      "fields" : [
-        ["version", 4, false],
-        ["ihl", 4, false],
-        ["diffserv", 8, false],
-        ["totalLen", 16, false],
-        ["identification", 16, false],
-        ["flags", 3, false],
-        ["fragOffset", 13, false],
-        ["ttl", 8, false],
-        ["protocol", 8, false],
-        ["hdrChecksum", 16, false],
-        ["srcAddr", 32, false],
-        ["dstAddr", 32, false]
-      ]
-    },
-    {
-      "name" : "ipv4_option_t",
-      "id" : 3,
-      "fields" : [
-        ["copyFlag", 1, false],
-        ["optClass", 2, false],
-        ["option", 5, false],
-        ["optionLength", 8, false]
-      ]
-    },
-    {
-      "name" : "mri_t",
-      "id" : 4,
-      "fields" : [
-        ["count", 16, false]
-      ]
-    },
-    {
-      "name" : "switch_t",
-      "id" : 5,
-      "fields" : [
-        ["swid", 32, false]
-      ]
-    },
-    {
-      "name" : "ingress_metadata_t",
-      "id" : 6,
-      "fields" : [
-        ["count", 16, false]
-      ]
-    },
-    {
-      "name" : "parser_metadata_t",
-      "id" : 7,
-      "fields" : [
-        ["remaining", 16, false]
-      ]
-    },
-    {
       "name" : "standard_metadata",
-      "id" : 8,
+      "id" : 1,
       "fields" : [
         ["ingress_port", 9, false],
         ["egress_spec", 9, false],
@@ -102,7 +34,62 @@
         ["egress_rid", 16, false],
         ["checksum_error", 1, false],
         ["recirculate_flag", 32, false],
+        ["parser_error", 32, false],
         ["_padding", 5, false]
+      ]
+    },
+    {
+      "name" : "ethernet_t",
+      "id" : 2,
+      "fields" : [
+        ["dstAddr", 48, false],
+        ["srcAddr", 48, false],
+        ["etherType", 16, false]
+      ]
+    },
+    {
+      "name" : "ipv4_t",
+      "id" : 3,
+      "fields" : [
+        ["version", 4, false],
+        ["ihl", 4, false],
+        ["diffserv", 8, false],
+        ["totalLen", 16, false],
+        ["identification", 16, false],
+        ["flags", 3, false],
+        ["fragOffset", 13, false],
+        ["ttl", 8, false],
+        ["protocol", 8, false],
+        ["hdrChecksum", 16, false],
+        ["srcAddr", 32, false],
+        ["dstAddr", 32, false]
+      ]
+    },
+    {
+      "name" : "ipv4_option_t",
+      "id" : 4,
+      "fields" : [
+        ["_pad0", 7, false],
+        ["copyFlag", 1, false],
+        ["_pad1", 6, false],
+        ["optClass", 2, false],
+        ["_pad2", 3, false],
+        ["option", 5, false],
+        ["optionLength", 8, false]
+      ]
+    },
+    {
+      "name" : "mri_t",
+      "id" : 5,
+      "fields" : [
+        ["count", 16, false]
+      ]
+    },
+    {
+      "name" : "switch_t",
+      "id" : 6,
+      "fields" : [
+        ["swid", 32, false]
       ]
     }
   ],
@@ -211,20 +198,6 @@
       "header_type" : "switch_t",
       "metadata" : false,
       "pi_omit" : true
-    },
-    {
-      "name" : "userMetadata.ingress_metadata",
-      "id" : 15,
-      "header_type" : "ingress_metadata_t",
-      "metadata" : true,
-      "pi_omit" : true
-    },
-    {
-      "name" : "userMetadata.parser_metadata",
-      "id" : 16,
-      "header_type" : "parser_metadata_t",
-      "metadata" : true,
-      "pi_omit" : true
     }
   ],
   "header_stacks" : [
@@ -241,13 +214,13 @@
   "header_union_stacks" : [],
   "field_lists" : [],
   "errors" : [
-    ["NoError", 0],
-    ["PacketTooShort", 1],
-    ["NoMatch", 2],
-    ["StackOutOfBounds", 3],
-    ["HeaderTooShort", 4],
-    ["ParserTimeout", 5],
-    ["IPHeaderTooShort", 6]
+    ["NoError", 1],
+    ["PacketTooShort", 2],
+    ["NoMatch", 3],
+    ["StackOutOfBounds", 4],
+    ["HeaderTooShort", 5],
+    ["ParserTimeout", 6],
+    ["IPHeaderTooShort", 7]
   ],
   "enums" : [],
   "parsers" : [
@@ -351,7 +324,7 @@
                 },
                 {
                   "type" : "hexstr",
-                  "value" : "6"
+                  "value" : "7"
                 }
               ],
               "op" : "verify"
@@ -428,7 +401,7 @@
               "parameters" : [
                 {
                   "type" : "field",
-                  "value" : ["userMetadata.parser_metadata", "remaining"]
+                  "value" : ["scalars", "metadata._parser_metadata_remaining1"]
                 },
                 {
                   "type" : "field",
@@ -454,7 +427,7 @@
           "transition_key" : [
             {
               "type" : "field",
-              "value" : ["userMetadata.parser_metadata", "remaining"]
+              "value" : ["mri", "count"]
             }
           ]
         },
@@ -475,7 +448,7 @@
               "parameters" : [
                 {
                   "type" : "field",
-                  "value" : ["userMetadata.parser_metadata", "remaining"]
+                  "value" : ["scalars", "metadata._parser_metadata_remaining1"]
                 },
                 {
                   "type" : "expression",
@@ -489,7 +462,7 @@
                           "op" : "+",
                           "left" : {
                             "type" : "field",
-                            "value" : ["userMetadata.parser_metadata", "remaining"]
+                            "value" : ["scalars", "metadata._parser_metadata_remaining1"]
                           },
                           "right" : {
                             "type" : "hexstr",
@@ -524,7 +497,7 @@
           "transition_key" : [
             {
               "type" : "field",
-              "value" : ["userMetadata.parser_metadata", "remaining"]
+              "value" : ["scalars", "metadata._parser_metadata_remaining1"]
             }
           ]
         }
@@ -538,7 +511,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "mri.p4",
-        "line" : 258,
+        "line" : 261,
         "column" : 8,
         "source_fragment" : "DeparserImpl"
       },
@@ -554,7 +527,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "mri.p4",
-        "line" : 237,
+        "line" : 240,
         "column" : 8,
         "source_fragment" : "update_checksum(true, ..."
       },
@@ -631,7 +604,7 @@
           "parameters" : [],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 152,
+            "line" : 155,
             "column" : 8,
             "source_fragment" : "mark_to_drop()"
           }
@@ -653,7 +626,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 156,
+            "line" : 159,
             "column" : 8,
             "source_fragment" : "hdr.ipv4_option.setValid()"
           }
@@ -672,7 +645,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 157,
+            "line" : 160,
             "column" : 8,
             "source_fragment" : "hdr.ipv4_option.copyFlag = 1"
           }
@@ -691,7 +664,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 158,
+            "line" : 161,
             "column" : 8,
             "source_fragment" : "hdr.ipv4_option.optClass = 2"
           }
@@ -729,7 +702,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 160,
+            "line" : 163,
             "column" : 8,
             "source_fragment" : "hdr.ipv4_option.optionLength = 4"
           }
@@ -744,7 +717,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 162,
+            "line" : 165,
             "column" : 8,
             "source_fragment" : "hdr.mri.setValid()"
           }
@@ -763,7 +736,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 163,
+            "line" : 166,
             "column" : 8,
             "source_fragment" : "hdr.mri.count = 0"
           }
@@ -805,7 +778,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 164,
+            "line" : 167,
             "column" : 8,
             "source_fragment" : "hdr.ipv4.ihl = hdr.ipv4.ihl + 1"
           }
@@ -859,7 +832,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 168,
+            "line" : 171,
             "column" : 8,
             "source_fragment" : "hdr.mri.count = hdr.mri.count + 1"
           }
@@ -878,7 +851,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 169,
+            "line" : 172,
             "column" : 8,
             "source_fragment" : "hdr.swids.push_front(1)"
           }
@@ -893,7 +866,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 174,
+            "line" : 177,
             "column" : 8,
             "source_fragment" : "hdr.swids[0].setValid()"
           }
@@ -912,7 +885,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 175,
+            "line" : 178,
             "column" : 8,
             "source_fragment" : "hdr.swids[0].swid = id"
           }
@@ -954,7 +927,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 177,
+            "line" : 180,
             "column" : 8,
             "source_fragment" : "hdr.ipv4.ihl = hdr.ipv4.ihl + 1"
           }
@@ -996,7 +969,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 178,
+            "line" : 181,
             "column" : 8,
             "source_fragment" : "hdr.ipv4_option.optionLength = hdr.ipv4_option.optionLength + 4"
           }
@@ -1031,7 +1004,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 182,
+            "line" : 185,
             "column" : 8,
             "source_fragment" : "standard_metadata.egress_spec = port"
           }
@@ -1050,7 +1023,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 183,
+            "line" : 186,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.srcAddr = hdr.ethernet.dstAddr"
           }
@@ -1069,7 +1042,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 184,
+            "line" : 187,
             "column" : 8,
             "source_fragment" : "hdr.ethernet.dstAddr = dstAddr"
           }
@@ -1111,7 +1084,7 @@
           ],
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 185,
+            "line" : 188,
             "column" : 8,
             "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl - 1"
           }
@@ -1125,7 +1098,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "mri.p4",
-        "line" : 150,
+        "line" : 153,
         "column" : 8,
         "source_fragment" : "ingress"
       },
@@ -1136,7 +1109,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 193,
+            "line" : 196,
             "column" : 10,
             "source_fragment" : "ipv4_lpm"
           },
@@ -1197,7 +1170,7 @@
           "id" : 2,
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 188,
+            "line" : 191,
             "column" : 10,
             "source_fragment" : "swid"
           },
@@ -1230,7 +1203,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 207,
+            "line" : 210,
             "column" : 12,
             "source_fragment" : "hdr.ipv4.isValid()"
           },
@@ -1253,7 +1226,7 @@
           "id" : 1,
           "source_info" : {
             "filename" : "mri.p4",
-            "line" : 210,
+            "line" : 213,
             "column" : 16,
             "source_fragment" : "!hdr.mri.isValid()"
           },
@@ -1285,7 +1258,7 @@
       "id" : 1,
       "source_info" : {
         "filename" : "mri.p4",
-        "line" : 223,
+        "line" : 226,
         "column" : 8,
         "source_fragment" : "egress"
       },
@@ -1299,9 +1272,17 @@
     {
       "name" : "cksum",
       "id" : 0,
+      "source_info" : {
+        "filename" : "mri.p4",
+        "line" : 240,
+        "column" : 8,
+        "source_fragment" : "update_checksum(true, ..."
+      },
       "target" : ["ipv4", "hdrChecksum"],
       "type" : "generic",
       "calculation" : "calc",
+      "verify" : false,
+      "update" : true,
       "if_cond" : {
         "type" : "bool",
         "value" : true
@@ -1355,5 +1336,10 @@
       "intrinsic_metadata.recirculate_flag",
       ["standard_metadata", "recirculate_flag"]
     ]
-  ]
+  ],
+  "program" : "./mri.p4i",
+  "__meta__" : {
+    "version" : [2, 18],
+    "compiler" : "https://github.com/p4lang/p4c"
+  }
 }

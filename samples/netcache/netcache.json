@@ -429,12 +429,12 @@
     }
   ],
   "errors" : [
-    ["NoError", 0],
-    ["PacketTooShort", 1],
-    ["NoMatch", 2],
-    ["StackOutOfBounds", 3],
-    ["HeaderTooShort", 4],
-    ["ParserTimeout", 5]
+    ["NoError", 1],
+    ["PacketTooShort", 2],
+    ["NoMatch", 3],
+    ["StackOutOfBounds", 4],
+    ["HeaderTooShort", 5],
+    ["ParserTimeout", 6]
   ],
   "enums" : [],
   "parsers" : [
@@ -13484,7 +13484,7 @@
   "force_arith" : [],
   "extern_instances" : [],
   "field_aliases" : [],
-  "program" : "netcache.p4",
+  "program" : "./netcache.p4i",
   "__meta__" : {
     "version" : [2, 18],
     "compiler" : "https://github.com/p4lang/p4c"

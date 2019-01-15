@@ -22,7 +22,9 @@ header ethernet_t {
 }
 
 header srcRoute_t {
+    bit<7>    _pad0;
     bit<1>    bos;
+    bit<1>    _pad1;
     bit<15>   port;
 }
 

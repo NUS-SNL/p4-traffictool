@@ -1,9 +1,4 @@
 {
-  "program" : "./source_routing.p4i",
-  "__meta__" : {
-    "version" : [2, 18],
-    "compiler" : "https://github.com/p4lang/p4c"
-  },
   "header_types" : [
     {
       "name" : "scalars_0",
@@ -11,43 +6,8 @@
       "fields" : []
     },
     {
-      "name" : "ethernet_t",
-      "id" : 1,
-      "fields" : [
-        ["dstAddr", 48, false],
-        ["srcAddr", 48, false],
-        ["etherType", 16, false]
-      ]
-    },
-    {
-      "name" : "ipv4_t",
-      "id" : 2,
-      "fields" : [
-        ["version", 4, false],
-        ["ihl", 4, false],
-        ["diffserv", 8, false],
-        ["totalLen", 16, false],
-        ["identification", 16, false],
-        ["flags", 3, false],
-        ["fragOffset", 13, false],
-        ["ttl", 8, false],
-        ["protocol", 8, false],
-        ["hdrChecksum", 16, false],
-        ["srcAddr", 32, false],
-        ["dstAddr", 32, false]
-      ]
-    },
-    {
-      "name" : "srcRoute_t",
-      "id" : 3,
-      "fields" : [
-        ["bos", 1, false],
-        ["port", 15, false]
-      ]
-    },
-    {
       "name" : "standard_metadata",
-      "id" : 4,
+      "id" : 1,
       "fields" : [
         ["ingress_port", 9, false],
         ["egress_spec", 9, false],
@@ -69,7 +29,45 @@
         ["egress_rid", 16, false],
         ["checksum_error", 1, false],
         ["recirculate_flag", 32, false],
+        ["parser_error", 32, false],
         ["_padding", 5, false]
+      ]
+    },
+    {
+      "name" : "ethernet_t",
+      "id" : 2,
+      "fields" : [
+        ["dstAddr", 48, false],
+        ["srcAddr", 48, false],
+        ["etherType", 16, false]
+      ]
+    },
+    {
+      "name" : "ipv4_t",
+      "id" : 3,
+      "fields" : [
+        ["version", 4, false],
+        ["ihl", 4, false],
+        ["diffserv", 8, false],
+        ["totalLen", 16, false],
+        ["identification", 16, false],
+        ["flags", 3, false],
+        ["fragOffset", 13, false],
+        ["ttl", 8, false],
+        ["protocol", 8, false],
+        ["hdrChecksum", 16, false],
+        ["srcAddr", 32, false],
+        ["dstAddr", 32, false]
+      ]
+    },
+    {
+      "name" : "srcRoute_t",
+      "id" : 4,
+      "fields" : [
+        ["_pad0", 7, false],
+        ["bos", 1, false],
+        ["_pad1", 1, false],
+        ["port", 15, false]
       ]
     }
   ],
@@ -180,12 +178,12 @@
   "header_union_stacks" : [],
   "field_lists" : [],
   "errors" : [
-    ["NoError", 0],
-    ["PacketTooShort", 1],
-    ["NoMatch", 2],
-    ["StackOutOfBounds", 3],
-    ["HeaderTooShort", 4],
-    ["ParserTimeout", 5]
+    ["NoError", 1],
+    ["PacketTooShort", 2],
+    ["NoMatch", 3],
+    ["StackOutOfBounds", 4],
+    ["HeaderTooShort", 5],
+    ["ParserTimeout", 6]
   ],
   "enums" : [],
   "parsers" : [
@@ -294,8 +292,8 @@
       "name" : "deparser",
       "id" : 0,
       "source_info" : {
-        "filename" : "source_routing.p4",
-        "line" : 162,
+        "filename" : "src_routing.p4",
+        "line" : 164,
         "column" : 8,
         "source_fragment" : "MyDeparser"
       },
@@ -317,8 +315,8 @@
           "op" : "drop",
           "parameters" : [],
           "source_info" : {
-            "filename" : "source_routing.p4",
-            "line" : 109,
+            "filename" : "src_routing.p4",
+            "line" : 111,
             "column" : 8,
             "source_fragment" : "mark_to_drop()"
           }
@@ -356,8 +354,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "source_routing.p4",
-            "line" : 113,
+            "filename" : "src_routing.p4",
+            "line" : 115,
             "column" : 8,
             "source_fragment" : "standard_metadata.egress_spec = (bit<9>)hdr.srcRoutes[0].port"
           }
@@ -375,8 +373,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "source_routing.p4",
-            "line" : 114,
+            "filename" : "src_routing.p4",
+            "line" : 116,
             "column" : 8,
             "source_fragment" : "hdr.srcRoutes.pop_front(1)"
           }
@@ -401,7 +399,7 @@
             }
           ],
           "source_info" : {
-            "filename" : "source_routing.p4",
+            "filename" : "src_routing.p4",
             "line" : 5,
             "column" : 26,
             "source_fragment" : "0x800; ..."
@@ -450,8 +448,8 @@
             }
           ],
           "source_info" : {
-            "filename" : "source_routing.p4",
-            "line" : 122,
+            "filename" : "src_routing.p4",
+            "line" : 124,
             "column" : 8,
             "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl - 1"
           }
@@ -464,8 +462,8 @@
       "name" : "ingress",
       "id" : 0,
       "source_info" : {
-        "filename" : "source_routing.p4",
-        "line" : 104,
+        "filename" : "src_routing.p4",
+        "line" : 106,
         "column" : 8,
         "source_fragment" : "MyIngress"
       },
@@ -570,8 +568,8 @@
           "name" : "node_2",
           "id" : 0,
           "source_info" : {
-            "filename" : "source_routing.p4",
-            "line" : 126,
+            "filename" : "src_routing.p4",
+            "line" : 128,
             "column" : 12,
             "source_fragment" : "hdr.srcRoutes[0].isValid()"
           },
@@ -593,8 +591,8 @@
           "name" : "node_3",
           "id" : 1,
           "source_info" : {
-            "filename" : "source_routing.p4",
-            "line" : 127,
+            "filename" : "src_routing.p4",
+            "line" : 129,
             "column" : 16,
             "source_fragment" : "hdr.srcRoutes[0].bos == 1"
           },
@@ -619,8 +617,8 @@
           "name" : "node_6",
           "id" : 2,
           "source_info" : {
-            "filename" : "source_routing.p4",
-            "line" : 131,
+            "filename" : "src_routing.p4",
+            "line" : 133,
             "column" : 16,
             "source_fragment" : "hdr.ipv4.isValid()"
           },
@@ -644,8 +642,8 @@
       "name" : "egress",
       "id" : 1,
       "source_info" : {
-        "filename" : "source_routing.p4",
-        "line" : 144,
+        "filename" : "src_routing.p4",
+        "line" : 146,
         "column" : 8,
         "source_fragment" : "MyEgress"
       },
@@ -703,5 +701,10 @@
       "intrinsic_metadata.recirculate_flag",
       ["standard_metadata", "recirculate_flag"]
     ]
-  ]
+  ],
+  "program" : "./src_routing.p4i",
+  "__meta__" : {
+    "version" : [2, 18],
+    "compiler" : "https://github.com/p4lang/p4c"
+  }
 }

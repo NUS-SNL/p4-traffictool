@@ -26,14 +26,18 @@ header ethernet_t {
 }
 
 header srcRoute_t {
+    bit<7>    _pad0;
     bit<1>    bos;
+    bit<1>    _pad1;
     bit<15>   port;
 }
 
 header hula_t {
     /* 0 is forward path, 1 is the backward path */
+    bit<7>  _pad0;
     bit<1>   dir;
     /* max qdepth seen so far in the forward path */
+    bit<1>  _pad1;
     qdepth_t qdepth;
     /* digest of the source routing list to uniquely identify each path */
     digest_t digest;

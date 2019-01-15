@@ -427,7 +427,7 @@
           "name" : "do_nothing",
           "id" : 0,
           "source_info" : {
-            "filename" : "samples/dummy/dummy.p4",
+            "filename" : "qmetadata.p4",
             "line" : 15,
             "column" : 0,
             "source_fragment" : "table do_nothing{ ..."
@@ -483,7 +483,7 @@
   "force_arith" : [],
   "extern_instances" : [],
   "field_aliases" : [],
-  "program" : "samples/dummy/dummy.json/dummy.p4i",
+  "program" : "./qmetadata.p4i",
   "__meta__" : {
     "version" : [2, 18],
     "compiler" : "https://github.com/p4lang/p4c"
