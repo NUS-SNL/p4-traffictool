@@ -4,8 +4,11 @@ from scapy.all import *
 class Ipv4_option(Packet):
 	name = 'ipv4_option'
 	fields_desc = [
+		XBitField('_pad0', 0, 7),
 		XBitField('copyFlag', 0, 1),
+		XBitField('_pad1', 0, 6),
 		XBitField('optClass', 0, 2),
+		XBitField('_pad2', 0, 3),
 		XBitField('option', 0, 5),
 		XByteField('optionLength', 0),
 	]

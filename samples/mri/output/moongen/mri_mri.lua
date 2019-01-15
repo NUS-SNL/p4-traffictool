@@ -9,6 +9,7 @@
 local ffi = require "ffi"
 local dpdkc = require "dpdkc"
 
+require "bitfields_def"
 require "utils"
 require "proto.template"
 local initHeader = initHeader
@@ -35,98 +36,37 @@ end
 
 local ntoh64, hton64 = ntoh64, hton64
 
------ 24 bit address -----
-ffi.cdef[[
-	union __attribute__((__packed__)) bitfield_24{
-		uint32_t intequiv;
-	};
-]]
-
-local bitfield24 = {}
-bitfield24.__index = bitfield24
-local bitfield24Type = ffi.typeof("union bitfield_24")
-
-function bitfield24:get()
-	return hton(self.intequiv)
-end
-
-function bitfield24:set(addr)
-	addr = addr or 0
-	self.intequiv = hton(tonumber(band(addr,0xFFFFFFFFULL)))
-
-end
-
------ 40 bit address -----
-ffi.cdef[[
-	union __attribute__((__packed__)) bitfield_40{
-		uint64_t intequiv;
-	};
-]]
-
-local bitfield40 = {}
-bitfield40.__index = bitfield40
-local bitfield40Type = ffi.typeof("union bitfield_40")
-
-function bitfield40:get()
-	return hton64(self.intequiv)
-end
-
-function bitfield40:set(addr)
-	addr = addr or 0
-	self.intequiv = hton64(tonumber(band(addr,0xFFFFFFFFFFFFFFFFULL)))
-end
-
------ 48 bit address -----
-ffi.cdef[[
-	union __attribute__((__packed__)) bitfield_48{
-		uint32_t intequiv;
-	};
-]]
-
-local bitfield48 = {}
-bitfield48.__index = bitfield48
-local bitfield48Type = ffi.typeof("union bitfield_48")
-
-function bitfield48:get()
-	return hton64(self.intequiv)
-end
-
-function bitfield48:set(addr)
-	addr = addr or 0
-	self.intequiv = hton64(tonumber(band(addr,0xFFFFFFFFFFFFFFFFULL)))
-end
-
 
 -----------------------------------------------------
----- MRI header and constants 
+---- mri_mri header and constants 
 -----------------------------------------------------
-local MRI = {}
+local mri_mri = {}
 
-MRI.headerFormat = [[
+mri_mri.headerFormat = [[
 	uint16_t 	 count;
 ]]
 
 
 -- variable length fields
-MRI.headerVariableMember = nil
+mri_mri.headerVariableMember = nil
 
--- Module for MRI_address struct
-local MRIHeader = initHeader()
-MRIHeader.__index = MRIHeader
+-- Module for mri_mri_address struct
+local mri_mriHeader = initHeader()
+mri_mriHeader.__index = mri_mriHeader
 
 
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
-function MRIHeader:getCOUNT()
+function mri_mriHeader:getCOUNT()
 	return hton16(self.count)
 end
 
-function MRIHeader:getCOUNTstring()
+function mri_mriHeader:getCOUNTstring()
 	return self:getCOUNT()
 end
 
-function MRIHeader:setCOUNT(int)
+function mri_mriHeader:setCOUNT(int)
 	int = int or 0
 	self.count = hton16(int)
 end
@@ -137,16 +77,16 @@ end
 ---- Functions for full header
 -----------------------------------------------------
 -- Set all members of the PROTO header
-function MRIHeader:fill(args,pre)
+function mri_mriHeader:fill(args,pre)
 	args = args or {}
-	pre = pre or 'MRI'
+	pre = pre or 'mri_mri'
 
 	self:setCOUNT(args[pre .. 'COUNT'])
 end
 
 -- Retrieve the values of all members
-function MRIHeader:get(pre)
-	pre = pre or 'MRI'
+function mri_mriHeader:get(pre)
+	pre = pre or 'mri_mri'
 
 	local args = {}
 	args[pre .. 'COUNT'] = self:getCOUNT()
@@ -154,17 +94,17 @@ function MRIHeader:get(pre)
 	return args
 end
 
-function MRIHeader:getString()
-	return 'MRI \n'
+function mri_mriHeader:getString()
+	return 'mri_mri \n'
 		.. 'COUNT' .. self:getCOUNTString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	SWIDS = default,
+	mri_swids = default,
 }
-function MRIHeader:resolveNextHeader()
-	local key = self:getREMAINING()
+function mri_mriHeader:resolveNextHeader()
+	local key = self:getCOUNT()
 	for name, value in pairs(nextHeaderResolve) do
 		if key == value then
 			return name
@@ -173,12 +113,21 @@ function MRIHeader:resolveNextHeader()
 	return nil
 end
 
+function mri_mriHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
+	if not namedArgs[pre .. 'COUNT'] then
+		for name, _port in pairs(nextHeaderResolve) do
+			if nextHeader == name then
+				namedArgs[pre .. 'COUNT'] = _port
+				break
+			end
+		end
+	end
+	return namedArgs
+end
 
 -----------------------------------------------------
 ---- Metatypes
 -----------------------------------------------------
-ffi.metatype('union bitfield_24',bitfield24)
-ffi.metatype('union bitfield_40',bitfield40)
-ffi.metatype('union bitfield_48',bitfield48)MRI.metatype = MRIHeader
+mri_mri.metatype = mri_mriHeader
 
-return MRI
+return mri_mri

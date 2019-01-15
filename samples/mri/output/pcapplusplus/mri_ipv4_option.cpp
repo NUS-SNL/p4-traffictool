@@ -1,6 +1,6 @@
 #define LOG_MODULE PacketLogModuleIpv4_optionLayer
 
-#include "Ipv4_optionLayer.h"
+#include "mri_ipv4_option.h"
 #include "PayloadLayer.h"
 #include "IpUtils.h"
 #include "Logger.h"
@@ -16,6 +16,10 @@ namespace pcpp{
 		return copyFlag;
 	}
 
+	void Ipv4_optionLayer::setCopyflag(uint8_t value){
+		ipv4_optionhdr* hdrdata = (ipv4_optionhdr*)m_Data;
+		hdrdata->copyFlag = (value);
+	}
 	uint8_t Ipv4_optionLayer::getOptclass(){
 		uint8_t optClass;
 		ipv4_optionhdr* hdrdata = (ipv4_optionhdr*)m_Data;
@@ -23,6 +27,10 @@ namespace pcpp{
 		return optClass;
 	}
 
+	void Ipv4_optionLayer::setOptclass(uint8_t value){
+		ipv4_optionhdr* hdrdata = (ipv4_optionhdr*)m_Data;
+		hdrdata->optClass = (value);
+	}
 	uint8_t Ipv4_optionLayer::getOption(){
 		uint8_t option;
 		ipv4_optionhdr* hdrdata = (ipv4_optionhdr*)m_Data;
@@ -30,6 +38,10 @@ namespace pcpp{
 		return option;
 	}
 
+	void Ipv4_optionLayer::setOption(uint8_t value){
+		ipv4_optionhdr* hdrdata = (ipv4_optionhdr*)m_Data;
+		hdrdata->option = (value);
+	}
 	uint8_t Ipv4_optionLayer::getOptionlength(){
 		uint8_t optionLength;
 		ipv4_optionhdr* hdrdata = (ipv4_optionhdr*)m_Data;
@@ -37,6 +49,10 @@ namespace pcpp{
 		return optionLength;
 	}
 
+	void Ipv4_optionLayer::setOptionlength(uint8_t value){
+		ipv4_optionhdr* hdrdata = (ipv4_optionhdr*)m_Data;
+		hdrdata->optionLength = (value);
+	}
 	void Ipv4_optionLayer::parseNextLayer(){
 		if (m_DataLen <= sizeof(ipv4_optionhdr))
 			return;
@@ -49,5 +65,6 @@ namespace pcpp{
 			m_NextLayer = new PayloadLayer(m_Data + sizeof(ipv4_optionhdr), m_DataLen - sizeof(ipv4_optionhdr), this, m_Packet);
 	}
 
-	std::string Ipv4_optionLayer::toString(){}
+	std::string Ipv4_optionLayer::toString(){ return ""; }
 
+}

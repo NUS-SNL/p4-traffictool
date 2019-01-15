@@ -1,6 +1,6 @@
 #define LOG_MODULE PacketLogModuleMriLayer
 
-#include "MriLayer.h"
+#include "mri_mri.h"
 #include "PayloadLayer.h"
 #include "IpUtils.h"
 #include "Logger.h"
@@ -16,17 +16,22 @@ namespace pcpp{
 		return count;
 	}
 
+	void MriLayer::setCount(uint16_t value){
+		mrihdr* hdrdata = (mrihdr*)m_Data;
+		hdrdata->count = htons(value);
+	}
 	void MriLayer::parseNextLayer(){
 		if (m_DataLen <= sizeof(mrihdr))
 			return;
 
 		mrihdr* hdrdata = getMriHeader();
-		uint16_t remaining = htons(hdrdata->remaining);
-		if (remaining == default)
+		uint16_t count = htons(hdrdata->count);
+		if (count == default)
 			m_NextLayer = new SwidsLayer(m_Data+sizeof(mrihdr), m_DataLen - sizeof(mrihdr), this, m_Packet);
 		else
 			m_NextLayer = new PayloadLayer(m_Data + sizeof(mrihdr), m_DataLen - sizeof(mrihdr), this, m_Packet);
 	}
 
-	std::string MriLayer::toString(){}
+	std::string MriLayer::toString(){ return ""; }
 
+}

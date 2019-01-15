@@ -9,6 +9,7 @@
 local ffi = require "ffi"
 local dpdkc = require "dpdkc"
 
+require "bitfields_def"
 require "utils"
 require "proto.template"
 local initHeader = initHeader
@@ -35,74 +36,13 @@ end
 
 local ntoh64, hton64 = ntoh64, hton64
 
------ 24 bit address -----
-ffi.cdef[[
-	union __attribute__((__packed__)) bitfield_24{
-		uint32_t intequiv;
-	};
-]]
-
-local bitfield24 = {}
-bitfield24.__index = bitfield24
-local bitfield24Type = ffi.typeof("union bitfield_24")
-
-function bitfield24:get()
-	return hton(self.intequiv)
-end
-
-function bitfield24:set(addr)
-	addr = addr or 0
-	self.intequiv = hton(tonumber(band(addr,0xFFFFFFFFULL)))
-
-end
-
------ 40 bit address -----
-ffi.cdef[[
-	union __attribute__((__packed__)) bitfield_40{
-		uint64_t intequiv;
-	};
-]]
-
-local bitfield40 = {}
-bitfield40.__index = bitfield40
-local bitfield40Type = ffi.typeof("union bitfield_40")
-
-function bitfield40:get()
-	return hton64(self.intequiv)
-end
-
-function bitfield40:set(addr)
-	addr = addr or 0
-	self.intequiv = hton64(tonumber(band(addr,0xFFFFFFFFFFFFFFFFULL)))
-end
-
------ 48 bit address -----
-ffi.cdef[[
-	union __attribute__((__packed__)) bitfield_48{
-		uint32_t intequiv;
-	};
-]]
-
-local bitfield48 = {}
-bitfield48.__index = bitfield48
-local bitfield48Type = ffi.typeof("union bitfield_48")
-
-function bitfield48:get()
-	return hton64(self.intequiv)
-end
-
-function bitfield48:set(addr)
-	addr = addr or 0
-	self.intequiv = hton64(tonumber(band(addr,0xFFFFFFFFFFFFFFFFULL)))
-end
-
 
 -----------------------------------------------------
----- IPV4_OPTION header and constants 
+---- mri_ipv4_option header and constants 
 -----------------------------------------------------
-local IPV4_OPTION = {}
+local mri_ipv4_option = {}
 
-IPV4_OPTION.headerFormat = [[
+mri_ipv4_option.headerFormat = [[
 	uint8_t 	 copyFlag;
 	uint8_t 	 optClass;
 	uint8_t 	 option;
@@ -111,67 +51,67 @@ IPV4_OPTION.headerFormat = [[
 
 
 -- variable length fields
-IPV4_OPTION.headerVariableMember = nil
+mri_ipv4_option.headerVariableMember = nil
 
--- Module for IPV4_OPTION_address struct
-local IPV4_OPTIONHeader = initHeader()
-IPV4_OPTIONHeader.__index = IPV4_OPTIONHeader
+-- Module for mri_ipv4_option_address struct
+local mri_ipv4_optionHeader = initHeader()
+mri_ipv4_optionHeader.__index = mri_ipv4_optionHeader
 
 
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
-function IPV4_OPTIONHeader:getCOPYFLAG()
+function mri_ipv4_optionHeader:getCOPYFLAG()
 	return (self.copyFlag)
 end
 
-function IPV4_OPTIONHeader:getCOPYFLAGstring()
+function mri_ipv4_optionHeader:getCOPYFLAGstring()
 	return self:getCOPYFLAG()
 end
 
-function IPV4_OPTIONHeader:setCOPYFLAG(int)
+function mri_ipv4_optionHeader:setCOPYFLAG(int)
 	int = int or 0
 	self.copyFlag = (int)
 end
 
 
-function IPV4_OPTIONHeader:getOPTCLASS()
+function mri_ipv4_optionHeader:getOPTCLASS()
 	return (self.optClass)
 end
 
-function IPV4_OPTIONHeader:getOPTCLASSstring()
+function mri_ipv4_optionHeader:getOPTCLASSstring()
 	return self:getOPTCLASS()
 end
 
-function IPV4_OPTIONHeader:setOPTCLASS(int)
+function mri_ipv4_optionHeader:setOPTCLASS(int)
 	int = int or 0
 	self.optClass = (int)
 end
 
 
-function IPV4_OPTIONHeader:getOPTION()
+function mri_ipv4_optionHeader:getOPTION()
 	return (self.option)
 end
 
-function IPV4_OPTIONHeader:getOPTIONstring()
+function mri_ipv4_optionHeader:getOPTIONstring()
 	return self:getOPTION()
 end
 
-function IPV4_OPTIONHeader:setOPTION(int)
+function mri_ipv4_optionHeader:setOPTION(int)
 	int = int or 0
 	self.option = (int)
 end
 
 
-function IPV4_OPTIONHeader:getOPTIONLENGTH()
+function mri_ipv4_optionHeader:getOPTIONLENGTH()
 	return (self.optionLength)
 end
 
-function IPV4_OPTIONHeader:getOPTIONLENGTHstring()
+function mri_ipv4_optionHeader:getOPTIONLENGTHstring()
 	return self:getOPTIONLENGTH()
 end
 
-function IPV4_OPTIONHeader:setOPTIONLENGTH(int)
+function mri_ipv4_optionHeader:setOPTIONLENGTH(int)
 	int = int or 0
 	self.optionLength = (int)
 end
@@ -182,9 +122,9 @@ end
 ---- Functions for full header
 -----------------------------------------------------
 -- Set all members of the PROTO header
-function IPV4_OPTIONHeader:fill(args,pre)
+function mri_ipv4_optionHeader:fill(args,pre)
 	args = args or {}
-	pre = pre or 'IPV4_OPTION'
+	pre = pre or 'mri_ipv4_option'
 
 	self:setCOPYFLAG(args[pre .. 'COPYFLAG'])
 	self:setOPTCLASS(args[pre .. 'OPTCLASS'])
@@ -193,8 +133,8 @@ function IPV4_OPTIONHeader:fill(args,pre)
 end
 
 -- Retrieve the values of all members
-function IPV4_OPTIONHeader:get(pre)
-	pre = pre or 'IPV4_OPTION'
+function mri_ipv4_optionHeader:get(pre)
+	pre = pre or 'mri_ipv4_option'
 
 	local args = {}
 	args[pre .. 'COPYFLAG'] = self:getCOPYFLAG()
@@ -205,8 +145,8 @@ function IPV4_OPTIONHeader:get(pre)
 	return args
 end
 
-function IPV4_OPTIONHeader:getString()
-	return 'IPV4_OPTION \n'
+function mri_ipv4_optionHeader:getString()
+	return 'mri_ipv4_option \n'
 		.. 'COPYFLAG' .. self:getCOPYFLAGString() .. '\n'
 		.. 'OPTCLASS' .. self:getOPTCLASSString() .. '\n'
 		.. 'OPTION' .. self:getOPTIONString() .. '\n'
@@ -215,9 +155,9 @@ end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	MRI = 0x1f,
+	mri_mri = 0x1f,
 }
-function IPV4_OPTIONHeader:resolveNextHeader()
+function mri_ipv4_optionHeader:resolveNextHeader()
 	local key = self:getOPTION()
 	for name, value in pairs(nextHeaderResolve) do
 		if key == value then
@@ -227,12 +167,21 @@ function IPV4_OPTIONHeader:resolveNextHeader()
 	return nil
 end
 
+function mri_ipv4_optionHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
+	if not namedArgs[pre .. 'OPTION'] then
+		for name, _port in pairs(nextHeaderResolve) do
+			if nextHeader == name then
+				namedArgs[pre .. 'OPTION'] = _port
+				break
+			end
+		end
+	end
+	return namedArgs
+end
 
 -----------------------------------------------------
 ---- Metatypes
 -----------------------------------------------------
-ffi.metatype('union bitfield_24',bitfield24)
-ffi.metatype('union bitfield_40',bitfield40)
-ffi.metatype('union bitfield_48',bitfield48)IPV4_OPTION.metatype = IPV4_OPTIONHeader
+mri_ipv4_option.metatype = mri_ipv4_optionHeader
 
-return IPV4_OPTION
+return mri_ipv4_option

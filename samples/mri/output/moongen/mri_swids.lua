@@ -9,6 +9,7 @@
 local ffi = require "ffi"
 local dpdkc = require "dpdkc"
 
+require "bitfields_def"
 require "utils"
 require "proto.template"
 local initHeader = initHeader
@@ -35,98 +36,37 @@ end
 
 local ntoh64, hton64 = ntoh64, hton64
 
------ 24 bit address -----
-ffi.cdef[[
-	union __attribute__((__packed__)) bitfield_24{
-		uint32_t intequiv;
-	};
-]]
-
-local bitfield24 = {}
-bitfield24.__index = bitfield24
-local bitfield24Type = ffi.typeof("union bitfield_24")
-
-function bitfield24:get()
-	return hton(self.intequiv)
-end
-
-function bitfield24:set(addr)
-	addr = addr or 0
-	self.intequiv = hton(tonumber(band(addr,0xFFFFFFFFULL)))
-
-end
-
------ 40 bit address -----
-ffi.cdef[[
-	union __attribute__((__packed__)) bitfield_40{
-		uint64_t intequiv;
-	};
-]]
-
-local bitfield40 = {}
-bitfield40.__index = bitfield40
-local bitfield40Type = ffi.typeof("union bitfield_40")
-
-function bitfield40:get()
-	return hton64(self.intequiv)
-end
-
-function bitfield40:set(addr)
-	addr = addr or 0
-	self.intequiv = hton64(tonumber(band(addr,0xFFFFFFFFFFFFFFFFULL)))
-end
-
------ 48 bit address -----
-ffi.cdef[[
-	union __attribute__((__packed__)) bitfield_48{
-		uint32_t intequiv;
-	};
-]]
-
-local bitfield48 = {}
-bitfield48.__index = bitfield48
-local bitfield48Type = ffi.typeof("union bitfield_48")
-
-function bitfield48:get()
-	return hton64(self.intequiv)
-end
-
-function bitfield48:set(addr)
-	addr = addr or 0
-	self.intequiv = hton64(tonumber(band(addr,0xFFFFFFFFFFFFFFFFULL)))
-end
-
 
 -----------------------------------------------------
----- SWIDS header and constants 
+---- mri_swids header and constants 
 -----------------------------------------------------
-local SWIDS = {}
+local mri_swids = {}
 
-SWIDS.headerFormat = [[
+mri_swids.headerFormat = [[
 	uint32_t 	 swid;
 ]]
 
 
 -- variable length fields
-SWIDS.headerVariableMember = nil
+mri_swids.headerVariableMember = nil
 
--- Module for SWIDS_address struct
-local SWIDSHeader = initHeader()
-SWIDSHeader.__index = SWIDSHeader
+-- Module for mri_swids_address struct
+local mri_swidsHeader = initHeader()
+mri_swidsHeader.__index = mri_swidsHeader
 
 
 -----------------------------------------------------
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
-function SWIDSHeader:getSWID()
+function mri_swidsHeader:getSWID()
 	return hton(self.swid)
 end
 
-function SWIDSHeader:getSWIDstring()
+function mri_swidsHeader:getSWIDstring()
 	return self:getSWID()
 end
 
-function SWIDSHeader:setSWID(int)
+function mri_swidsHeader:setSWID(int)
 	int = int or 0
 	self.swid = hton(int)
 end
@@ -137,16 +77,16 @@ end
 ---- Functions for full header
 -----------------------------------------------------
 -- Set all members of the PROTO header
-function SWIDSHeader:fill(args,pre)
+function mri_swidsHeader:fill(args,pre)
 	args = args or {}
-	pre = pre or 'SWIDS'
+	pre = pre or 'mri_swids'
 
 	self:setSWID(args[pre .. 'SWID'])
 end
 
 -- Retrieve the values of all members
-function SWIDSHeader:get(pre)
-	pre = pre or 'SWIDS'
+function mri_swidsHeader:get(pre)
+	pre = pre or 'mri_swids'
 
 	local args = {}
 	args[pre .. 'SWID'] = self:getSWID()
@@ -154,17 +94,17 @@ function SWIDSHeader:get(pre)
 	return args
 end
 
-function SWIDSHeader:getString()
-	return 'SWIDS \n'
+function mri_swidsHeader:getString()
+	return 'mri_swids \n'
 		.. 'SWID' .. self:getSWIDString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	SWIDS = default,
+	mri_swids = default,
 }
-function SWIDSHeader:resolveNextHeader()
-	local key = self:getREMAINING()
+function mri_swidsHeader:resolveNextHeader()
+	local key = self:getMETADATA._PARSER_METADATA_REMAINING1()
 	for name, value in pairs(nextHeaderResolve) do
 		if key == value then
 			return name
@@ -173,12 +113,21 @@ function SWIDSHeader:resolveNextHeader()
 	return nil
 end
 
+function mri_swidsHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
+	if not namedArgs[pre .. 'METADATA._PARSER_METADATA_REMAINING1'] then
+		for name, _port in pairs(nextHeaderResolve) do
+			if nextHeader == name then
+				namedArgs[pre .. 'METADATA._PARSER_METADATA_REMAINING1'] = _port
+				break
+			end
+		end
+	end
+	return namedArgs
+end
 
 -----------------------------------------------------
 ---- Metatypes
 -----------------------------------------------------
-ffi.metatype('union bitfield_24',bitfield24)
-ffi.metatype('union bitfield_40',bitfield40)
-ffi.metatype('union bitfield_48',bitfield48)SWIDS.metatype = SWIDSHeader
+mri_swids.metatype = mri_swidsHeader
 
-return SWIDS
+return mri_swids
