@@ -37,15 +37,29 @@ Use `./runtests.sh clean` to wipe out all the code and pcap file generated from 
 
 ## Usage
 
-For usage with a P4 source file, use the top-level script _p4-traffictool.sh_ as following:
+Use the top-level script _p4-traffictool.sh_ as following:
 ```
-./p4-traffictool.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--scapy] [--wireshark] [--moongen] [--pcpp] [--debug]
-```
-* **Inputs:** Exactly one of `-p4 <path to p4 source>` or `-json <path to json description>` should be specified.
-* **Output directory path:** If not specified, the default output directory is the same directory as the P4/json input file.
-* **P4 standard:** If not specified, then p4-16 is taken up as the default standard.
-* **Target tool(s):** At least one of `--scapy` `--wireshark` `--moongen` `--pcpp` needs to be specified. 
+# With P4 program as the input
+./p4-traffictool.sh -p4 <path to p4 source> [OPTIONS] [TARGET TOOL(S)]
 
+# With json HLIR as the input
+./p4-traffictool.sh -json <path to json HLIR description> [OPTIONS] [TARGET TOOL(S)]
+
+# For help
+./p4-traffictool.sh --help
+
+
+[OPTIONS]
+--std {p4-14|p4-16} : The P4 standard to use. Default is p4-16.
+-o <output dir>     : Output directory path. Default is the same as the P4/json input file.
+--debug             : Shows debugging information.
+
+
+[TARGET TOOL(S)]
+If no target tools are specified, user is prompted for each target tool.
+Otherwise, user can specify one or more of the following:
+--scapy --wireshark --moongen --pcpp
+```
 The above command will generate output files for specified target tool(s). The output files for each target tool will be placed in a subdirectory inside the _output directory_.
 
 ### Using the output files
