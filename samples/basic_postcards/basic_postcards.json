@@ -158,7 +158,7 @@
       "name" : "fl",
       "source_info" : {
         "filename" : "basic_postcards.p4",
-        "line" : 179,
+        "line" : 191,
         "column" : 35,
         "source_fragment" : "99"
       },
@@ -376,6 +376,49 @@
           ],
           "transitions" : [
             {
+              "type" : "hexstr",
+              "value" : "0x270f",
+              "mask" : null,
+              "next_state" : "parse_hdr_meta"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["udp", "dst_port"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_hdr_meta",
+          "id" : 3,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "hdr_meta"
+                }
+              ],
+              "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "q_meta"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
               "value" : "default",
               "mask" : null,
               "next_state" : null
@@ -393,7 +436,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "basic_postcards.p4",
-        "line" : 258,
+        "line" : 270,
         "column" : 8,
         "source_fragment" : "DeparserImpl"
       },
@@ -416,7 +459,7 @@
           "parameters" : [],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 145,
+            "line" : 157,
             "column" : 8,
             "source_fragment" : "mark_to_drop()"
           }
@@ -447,7 +490,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 150,
+            "line" : 162,
             "column" : 8,
             "source_fragment" : "standard_metadata.egress_spec = port"
           }
@@ -473,7 +516,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 179,
+            "line" : 191,
             "column" : 12,
             "source_fragment" : "meta.cloning_session = 99"
           }
@@ -492,7 +535,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 180,
+            "line" : 192,
             "column" : 12,
             "source_fragment" : "clone3(CloneType.I2E, 99, meta.cloning_session)"
           }
@@ -514,7 +557,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 193,
+            "line" : 205,
             "column" : 8,
             "source_fragment" : "hdr.hdr_meta.setValid()"
           }
@@ -533,7 +576,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 194,
+            "line" : 206,
             "column" : 8,
             "source_fragment" : "hdr.hdr_meta.mac_srcAddr = hdr.ethernet.srcAddr"
           }
@@ -552,7 +595,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 195,
+            "line" : 207,
             "column" : 8,
             "source_fragment" : "hdr.hdr_meta.mac_dstAddr = hdr.ethernet.dstAddr"
           }
@@ -571,7 +614,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 196,
+            "line" : 208,
             "column" : 8,
             "source_fragment" : "hdr.hdr_meta.ip_srcAddr = hdr.ipv4.srcAddr"
           }
@@ -590,7 +633,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 197,
+            "line" : 209,
             "column" : 8,
             "source_fragment" : "hdr.hdr_meta.ip_dstAddr = hdr.ipv4.dstAddr"
           }
@@ -609,7 +652,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 198,
+            "line" : 210,
             "column" : 8,
             "source_fragment" : "hdr.hdr_meta.ip_protocol = hdr.ipv4.protocol"
           }
@@ -631,7 +674,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 203,
+            "line" : 215,
             "column" : 8,
             "source_fragment" : "hdr.q_meta.setValid()"
           }
@@ -663,7 +706,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 204,
+            "line" : 216,
             "column" : 8,
             "source_fragment" : "hdr.q_meta.enq_qdepth = (bit<24>) standard_metadata.enq_qdepth"
           }
@@ -695,7 +738,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 205,
+            "line" : 217,
             "column" : 8,
             "source_fragment" : "hdr.q_meta.deq_qdepth = (bit<24>) standard_metadata.deq_qdepth"
           }
@@ -714,7 +757,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 206,
+            "line" : 218,
             "column" : 8,
             "source_fragment" : "hdr.q_meta.deq_timedelta = standard_metadata.deq_timedelta"
           }
@@ -733,7 +776,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 207,
+            "line" : 219,
             "column" : 8,
             "source_fragment" : "hdr.q_meta.enq_timestamp = standard_metadata.enq_timestamp"
           }
@@ -873,7 +916,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 218,
+            "line" : 230,
             "column" : 8,
             "source_fragment" : "hdr.udp.len = 43"
           }
@@ -892,7 +935,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 219,
+            "line" : 231,
             "column" : 8,
             "source_fragment" : "hdr.ipv4.totalLen = 63"
           }
@@ -907,7 +950,7 @@
           ],
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 221,
+            "line" : 233,
             "column" : 8,
             "source_fragment" : "truncate(77)"
           }
@@ -921,7 +964,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "basic_postcards.p4",
-        "line" : 141,
+        "line" : 153,
         "column" : 8,
         "source_fragment" : "ingress"
       },
@@ -932,7 +975,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 154,
+            "line" : 166,
             "column" : 10,
             "source_fragment" : "mac_forward"
           },
@@ -967,7 +1010,7 @@
             {
               "source_info" : {
                 "filename" : "basic_postcards.p4",
-                "line" : 167,
+                "line" : 179,
                 "column" : 12,
                 "source_fragment" : "MAC_H1: forward(9w1)"
               },
@@ -986,7 +1029,7 @@
             {
               "source_info" : {
                 "filename" : "basic_postcards.p4",
-                "line" : 168,
+                "line" : 180,
                 "column" : 12,
                 "source_fragment" : "MAC_H2: forward(9w2)"
               },
@@ -1005,7 +1048,7 @@
             {
               "source_info" : {
                 "filename" : "basic_postcards.p4",
-                "line" : 169,
+                "line" : 181,
                 "column" : 12,
                 "source_fragment" : "MAC_H3: forward(9w3)"
               },
@@ -1054,7 +1097,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 178,
+            "line" : 190,
             "column" : 10,
             "source_fragment" : "hdr.ipv4.protocol == TYPE_UDP"
           },
@@ -1082,7 +1125,7 @@
       "id" : 1,
       "source_info" : {
         "filename" : "basic_postcards.p4",
-        "line" : 189,
+        "line" : 201,
         "column" : 8,
         "source_fragment" : "egress"
       },
@@ -1165,7 +1208,7 @@
           "id" : 1,
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 226,
+            "line" : 238,
             "column" : 11,
             "source_fragment" : "standard_metadata.egress_port == 9w3"
           },
@@ -1191,7 +1234,7 @@
           "id" : 2,
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 227,
+            "line" : 239,
             "column" : 15,
             "source_fragment" : "standard_metadata.instance_type == 32w1"
           },
@@ -1217,7 +1260,7 @@
           "id" : 3,
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 229,
+            "line" : 241,
             "column" : 20,
             "source_fragment" : "!hdr.hdr_meta.isValid()"
           },
@@ -1247,7 +1290,7 @@
           "id" : 4,
           "source_info" : {
             "filename" : "basic_postcards.p4",
-            "line" : 233,
+            "line" : 245,
             "column" : 19,
             "source_fragment" : "!hdr.q_meta.isValid()"
           },

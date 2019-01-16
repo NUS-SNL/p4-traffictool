@@ -120,9 +120,21 @@ parser ParserImpl(packet_in packet,
 
     state parse_udp {
         packet.extract(hdr.udp);
-        transition accept;
+        transition select(hdr.udp.dst_port){
+            COLLECTOR_UDP_PORT: parse_hdr_meta;
+            default: accept;
+        }
     }
 
+    state parse_hdr_meta {
+        packet.extract(hdr.hdr_meta);
+        transition parse_q_meta;
+    }
+
+    state parse_q_meta {
+        packet.extract(hdr.q_meta);
+        transition accept;
+    }
 }
 
 
