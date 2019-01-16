@@ -128,7 +128,9 @@ parser ParserImpl(packet_in packet,
 
     state parse_hdr_meta {
         packet.extract(hdr.hdr_meta);
-        transition parse_q_meta;
+        transition select(hdr.hdr_meta.ip_protocol){
+            default:transition parse_q_meta;
+        }
     }
 
     state parse_q_meta {

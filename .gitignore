@@ -3,4 +3,3 @@
 *.p4rt
 tests/*.pcap
 *.pcap
-samples/*/output/*
