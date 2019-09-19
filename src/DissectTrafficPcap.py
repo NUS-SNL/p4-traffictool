@@ -238,8 +238,6 @@ def handle_special_len(fout_header, field_sgmnt_lst, l, fields, init_idx, end_id
 	print('non of the above')
 	exit(1)
 	
-    print('init_idx = ', init_idx)
-    print('end_idx = ', end_idx)
     tmp_list = []
     field_parts = []
 
@@ -250,7 +248,6 @@ def handle_special_len(fout_header, field_sgmnt_lst, l, fields, init_idx, end_id
         accum += fields[i][1]
         if accum > s[0]:
             break_point = i
-	    print('break_point = ', break_point)
             break
     if break_point == init_idx:
         offset = 1
@@ -658,14 +655,13 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_source.write("#include <string.h>\n#include <sstream>\n#include <endian.h>\n\n")
     fout_source.write("namespace pcpp{\n")
     
-    print('field_sgmnt_lst = ', field_sgmnt_lst)
     for field in header_type["fields"]:
         field_segments = field_sgmnt_lst[field[0]]
         fout_source.write("\t%s %sLayer::get%s(){\n" % (
         predict_input_type(field[1]), header.capitalize(), str(field[0]).capitalize()))
-        fout_source.write("\t\t%s %s;\n" % (predict_type(field[1]), field[0]))
-        fout_source.write("\t\t%shdr* hdrdata = (%shdr*)m_Data;\n" % (header.lower(), header.lower()))
     	if len(field_segments) == 1:
+	    fout_source.write("\t\t%s %s;\n" % (predict_type(field[1]), field[0]))
+            fout_source.write("\t\t%shdr* hdrdata = (%shdr*)m_Data;\n" % (header.lower(), header.lower()))
             if (field[1] == 24 or field[1] == 40 or field[1] == 48):
                 fout_source.write("\t\tUINT%d_HTON(%s,hdrdata->%s);\n" % (field[1], field[0], field[0]))
                 # fout_source.write("\t\treturn (%s)(UINT%d_GET(%s));\n\t}\n\n" %(predict_input_type(field[1]),field[1],field[0]))
@@ -676,7 +672,8 @@ def make_template(control_graph, header, header_type, destination, header_ports)
                 fout_source.write("\t\t%s = %s(hdrdata->%s);\n" % (field[0], host_network_conversion(field), field[0]))
                 fout_source.write("\t\treturn %s;\n\t}\n\n" % (field[0]))
         elif len(field_segments) > 1:
-	    print('field_segments = ', field_segments)
+	    fout_source.write("\t\t%s %s;\n" % (predict_input_type(field[1]), field[0]))
+            fout_source.write("\t\t%shdr* hdrdata = (%shdr*)m_Data;\n" % (header.lower(), header.lower()))
             offset = 1
             init_val = field_segments[0]
             fout_source.write("\t\t%s = ((hdrdata->%s) << %s)" %(field[0], field[0]+"_"+str(offset), field[1] - init_val))
@@ -686,7 +683,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
                 fout_source.write(" + ((hdrdata->%s) << %s)" %(field[0]+"_"+str(offset), field[1] - init_val))
                 offset += 1
                 fout_source.write(" + (hdrdata->%s);\n" %(field[0]+"_"+str(offset)))
-            fout_source.write("\t}\n")
+            fout_source.write("\t\treturn %s;\n\t}\n\n" % (field[0]))
         fout_source.write("\tvoid %sLayer::set%s(%s value){\n" % (
         header.capitalize(), str(field[0]).capitalize(), predict_input_type(field[1])))
         fout_source.write("\t\t%shdr* hdrdata = (%shdr*)m_Data;\n" % (header.lower(), header.lower()))
@@ -699,7 +696,6 @@ def make_template(control_graph, header, header_type, destination, header_ports)
                 fout_source.write("\t\thdrdata->%s = %s(value);\n" % (field[0], host_network_conversion(field)))
         elif len(field_segments) > 1:
             hex_mask = gen_hex_mask(field_segments, field[1])
-            print('hex_mask = ', hex_mask)
             offset = 1
             init_val = 0
             for i in range(len(field_segments[:-1])):
@@ -707,7 +703,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
                 fout_source.write("\t\thdrdata->%s_%s = (value & %s) >> %s;\n" %(field[0], offset, hex_mask[i], field[1] - init_val))
                 offset += 1
             fout_source.write("\t\thdrdata->%s_%s = (value & %s);\n" %(field[0], offset, hex_mask[-1]))
-            fout_source.write("\t}\n")
+        fout_source.write("\t}\n")
 
 
     fout_source.write("\tvoid %sLayer::parseNextLayer(){\n" % (header.capitalize()))
