@@ -649,6 +649,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 
     if (len(next_transitions) > 0):
     	for transition in next_transitions:
+            print('transition[0] = ', transition[0])
             fout_source.write("#include \"%s.h\"\n" % (local_name+'_'+transition[0]))
 
     fout_source.write("#include \"PayloadLayer.h\"\n#include \"IpUtils.h\"\n#include \"Logger.h\"\n")
@@ -682,7 +683,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
                 init_val += field_segments[i]
                 fout_source.write(" + ((hdrdata->%s) << %s)" %(field[0]+"_"+str(offset), field[1] - init_val))
                 offset += 1
-                fout_source.write(" + (hdrdata->%s);\n" %(field[0]+"_"+str(offset)))
+            fout_source.write(" + (hdrdata->%s);\n" %(field[0]+"_"+str(offset)))
             fout_source.write("\t\treturn %s;\n\t}\n\n" % (field[0]))
         fout_source.write("\tvoid %sLayer::set%s(%s value){\n" % (
         header.capitalize(), str(field[0]).capitalize(), predict_input_type(field[1])))
