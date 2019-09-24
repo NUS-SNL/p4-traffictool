@@ -712,14 +712,14 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_source.write("\t\t\treturn;\n\n")
 
     if (len(next_transitions) > 0):
-        fout_source.write("\t\t%shdr* hdrdata = get%sHeader();\n" % (header.lower(), header.capitalize()))
-        #print('transition_key = ', transition_key)
+        # fout_source.write("\t\t%shdr* hdrdata = get%sHeader();\n" % (header.lower(), header.capitalize()))
+        # print('transition_key = ', transition_key)
         transition_dict = {}
         for tk in transition_key:
             for field in header_type["fields"]:
                 if (field[0] == tk):
-                    fout_source.write("\t\t%s %s = %s(hdrdata->%s);\n" % (
-                    predict_type(field[1]), tk, host_network_conversion(field), tk))
+                    fout_source.write("\t\t%s %s = %sLayer::get%s();\n" % (
+                        predict_input_type(field[1]), tk, header.capitalize(), str(field[0]).capitalize()))
                     transition_dict[field[0]] = nibble(field[1])
                     break
         # fout_source.write("\t\t%s %s = %s(hdrdata->%s);\n\t\t" % (
