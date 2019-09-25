@@ -2,7 +2,7 @@ import json
 import sys
 import os
 from tabulate import tabulate
-from commonMultiHdrTrns import *
+from common import *
 
 # global variables for common header types
 ETHER_DETECT = False
@@ -174,33 +174,6 @@ def host_network_conversion(field):
         return "hton64"
     return "-- fill blank here"
 
-def nibble(size):
-    if (size <= 8):
-        return 2
-    if (size <= 16):
-        return 4
-    if (size <= 24):
-        return 6
-    if (size <= 32):
-        return 8
-    if (size <= 40):
-        return 10
-    if (size <= 48):
-        return 12
-    if (size <= 56):
-        return 14
-    if (size <= 64):
-        return 16
-    return "-- fill blank here"
-
-def gen_hex_mask(rbit_num, length):
-    mask = '0b'
-    for i in range(length):
-        mask = mask + '1'
-    for i in range(rbit_num):
-        mask = mask + '0'
-    return hex(int(mask, 2))
-
 # makes the actual lua script given the relevant header type and next and previous state transition information
 def make_template(control_graph, header, header_type, destination, header_ports, local_name):
         headerUpper = local_name + header.lower()
@@ -312,68 +285,25 @@ def make_template(control_graph, header, header_type, destination, header_ports,
 
         fout.write("function %sHeader:resolveNextHeader()\n" %(headerUpper))
         if (len(next_transitions)>0):
-	    transition_dict = {}
-	    offset = 1
-	    for tk in transition_key:
-	        for field in header_type["fields"]:
-		    if(field[0] == tk):
-			if len(transition_key) == 1:
-                            fout.write("\tlocal key = self:get%s()\n" %(tk.upper()))
-			else:
-			    fout.write("\tlocal key%s = self:get%s()\n" %(offset, tk.upper()))
-			    offset += 1
-	    		    transition_dict[field[0]] = nibble(field[1])
-			break
-
+            fout.write("\tlocal key = self:get%s()\n" %(transition_key.upper()))
             fout.write("\tfor name, value in pairs(nextHeaderResolve) do\n")
-	    if len(transition_key) == 1:
-		fout.write("\t\tif key == value then\n\t\t\treturn name\n\t\tend\n\tend\n")
-	    elif len(transition_key) > 1:
-	 	vals = transition_dict.values()
-		rbit_num = sum(vals) - transition_dict[transition_key[0]]
-		offset = 1
-		mask = gen_hex_mask(rbit_num, transition_dict[transition_key[0]])
-		fout.write("\t\tif key%s == rshift(band(value, %sULL), %s)" %(offset, mask, rbit_num))
-		offset += 1
-		for i in range(1, len(transition_key[:-1])):
-		    rbit_num -= transition_dict[transition_key[i]]
-		    mask = gen_hex_mask(rbit_num, transition_dict[transition_key[i]])
-		    fout.write(" and key%s == rshift(band(value, %sULL), %s)" %(offset, mask, rbit_num))
-		    offset += 1
-		rbit_num -= transition_dict[transition_key[-1]]
-		mask = gen_hex_mask(rbit_num, transition_dict[transition_key[-1]])
-		fout.write(" and key%s == band(value, %sULL) then\n\t\t\treturn name\n\t\tend\n\tend\n" %(offset, mask))
-		    
+            fout.write("\t\tif key == value then\n\t\t\treturn name\n\t\tend\n\tend\n")
         if (default_next_transition!= None):
             fout.write("\treturn %s\n" %(default_next_transition))
         else:
             fout.write("\treturn nil\n")
         fout.write("end\n\n")
 
-	
         fout.write("function %sHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)\n" %(headerUpper))
         if (len(next_transitions)>0):
-	    vals = transition_dict.values()
-	    rbit_num = sum(vals)
-	    for tk in transition_key:	
-                fout.write("\tif not namedArgs[pre .. '%s'] then\n" %(tk.upper()))
-                fout.write("\t\tfor name, _port in pairs(nextHeaderResolve) do\n")
-                fout.write("\t\t\tif nextHeader == name then\n")
-		if len(transition_key) == 1:
-                    fout.write("\t\t\t\tnamedArgs[pre .. '%s'] = _port\n" %(tk.upper()))
-		    break
-		elif len(transition_key) > 1:
-		    rbit_num -= transition_dict[tk]
-		    mask = gen_hex_mask(rbit_num, transition_dict[tk])
-		    if rbit_num > 0:
-		    	fout.write("\t\t\t\tnamedArgs[pre .. '%s'] = rshift(band(_port, %sULL), %s)\n" %(tk.upper(), mask, rbit_num))
-		    else:
-			fout.write("\t\t\t\tnamedArgs[pre .. '%s'] = band(_port, %sULL)\n" %(tk.upper(), mask))
-                fout.write("\t\t\t\tbreak\n")
-                fout.write("\t\t\tend\n\t\tend\n\tend\n")
+            fout.write("\tif not namedArgs[pre .. '%s'] then\n" %(transition_key.upper()))
+            fout.write("\t\tfor name, _port in pairs(nextHeaderResolve) do\n")
+            fout.write("\t\t\tif nextHeader == name then\n")
+            fout.write("\t\t\t\tnamedArgs[pre .. '%s'] = _port\n" %(transition_key.upper()))
+            fout.write("\t\t\t\tbreak\n")
+            fout.write("\t\t\tend\n\t\tend\n\tend\n")
         fout.write("\treturn namedArgs\n")
         fout.write("end\n")
-	
 
 
         fout.write("\n-----------------------------------------------------\n")
