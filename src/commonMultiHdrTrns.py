@@ -60,7 +60,8 @@ def make_control_graph(parsers, DEBUG):
                     if transition["next_state"] != None:
 			originHdr = [d["value"][0] for d in state["transition_key"]]
 			if(len(set(originHdr)) != 1):
-			    print("Error")
+			    print("Error: Header transitions based on multiple fields from different headers are not supported.")
+			    exit(1)
 			transition_fields = [d["value"][1] for d in state["transition_key"]]
                         graph.append([name,
                                       transition_fields,
@@ -76,7 +77,6 @@ def make_control_graph(parsers, DEBUG):
                         parser, state["transitions"][0]["next_state"])])
                 else:
                     graph.append([name, None, None, "final"])
-    print('graph = ', graph)
     if (DEBUG):
         print("\nEdges in the control_graph\n")
         for i in graph:

@@ -368,7 +368,6 @@ def make_parsers(control_graph, header_type, header, fout):
                 next_transitions.append((edge[-1], edge[-2]))
             else:
                 default_next_transition = edge[-1]
-                print('default_next_transition = ', default_next_transition)
 
     if (len(next_transitions) > 0):
         fout.write("\n\tdef guess_payload_class(self, payload):\n")

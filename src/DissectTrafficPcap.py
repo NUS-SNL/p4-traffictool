@@ -234,9 +234,6 @@ def handle_special_len(fout_header, field_sgmnt_lst, l, fields, init_idx, end_id
         s = (32, 8)
     elif l == 48:
         s = (32, 16)
-    else:
-	print('non of the above')
-	exit(1)
 	
     tmp_list = []
     field_parts = []
@@ -639,7 +636,6 @@ def make_template(control_graph, header, header_type, destination, header_ports)
         if (header == edge[0]):
             if (edge[1] != None):
                 transition_key = edge[1]
-		print('transition_key = ', transition_key)
                 next_transitions.append((edge[-1], edge[-2]))
             else:
                 default_next_transition = edge[-1]
@@ -649,7 +645,6 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 
     if (len(next_transitions) > 0):
     	for transition in next_transitions:
-            print('transition[0] = ', transition[0])
             fout_source.write("#include \"%s.h\"\n" % (local_name+'_'+transition[0]))
 
     fout_source.write("#include \"PayloadLayer.h\"\n#include \"IpUtils.h\"\n#include \"Logger.h\"\n")
