@@ -36,20 +36,24 @@ if (len(sys.argv)>3):
 
 # check if debug mode activated or not
 if (len(sys.argv)>3):
-    if (sys.argv[-1]=='-d'):
+    if (sys.argv[-2]=='-d'):
         DEBUG = True
 
+start_with_eth = sys.argv[-1].lower()
+
 # find all possible header orderings that are valid
-def possible_paths(init, control_graph, length_till_now):
+def possible_paths(init, control_graph, length_till_now, rmv_headers):
     if (init == 'final'):
         return [['final']]
     if (length_till_now == MAX_PATH_LENGTH):
         return []
+    if (init in rmv_headers):
+        return[]
     temp = []
     possible_stops = [i[-1] for i in control_graph if i[0] == init]
     paths = []
     for i in possible_stops:
-        temp += (possible_paths(i, control_graph, length_till_now+1))
+        temp += (possible_paths(i, control_graph, length_till_now+1, rmv_headers))
     for i in temp:
         paths.append([init] + i)
     return paths
@@ -112,6 +116,83 @@ def nibble(size):
     if (size <= 64):
 	return 16
     return "-- fill blank here"
+
+class State:
+    def __init__(self, name):
+        self.name = name
+        self.children = []
+
+    def print_state(self):
+        print("node's name: ", self.name)
+        print("node's children: ", [self.children[i].name for i in range(len(self.children))])
+
+
+def delete_obj(del_list, orig_list):
+    for item in del_list:
+        orig_list.remove(item)
+
+def find_children(root, nodes):
+    if len(nodes) == 0:
+        return
+    else:
+        children = []
+        del_list = []
+        for node in nodes:
+            if node[0] == root.name:
+                children.append(node[-1])
+                del_list.append(node)
+        delete_obj(del_list, nodes)
+        children = set(children)
+        for child in children:
+            state = State(child)
+            find_children(state, nodes)
+            root.children.append(state)
+        return 
+
+def make_tree(graph):
+    paths = []
+    state_names = [edge[0] for edge in graph]
+    state_names = set(state_names)
+    states = []
+    non_roots = [edge[-1] for edge in graph]
+    non_roots = set(non_roots)
+    for name in state_names:
+        if name not in non_roots:
+            root = State(name)
+            #copy_of_graph = graph
+            find_children(root, graph)
+            paths.append(root)
+            root.print_state()
+    return paths
+
+def find_eth_subhdr(node, sub_headers):
+    if len(node.children) == 0:
+        if node.name != "final":
+            sub_headers.append(node.name)
+        return
+    else:
+        for child in node.children:
+            if child.name != "final":
+                sub_headers.append(child.name)
+            find_eth_subhdr(child, sub_headers)
+        return
+
+
+def find_ethernet(node, rmv_headers, sub_headers):
+    if node.name == "ethernet" or node.name == "Ether":
+        find_eth_subhdr(node, sub_headers)
+        return
+    elif len(node.children) == 0:
+        if node.name != "final":
+            rmv_headers.append(node.name)
+        return
+    else:
+        if node.name != "scalars" and node.name != "final":
+            rmv_headers.append(node.name)
+        for child in node.children:
+            find_ethernet(child, rmv_headers, sub_headers)
+        return
+
 
 def detect_builtin_hdr(headers):
         
@@ -192,7 +273,7 @@ def remove_number(headers):
         unique_headers[header['name']] = header
     return unique_headers.keys(),unique_headers.values()
 
-def make_classes(data, control_graph, header_ports, headers, fout):
+def make_classes(data, control_graph, header_ports, headers, rmv_headers, fout):
     global ETHER_DETECT
     global IPv4_DETECT
     global IPv6_DETECT
@@ -210,25 +291,49 @@ def make_classes(data, control_graph, header_ports, headers, fout):
             input = raw_input
         except NameError:
             pass
+
         if (headers[header_id]['metadata']) == False:
             if (headers[header_id]['name']=='ethernet'):
                 if (ETHER_DETECT == False):
-                    make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    if start_with_eth == 'true':
+                        if headers[header_id]['name'] not in rmv_headers:
+                            make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    else:
+                        make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             elif (headers[header_id]['name']=='ipv4'):
                 if (IPv4_DETECT == False): 
-                    make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    if start_with_eth == 'true':
+                        if headers[header_id]['name'] not in rmv_headers:
+                            make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    else:
+                        make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             elif (headers[header_id]['name']=='ipv6'):
                 if (IPv6_DETECT == False):
-                    make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    if start_with_eth == 'true':
+                        if headers[header_id]['name'] not in rmv_headers:
+                            make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    else:
+                        make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             elif (headers[header_id]['name']=='tcp'):
                 if (TCP_DETECT == False):
-                    make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    if start_with_eth == 'true':
+                        if headers[header_id]['name'] not in rmv_headers:
+                            make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    else:
+                        make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             elif (headers[header_id]['name']=='udp'):
                 if (UDP_DETECT == False):
-                    make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    if start_with_eth == 'true':
+                        if headers[header_id]['name'] not in rmv_headers:
+                            make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    else:
+                        make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             else:
-                make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
-
+                if start_with_eth == 'true':
+                    if headers[header_id]['name'] not in rmv_headers:
+                        make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                else:
+                    make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
     return
 
 # correct graph for inbuilt headers
@@ -316,10 +421,10 @@ def rectify_paths(paths):
     return paths
 
 # prints the possible packet list into the file
-def make_packets(header_ports, init_states, control_graph, fout):
+def make_packets(header_ports, init_states, control_graph, rmv_headers, fout):
     paths = []
     for i in init_states:
-        paths += possible_paths(i, control_graph, 0)
+        paths += possible_paths(i, control_graph, 0, rmv_headers)
 
     paths = set(map(tuple,paths))
     paths = list(map(list,paths))
@@ -391,8 +496,25 @@ def make_template(json_data, destination):
         for parser in json_data["parsers"]:
             init_states.append(search_state(parser,parser["init_state"]))
         (header_ports,control_graph,init_states) = correct_metadata(header_ports,control_graph,init_states)
+
+        copy_of_graph = control_graph[:]
+        paths = make_tree(copy_of_graph)
+        rmv_headers = []
+        sub_headers = []
+        for path in paths:
+            find_ethernet(path, rmv_headers, sub_headers)
+            print("rmv_headers = ", rmv_headers)
+            print("sub_headers = ", sub_headers)
+            #if path.name != "ethernet": # header doesn't start with ethernet. search for ethernet in next levels. 
+            # search for ethernet
+            rmv_headers = set(rmv_headers)
+            sub_headers = set(sub_headers)
+            for item in sub_headers:
+                if item in rmv_headers:
+                    rmv_headers.remove(item)
         
-        make_classes(json_data, control_graph, header_ports, headers, fout)
+        make_classes(json_data, control_graph, header_ports, headers, rmv_headers, fout)
+        print('rmv_headers 517: ', rmv_headers)
 
         if (DEBUG):
             print("\nHeaders \n")
@@ -404,14 +526,20 @@ def make_template(json_data, destination):
           
         fout.write("\n## remaining bindings\n")
         for edge in control_graph:
-            if (edge[0] in header_ports) and (edge[-1] in header_ports):
-                if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT): 
-                    fout.write("bind_layers(%s, %s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))	    
+            if start_with_eth == 'true':
+                if (edge[0] in header_ports) and (edge[-1] in header_ports):
+                    if edge[0] not in rmv_headers and edge[-1] not in rmv_headers:
+                        if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT): 
+                            fout.write("bind_layers(%s, %s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))
+            else:
+                if (edge[0] in header_ports) and (edge[-1] in header_ports):
+                    if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT): 
+                        fout.write("bind_layers(%s, %s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))
                 
         #make_parsers(control_graph, header_ports, fout)
 
         fout.write("\n##packet_list\n")
-        make_packets(header_ports, init_states, control_graph, fout)
+        make_packets(header_ports, init_states, control_graph, rmv_headers, fout)
 
     except IOError:
         print("Destination file cannot be created\n")

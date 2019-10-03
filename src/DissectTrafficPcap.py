@@ -23,7 +23,7 @@ if (DESTINATION[-1] != '/'):
 
 # check if debug mode activated or not
 if (len(sys.argv) > 3):
-    if (sys.argv[-1] == '-d'):
+    if (sys.argv[-2] == '-d'):
         DEBUG = True
 
 # variable to store the list of tables created by the scripts
@@ -189,6 +189,82 @@ def nibble(size):
     if (size <= 64):
         return 16
     return "-- fill blank here"
+
+class State:
+    def __init__(self, name):
+        self.name = name
+        self.children = []
+
+    def print_state(self):
+        print("node's name: ", self.name)
+        print("node's children: ", [self.children[i].name for i in range(len(self.children))])
+
+
+def delete_obj(del_list, orig_list):
+    for item in del_list:
+        orig_list.remove(item)
+
+def find_children(root, nodes):
+    if len(nodes) == 0:
+        return
+    else:
+        children = []
+        del_list = []
+        for node in nodes:
+            if node[0] == root.name:
+                children.append(node[-1])
+                del_list.append(node)
+        delete_obj(del_list, nodes)
+        children = set(children)
+        for child in children:
+            state = State(child)
+            find_children(state, nodes)
+            root.children.append(state)
+        return 
+
+def make_tree(graph):
+    paths = []
+    state_names = [edge[0] for edge in graph]
+    state_names = set(state_names)
+    states = []
+    non_roots = [edge[-1] for edge in graph]
+    non_roots = set(non_roots)
+    for name in state_names:
+        if name not in non_roots:
+            root = State(name)
+            #copy_of_graph = graph
+            find_children(root, graph)
+            paths.append(root)
+            root.print_state()
+    return paths
+
+def find_eth_subhdr(node, sub_headers):
+    if len(node.children) == 0:
+        if node.name != "final":
+            sub_headers.append(node.name)
+        return
+    else:
+        for child in node.children:
+            if child.name != "final":
+                sub_headers.append(child.name)
+            find_eth_subhdr(child, sub_headers)
+        return
+
+
+def find_ethernet(node, rmv_headers, sub_headers):
+    if node.name == "ethernet":
+        find_eth_subhdr(node, sub_headers)
+        return
+    elif len(node.children) == 0:
+        if node.name != "final":
+            rmv_headers.append(node.name)
+        return
+    else:
+        if node.name != "scalars" and node.name != "final":
+            rmv_headers.append(node.name)
+        for child in node.children:
+            find_ethernet(child, rmv_headers, sub_headers)
+        return
 
 def field_segmenter(fout_header, field, cap, size, field_parts, tmp_list, field_sgmnt_lst):
     if (size - cap) <= 0:
@@ -770,6 +846,26 @@ try:
 except KeyError:
     local_name = sys.argv[1]
 local_name = local_name[local_name.rfind('/') + 1:local_name.rfind('.')]
+start_with_eth = sys.argv[4].lower()
+
+print("control_graph line 851: ", control_graph)
+copy_of_graph = control_graph[:]
+paths = make_tree(copy_of_graph)
+print("control_graph line 853: ", control_graph)
+rmv_headers = []
+sub_headers = []
+for path in paths:
+    find_ethernet(path, rmv_headers, sub_headers)
+    print("rmv_headers = ", rmv_headers)
+    print("sub_headers = ", sub_headers)
+    #if path.name != "ethernet": # header doesn't start with ethernet. search for ethernet in next levels. 
+        # search for ethernet
+rmv_headers = set(rmv_headers)
+sub_headers = set(sub_headers)
+for item in sub_headers:
+    if item in rmv_headers:
+        rmv_headers.remove(item)
+        
 
 for i in range(len(header_ports)):
     if ((ETHER_DETECT and header_ports[i] == 'ethernet') or (IPv4_DETECT and header_ports[i] == 'ipv4') or (
@@ -777,5 +873,10 @@ for i in range(len(header_ports)):
             UDP_DETECT and header_ports[i] == 'udp')):
         continue
 
-    destination = DESTINATION + local_name + "_" + header_ports[i]
-    make_template(control_graph, header_ports[i], header_types[i], destination, header_ports)
+    if start_with_eth == 'true':
+        if header_ports[i] not in rmv_headers :
+            destination = DESTINATION + local_name + "_" + header_ports[i]
+            make_template(control_graph, header_ports[i], header_types[i], destination, header_ports)
+    else:
+        destination = DESTINATION + local_name + "_" + header_ports[i]
+        make_template(control_graph, header_ports[i], header_types[i], destination, header_ports)
