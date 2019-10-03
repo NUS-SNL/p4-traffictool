@@ -150,35 +150,6 @@ def detect_builtin_hdr(headers):
                     UDP_DETECT = True
     return
 
-
-'''
-# declares header fields and initialises them with default value zero, also specifies if there is any checksum fields which needs to be post-build
-# other post-build fields need to be added manually
-def make_header(headers, header_types, header_id, checksums, calculations, fout):
-    fout.write("class %s(Packet):\n" %(capitalise(headers[header_id]['name'])))
-    fout.write("\tname = '%s'\n" %(headers[header_id]['name']))
-    fout.write("\tfields_desc = [\n")
-    header_type = search_header_type(header_types, headers[header_id]["header_type"])
-    for field in header_type['fields'][:-1]:
-        if field[1]!="*":
-            fout.write("\t\t%s,\n" % (detect_field_type(field)))
-        else:
-            field[1] = int(input('Variable length field "' + field[0] + '" detected in "' + header_type['name'] + '". Enter its length\n'))
-            fout.write("\t\t%s,\n" % (detect_field_type(field)))
-            
-    if (len(header_type['fields'])>0):
-        if header_type['fields'][-1][1]!="*":
-            fout.write("\t\t%s,\n" % (detect_field_type(header_type['fields'][-1])))
-        else:
-            header_type['fields'][-1][1] = int(input('Variable length field "' + header_type['fields'][-1][0] + '" detected in "' + header_type['name'] + '". Enter its length\n'))
-            fout.write("\t\t%s,\n" % (detect_field_type(header_type['fields'][-1])))
-           
-    fout.write("\t]\n")
-    chksum,target,fields,algo = check_checksum_fields(checksums, calculations, data["headers"][header_id]['name'])
-    if (chksum):
-        fout.write("\t#update %s over %s using %s in post_build method\n\n" %(target,fields,algo))
-'''
-
 def make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout):
     fout.write("class %s(Packet):\n" %(capitalise(headers[header_id]['name'])))
     fout.write("\tname = '%s'\n" %(headers[header_id]['name']))
@@ -221,72 +192,6 @@ def remove_number(headers):
         unique_headers[header['name']] = header
     return unique_headers.keys(),unique_headers.values()
 
-'''
-# defines various header types and check if any common header type can be substituted in its place, calls make_header function
-def make_classes(data, fout):
-    global ETHER_DETECT
-    global IPv4_DETECT
-    global IPv6_DETECT
-    global TCP_DETECT
-    global UDP_DETECT
-
-    
-    header_ports, headers = remove_number(data["headers"])
-    header_types = data["header_types"]
-    checksums = data["checksums"]
-    calculations = data["calculations"]
-
-    for header_id in range(len(headers)):
-        global input
-        try:
-            input = raw_input
-        except NameError:
-            pass
-        if (headers[header_id]['metadata']) == False:
-            # header_ports.append(correct_name(headers[header_id]['name']))
-            if (headers[header_id]['name']=='ethernet'):
-                temp = input("\nEthernet header detected, would you like the standard ethernet header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    ETHER_DETECT = True
-                else:
-                    make_header(headers, header_types, header_id, checksums, calculations, fout)
-            elif (headers[header_id]['name']=='ipv4'):
-                temp = input("\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    IPv4_DETECT = True
-                else:
-                    make_header(headers, header_types, header_id, checksums, calculations, fout)
-            elif (headers[header_id]['name']=='ipv6'):
-                temp = input("\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    IPv6_DETECT = True
-                else:
-                    make_header(headers, header_types, header_id, checksums, calculations, fout)
-            elif (headers[header_id]['name']=='tcp'):
-                temp = input("\nTCP header detected, would you like the standard TCP header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    TCP_DETECT = True
-                else:
-                    make_header(headers, header_types, header_id, checksums, calculations, fout)
-            elif (headers[header_id]['name']=='udp'):
-                temp = input("\nUDP header detected, would you like the standard UDP header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    UDP_DETECT = True
-                else:
-                    make_header(headers, header_types, header_id, checksums, calculations, fout)
-            else:
-                make_header(headers, header_types, header_id, checksums, calculations, fout)
-
-    if (DEBUG):
-        print("\nHeaders \n")
-        for i in header_ports:
-            print (i)
-        print("\nHeader arrays\n")
-        for i in set(multi_headers):
-            print (i)
-
-    return header_ports
-'''
 def make_classes(data, control_graph, header_ports, headers, fout):
     global ETHER_DETECT
     global IPv4_DETECT
@@ -307,19 +212,19 @@ def make_classes(data, control_graph, header_ports, headers, fout):
             pass
         if (headers[header_id]['metadata']) == False:
             if (headers[header_id]['name']=='ethernet'):
-		if (ETHER_DETECT == False):
+                if (ETHER_DETECT == False):
                     make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             elif (headers[header_id]['name']=='ipv4'):
-		if (IPv4_DETECT == False): 
+                if (IPv4_DETECT == False): 
                     make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             elif (headers[header_id]['name']=='ipv6'):
                 if (IPv6_DETECT == False):
                     make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             elif (headers[header_id]['name']=='tcp'):
-		if (TCP_DETECT == False):
+                if (TCP_DETECT == False):
                     make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             elif (headers[header_id]['name']=='udp'):
-		if (UDP_DETECT == False):
+                if (UDP_DETECT == False):
                     make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             else:
                 make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
@@ -343,18 +248,6 @@ def correct_graph(graph):
         graph[i]=edge
     return graph
 
-'''
-# defines bindings based on control graph
-def make_parsers(control_graph, header_ports, fout):
-    for edge in control_graph:
-        print('edge = ', edge)
-        if (edge[0] in header_ports) and (edge[-1] in header_ports):
-            if (edge[2]!='default') and (edge[1]!=None) and (edge[2]!=None): 
-                fout.write("bind_layers(%s, %s, %s = %s)\n" % (capitalise(edge[0]), capitalise(edge[-1]), edge[1], edge[2]))
-            else:
-                fout.write("bind_layers(%s,%s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))
-'''
-
 # defines bindings based on control graph
 def make_parsers(control_graph, header_type, header, fout):
     
@@ -363,38 +256,38 @@ def make_parsers(control_graph, header_type, header, fout):
 
     for edge in control_graph:
         if (header == edge[0]):
-	    if (edge[1] != None):
-		transition_key = edge[1]
+            if (edge[1] != None):
+                transition_key = edge[1]
                 next_transitions.append((edge[-1], edge[-2]))
             else:
                 default_next_transition = edge[-1]
 
     if (len(next_transitions) > 0):
-        fout.write("\n\tdef guess_payload_class(self, payload):\n")
+        fout.write("\n\tdef guess_payload_class(self, payload):\n\t\t")
         transition_dict = {}
         for tk in transition_key: 
-	    for field in header_type['fields']:
-	        if (field[0] == tk):
-		    transition_dict[field[0]] = nibble(field[1])
+            for field in header_type['fields']:
+                if (field[0] == tk):
+                    transition_dict[field[0]] = nibble(field[1])
                     break
         for transition in next_transitions[:-1]:
             init_idx = 2
-            fout.write("\t\tif (self.%s == 0x%s" % (transition_key[0], transition[1][init_idx:init_idx+transition_dict[transition_key[0]]]))
-	    for idx in range(1, len(transition_key)):
-	        init_idx += transition_dict[transition_key[idx-1]]
+            fout.write("if (self.%s == 0x%s" % (transition_key[0], transition[1][init_idx:init_idx+transition_dict[transition_key[0]]]))
+            for idx in range(1, len(transition_key)):
+                init_idx += transition_dict[transition_key[idx-1]]
                 fout.write(" and self.%s == 0x%s" % (transition_key[idx], transition[1][init_idx:init_idx+transition_dict[transition_key[idx]]]))
             fout.write("):\n\t")
             fout.write("\t\treturn %s\n" % (transition[0].capitalize()))
             fout.write("\t\tel")
         transition = next_transitions[-1]
-	init_idx = 2
-        fout.write("\t    if (self.%s == 0x%s" % (transition_key[0], transition[1][init_idx:init_idx+transition_dict[transition_key[0]]]))
-	for idx in range(1, len(transition_key)):
-	    init_idx += transition_dict[transition_key[idx-1]]
+        init_idx = 2
+        fout.write("if (self.%s == 0x%s" % (transition_key[0], transition[1][init_idx:init_idx+transition_dict[transition_key[0]]]))
+        for idx in range(1, len(transition_key)):
+            init_idx += transition_dict[transition_key[idx-1]]
             fout.write(" and self.%s == 0x%s" % (transition_key[idx], transition[1][init_idx:init_idx+transition_dict[transition_key[idx]]]))
-        fout.write("):\n")
+        fout.write("):\n\t")
         fout.write("\t\treturn %s\n" % (transition[0].capitalize()))
-        fout.write("\t    else:\n\t\treturn Packet.guess_payload_class(self, payload)\n")
+        fout.write("\t    else:\n\t\t\treturn Packet.guess_payload_class(self, payload)\n\n")
         
 
 # creates a string of the headers in a packet in a way that Scapy expects
@@ -475,33 +368,6 @@ def correct_metadata(header_ports, control_graph, init_states):
         (header_ports,control_graph,init_states) = change_names(header_ports, control_graph, init_states, "udp", "UDP")
     return (header_ports,control_graph,init_states) 
 
-'''
-# top level module that calls other functions, accepts the json_data and the file destination as input
-def make_template(json_data, destination):
-    try:
-        fout = open(destination, 'w')
-        fout.write("from scapy.all import *\n")
-
-        fout.write("\n##class definitions\n")
-        header_ports = make_classes(json_data, fout)
-
-        #building metadata
-        control_graph = correct_graph(make_control_graph(json_data["parsers"], DEBUG))
-        init_states = []
-        for parser in json_data["parsers"]:
-            init_states.append(search_state(parser,parser["init_state"]))
-        (header_ports,control_graph,init_states) = correct_metadata(header_ports,control_graph,init_states) 
-            
-        fout.write("\n##bindings\n")
-        make_parsers(control_graph, header_ports, fout)
-
-        fout.write("\n##packet_list\n")
-        make_packets(header_ports, init_states, control_graph, fout)
-
-    except IOError:
-        print("Destination file cannot be created\n")
-        exit(0)
-'''
 # top level module that calls other functions, accepts the json_data and the file destination as input
 def make_template(json_data, destination):
     
@@ -537,10 +403,10 @@ def make_template(json_data, destination):
                 print (i)
           
         fout.write("\n## remaining bindings\n")
-	for edge in control_graph:
+        for edge in control_graph:
             if (edge[0] in header_ports) and (edge[-1] in header_ports):
-		if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT): 
-		    fout.write("bind_layers(%s, %s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))	    
+                if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT): 
+                    fout.write("bind_layers(%s, %s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))	    
                 
         #make_parsers(control_graph, header_ports, fout)
 
