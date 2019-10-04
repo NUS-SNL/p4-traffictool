@@ -32,20 +32,10 @@
   color: #FFFFFF;
 }
 
-.sidenav a:after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 0.2em;
-  background: black;
-  left: 0;
-  bottom: 0;
-  background-image: linear-gradient(to right, #5e42a6, #b74e91)
-}
-
-.sidenav a:active {
-  bacground-color: #23374D;
-  color: white;
+.divider {
+    position: absolute;
+    right:-1px;
+    top:2px;
 }
 
 /* Style page content */
