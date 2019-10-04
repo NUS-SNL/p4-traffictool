@@ -21,6 +21,7 @@ print_arguments(){
     echo "STANDARD $STANDARD"
     echo "DEBUG_MODE $DEBUG_MODE"
     echo "OUTPUT DIR $OUTPUT"
+    echo "START WITH ETHERNET $START_WITH_ETH" # TODO make it possible for the user to control this varible by passing an argument in the terminal command
     echo -e "------------------------------------\n"
 
 }
@@ -39,6 +40,7 @@ WIRESHARK=false
 MOONGEN=false
 PCAPPLUSPLUS=false
 DEBUG_MODE=false
+START_WITH_ETH=true
 STANDARD="p4-16"
 
 while test $# -gt 0; do
@@ -231,7 +233,7 @@ if [[ "$SCAPY" = true ]];then
     temp="$OUTPUT/scapy"
     echo "Running Scapy backend script"
     mkdir -p $temp
-    python $DIR/src/GenTrafficScapy.py $JSONSOURCE $temp $DEBUG_MODE
+    python $DIR/src/GenTrafficScapy.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
     echo -e "------------------------------------\n"
 fi
 if [[ "$WIRESHARK" = true ]];then
@@ -245,14 +247,14 @@ if [[ "$MOONGEN" = true ]];then
     temp="$OUTPUT/moongen"
     echo "Running MoonGen backend script"
     mkdir -p $temp
-    python $DIR/src/GenTrafficMoonGen.py $JSONSOURCE $temp $DEBUG_MODE
+    python $DIR/src/GenTrafficMoonGen.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
     echo -e "------------------------------------\n"
 fi
 if [[ "$PCAPPLUSPLUS" = true ]];then
     temp="$OUTPUT/pcapplusplus"
     echo "Running PcapPlusPlus backend script"
     mkdir -p $temp
-    python $DIR/src/DissectTrafficPcap.py $JSONSOURCE $temp $DEBUG_MODE
+    python $DIR/src/DissectTrafficPcap.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
     echo -e "------------------------------------\n"
 fi
 

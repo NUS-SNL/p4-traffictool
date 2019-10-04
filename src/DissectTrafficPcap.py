@@ -252,7 +252,7 @@ def find_eth_subhdr(node, sub_headers):
 
 
 def find_ethernet(node, rmv_headers, sub_headers):
-    if node.name == "ethernet":
+    if node.name == "ethernet" and ETHER_DETECT == True:
         find_eth_subhdr(node, sub_headers)
         return
     elif len(node.children) == 0:
@@ -848,10 +848,8 @@ except KeyError:
 local_name = local_name[local_name.rfind('/') + 1:local_name.rfind('.')]
 start_with_eth = sys.argv[4].lower()
 
-print("control_graph line 851: ", control_graph)
 copy_of_graph = control_graph[:]
 paths = make_tree(copy_of_graph)
-print("control_graph line 853: ", control_graph)
 rmv_headers = []
 sub_headers = []
 for path in paths:

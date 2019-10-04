@@ -179,8 +179,8 @@ def find_eth_subhdr(node, sub_headers):
 
 
 def find_ethernet(node, rmv_headers, sub_headers):
-    if node.name == "ethernet" or node.name == "Ether":
-        find_eth_subhdr(node, sub_headers)
+    if node.name == "ethernet" or node.name == "Ether" and ETHER_DETECT == True:
+            find_eth_subhdr(node, sub_headers)
         return
     elif len(node.children) == 0:
         if node.name != "final":
