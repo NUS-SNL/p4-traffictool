@@ -27,11 +27,11 @@
 
 /* When you mouse over the navigation links, change their color */
 .sidenav a:hover {
-  background-color: #676767;
+  background-color: #6699CC;
   color: #FFFFFF;
 }
 
-.active {
+.sidenav a:active {
   bacground-color: #23374D;
   color: white;
 }
