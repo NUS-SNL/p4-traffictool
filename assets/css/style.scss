@@ -3,7 +3,7 @@
 
 @import "{{ site.theme }}";
 /* The sidebar menu */
-.sidenav, .dropdown-btn {
+.sidenav {
   height: 100%; /* Full-height: remove this if you want "auto" height */
   width: 18%; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
@@ -16,18 +16,19 @@
 }
 
 /* The navigation menu links */
-.sidenav a, .dropdown-btn db {
+.sidenav a, .dropdown-btn {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 32px;
   font-family: 'Comfortaa', cursive;
+  background-color: #1089ff; /* Blue */
   color: #E5E5E5;
   display: block;
   
 }
 
 /* When you mouse over the navigation links, change their color */
-.sidenav a:hover, .dropdown-btn db:hover {
+.sidenav a:hover, .dropdown-btn:hover {
   background-color: #6699CC;
   color: #FFFFFF;
 }
