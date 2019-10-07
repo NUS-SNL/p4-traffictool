@@ -16,7 +16,7 @@
 }
 
 /* The navigation menu links */
-.sidenav a {
+.sidenav a, .dropdown-btn {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 32px;
@@ -27,7 +27,7 @@
 }
 
 /* When you mouse over the navigation links, change their color */
-.sidenav a:hover {
+.sidenav a:hover, .dropdown-btn:hover {
   background-color: #6699CC;
   color: #FFFFFF;
 }
@@ -36,6 +36,12 @@
     position: absolute;
     right:-1px;
     top:2px;
+}
+
+.dropdown-container {
+  display: none;
+  background-color: #262626;
+  padding-left: 8px;
 }
 
 /* Style page content */
