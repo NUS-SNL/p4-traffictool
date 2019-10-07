@@ -16,7 +16,7 @@
 }
 
 /* The navigation menu links */
-.sidenav a.one {
+.sidenav a {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 30px;
@@ -31,7 +31,7 @@
   
 }
 
-.dropdown-container a.two{
+.dropdown-container a{
   /*display: none;
   background: none;
   border: none;*/
@@ -49,12 +49,12 @@
 }
 
 /* When you mouse over the navigation links, change their color */
-.sidenav a.one:hover {
+.sidenav a:hover {
   background-color: #8FB4BE;
   color: #FFFFFF;
 }
 
-.dropdown-container a.two:hover {
+.dropdown-container a:hover {
   background-color: #8FB4BE;
   color: #FFFFFF;
 }
