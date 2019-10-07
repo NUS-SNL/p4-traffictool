@@ -32,8 +32,13 @@
 }
 
 /* When you mouse over the navigation links, change their color */
-.sidenav a:hover, .dropdown-btn:hover {
+.sidenav a:hover {
   background-color: #6699CC;
+  color: #FFFFFF;
+}
+
+.dropdown-btn:hover {
+  background-color: #777777;
   color: #FFFFFF;
 }
 
@@ -45,8 +50,8 @@
 
 .dropdown-container {
   display: none;
-  background-color: #262626;
-  padding-left: 15px;
+  background-color: #333333;
+  padding-left: 20px;
 }
 
 .arrow_drop_down {
