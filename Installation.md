@@ -1,3 +1,8 @@
+---
+title: Getting Started
+layout: default
+filename: Installation
+--- 
 # Getting Started
 ## Dependencies
 * **p4c compiler:** The input to p4-traffictool is the json file produced by the open-source [p4c](https://github.com/p4lang/p4c) compiler, specifically the `p4c-bm2-ss` backend. You can use the scripts [here](https://github.com/jafingerhut/p4-guide) to install `p4c` and the `p4c-bm2-ss` backend. For the `p4c-bm2-ss` backend to compile correctly, you may need to install [behavioral model](https://github.com/p4lang/behavioral-model) first. Post installation, `p4c-bm2-ss` should be available in your _PATH_. 
