@@ -16,7 +16,7 @@
 }
 
 /* The navigation menu links */
-.sidenav a, .dropdown-btn {
+.sidenav a {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 30px;
@@ -31,8 +31,30 @@
   
 }
 
+.dropdown-container dc{
+  /*display: none;
+  background: none;
+  border: none;*/
+  padding: 10px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 22px;
+  font-family: 'Comfortaa', cursive;
+  border: none;
+  background: none;
+  color: #E5E5E5;
+  text-align: left;
+  display: block;
+  cursor: pointer;
+  outline: none;
+}
+
 /* When you mouse over the navigation links, change their color */
-.sidenav a:hover, .dropdown-btn:hover {
+.sidenav a:hover {
+  background-color: #8FB4BE;
+  color: #FFFFFF;
+}
+
+.dropdown-container dc:hover {
   background-color: #8FB4BE;
   color: #FFFFFF;
 }
@@ -41,16 +63,6 @@
     position: absolute;
     right:-1px;
     top:2px;
-}
-
-.dropdown-container {
-  display: none;
-  background-color: #333333;
-}
-
-.arrow_drop_down {
-  float: right;
-  padding-right: 8px;
 }
 
 /* Style page content */
