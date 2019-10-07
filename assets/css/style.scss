@@ -3,7 +3,7 @@
 
 @import "{{ site.theme }}";
 /* The sidebar menu */
-.sidenav {
+.sidenav, .dropdown-btn {
   height: 100%; /* Full-height: remove this if you want "auto" height */
   width: 18%; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
@@ -16,7 +16,7 @@
 }
 
 /* The navigation menu links */
-.sidenav a, .dropdown-btn {
+.sidenav a, .dropdown-btn db {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 32px;
@@ -27,7 +27,7 @@
 }
 
 /* When you mouse over the navigation links, change their color */
-.sidenav a:hover, .dropdown-btn:hover {
+.sidenav a:hover, .dropdown-btn db:hover {
   background-color: #6699CC;
   color: #FFFFFF;
 }
