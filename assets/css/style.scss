@@ -21,7 +21,7 @@
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 30px;
-  font-size: 1.5vw;
+  font-size: 1.7vw;
   font-family: 'Comfortaa', cursive;
   border: none;
   background: none;
@@ -39,7 +39,7 @@
   padding: 6px 8px 6px 50px;
   text-decoration: none;
   font-size: 20px;
-  font-size: 1vw;
+  font-size: 1.1vw;
   font-family: 'Comfortaa', cursive;
   border: none;
   background: none;
@@ -73,13 +73,16 @@
   padding: 0px 10px;
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 800px) {
   .sidenav {
     width: 100%;
     height: auto;
     position: relative;
   }
-  .sidenav a {float: left;}
+  .sidenav a {
+    float: left;
+    font-size: 5vw;
+  }
   .dropdown-container a {
     display: none;
   }
@@ -90,6 +93,7 @@
   .sidenav a {
     text-align: center;
     float: none;
+    font-size: 10vw;
   }
   .dropdown-container a {
     display: none;
