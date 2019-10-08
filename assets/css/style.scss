@@ -21,7 +21,7 @@
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 30px;
-  font-size: 3vw;
+  font-size: 1.5vw;
   font-family: 'Comfortaa', cursive;
   border: none;
   background: none;
@@ -39,7 +39,7 @@
   padding: 6px 8px 6px 50px;
   text-decoration: none;
   font-size: 20px;
-  font-size: 2vw;
+  font-size: 1vw;
   font-family: 'Comfortaa', cursive;
   border: none;
   background: none;
@@ -80,6 +80,9 @@
     position: relative;
   }
   .sidenav a {float: left;}
+  .dropdown-container a {
+    display: none;
+  }
   div.content {margin-left: 0;}
 }
 
@@ -89,8 +92,7 @@
     float: none;
   }
   .dropdown-container a {
-    text-align: center;
-    float: none;
+    display: none;
   }
 }
 /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
