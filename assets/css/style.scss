@@ -86,6 +86,11 @@
   .dropdown-container a {
     display: none;
   }
+  i {
+    max-width: 100%;
+    height: auto;
+    width: auto\9; /* ie8 */
+  }
   div.content {margin-left: 0;}
 }
 
@@ -93,10 +98,15 @@
   .sidenav a {
     text-align: center;
     float: none;
-    font-size: 10vw;
+    font-size: 5vw;
   }
   .dropdown-container a {
     display: none;
+  }
+  i {
+    max-width: 100%;
+    height: auto;
+    width: auto\9; /* ie8 */
   }
 }
 /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
