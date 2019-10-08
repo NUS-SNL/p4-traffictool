@@ -11,6 +11,7 @@
   top: 0; /* Stay at the top */
   left: 0;
   background-color: #1089ff; /* Blue */
+  overflow: auto;
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 20px;
 }
@@ -28,7 +29,6 @@
   display: block;
   cursor: pointer;
   outline: none;
-  
 }
 
 .dropdown-container a{
