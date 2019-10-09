@@ -25,7 +25,7 @@ Otherwise, user can specify one or more of the following:
 ```
 The above command will generate output files for specified target tool(s). The output files for each target tool will be placed in a subdirectory inside the _output directory_.
 
-## Using the output files
+# Using the output files
 The generated output files need to be integrated with the correponding tool(s).
 
 ## Tool-specific Usage
@@ -201,7 +201,7 @@ The second example demonstrates extraction of a field values from the packets ca
     That's it! Your plugins are ready to work. Restart Wireshark and open the pcap file which you wish to parse.
 
 
-## Additional User Inputs
+# Additional User Inputs
 * **Standard headers:** If standard headers for common protocols such as Ethernet, IPv4, IPv6, TCP, and UDP are detected by p4-traffictool, it will prompt the user if s/he wishes to use the original header/protocol implementations provided by the tool(s) instead of generating new implementations for them. An exception for this is the code generated for the Wireshark Lua dissector (see more details in [Nuances.md](Nuances.md)).
 * **Variable Length Fields:** Since there is limited support  available (and/or inconvenience of use) for variable length fields with Scapy, PcapPlusPlus and Wireshark Lua dissector, the tool prompts the user to enter the length of a variable length field when it detects one. This length should be a multiple of 8 to ensure that the header is byte aligned.
   * A fixed length field would be produced for the current run of p4-traffictool for Scapy, PcapPlusPlus and Wireshark Lua dissector. In order to modify this length, the user needs to rerun p4-traffictool. Note that this is a limitation of the target tools and p4-traffictool merely provides an option to choose the fixed length. 
