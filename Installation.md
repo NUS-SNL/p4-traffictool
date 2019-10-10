@@ -12,7 +12,7 @@ P4TrafficTool is an automed code generator for packet analyzer tools. In order t
 
 ## Installation
 * Clone this repository. 
-```
+```shell
 git clone https://github.com/djin31/p4-traffictool.git
 ```
 * Run `configure.sh` to check for dependencies.
