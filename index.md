@@ -9,6 +9,9 @@ P4TrafficTool is a tool designed to aid P4 developers with the process of packet
 
 So whether behavioral (qualitative) testing on software targets (e.g. [bmv2](https://github.com/p4lang/behavioral-model)) or production (quantitative) testing on hardware targets (e.g. [Barefoot Tofino](https://barefootnetworks.com/products/brief-tofino/)), p4-traffictool has you covered :)
 
+![](https://drive.google.com/open?id=1l09KuwX_w9inEp4YE6ncpOuTNstMNeAM)
+<img src="https://github.com/NUS-SNL/p4-traffictool/blob/master/images/problem-new.png">
+
 ## Usage
 
 Use the top-level script _p4-traffictool.sh_ as following:
