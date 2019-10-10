@@ -5,30 +5,62 @@ filename: Usage.md
 --- 
 
 # Usage
+The internal working of **p4-traffictool** is as below. You provide the tool with your `.p4` (or `json`) file and get the plugin code as the output.
+
+<br>
+
+<p align="center">
+	<img src="https://raw.githubusercontent.com/NUS-SNL/p4-traffictool/master/images/solution-new.png" style="width:80%">
+</p>
+
+<br>
 
 Use the top-level script _p4-traffictool.sh_ as following:
-```
+
+<br>
+
+```shell
 # With P4 program as the input
 ./p4-traffictool.sh -p4 <path to p4 source> [OPTIONS] [TARGET TOOL(S)]
 
+```
+
+<br>
+
+```shell
 # With json HLIR as the input
 ./p4-traffictool.sh -json <path to json HLIR description> [OPTIONS] [TARGET TOOL(S)]
 
+```
+
+<br>
+
+```shell
 # For help
 ./p4-traffictool.sh --help
 
+```
 
+<br>
+
+```shell
 [OPTIONS]
 --std {p4-14|p4-16} : The P4 standard to use. Default is p4-16.
 -o <output dir>     : Output directory path. Default is the same as the P4/json input file.
 --debug             : Shows debugging information.
+```
 
+<br>
 
+```shell
 [TARGET TOOL(S)]
 If no target tools are specified, user is prompted for each target tool.
 Otherwise, user can specify one or more of the following:
 --scapy --wireshark --moongen --pcpp
 ```
+
+<br>
+
 The above command will generate output files for specified target tool(s). The output files for each target tool will be placed in a subdirectory inside the _output directory_.
 
 # Using the output files
