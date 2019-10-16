@@ -5,7 +5,7 @@ filename: Usage.md
 --- 
 
 # Usage
-The internal working of **p4-traffictool** is as below. You provide the tool with your `.p4` (or `json`) file and get the plugin code as the output.
+The internal working of **p4-traffictool** is as below. You provide the tool with your `.p4` or `json` file and get the plugin code as the output.
 
 <br>
 
@@ -79,7 +79,7 @@ The generated output files need to be integrated with the correponding tool(s).
 ### Generating code for Scapy
 Use the top-level script `p4-traffictool.sh` as following:
     
-```    
+```shell    
 ./p4-traffictool.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --scapy 
 ```
 If standard headers (Ethernet, IPv4, etc.) are detected, the user will be asked if s/he wants to use Scapy's built-in headers instead of re-defining them.
@@ -96,19 +96,19 @@ The code for Scapy would be generated in the output directory inside a subdirect
 
 ### Integration and Usage with Scapy
 1. In your Python code that uses Scapy, import the generated Python file using
-    ```
+    ```python
     from <filename> import *
     ```
 
 2. Then, you can generate packets using standard Scapy format. For example, if you want to generate a packet with custom P4-defined layers _foo_ and _bar_ with payload _"foobar"_ , then:
-    ```
+    ```python
     a = Foo()/Bar()/"foobar"
     ```
     will generate the required packet.
 
 3. Also you can access a list of possible packet combinations using the variable *possible_packets_*
 4. To send packets on the wire, use the `send()` or `sendp()` methods:
-    ```
+    ```python
     sendp(a, iface=<netdev interface>)
     ```
 5. For receiving or parsing packets, simply use the standard Scapy methods and it should now be able to recognize and show the custom P4-defined layers.
@@ -119,7 +119,7 @@ The code for Scapy would be generated in the output directory inside a subdirect
 
 ### Generating code for PcapPlusPlus
 Use the top-level script `p4-traffictool.sh` as following:
-```
+```shell
 ./p4-traffictool.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --pcpp 
 ```
 If standard headers (Ethernet, IPv4, etc.) are detected, the user will be asked if s/he wants to use PcapPlusPlus' built-in headers instead of re-defining them.
@@ -144,7 +144,7 @@ The code for PcapPlusPlus would be generated in the output directory inside a su
 4. Add the newly generated protocol(s) to the `enum ProtocolType` inside Packet++/header/ProtocolType.h. The `enum ProtocolType` specifies a separate bit for each protocol. So if the already defined last protocol in the `enum ProtocolType` has value 0x20000000, then to add a newly generated protocol _foo_, add `P4_FOO = 0x40000000` to the enum.
 
 5. Now recompile PcapPlusPlus and also install it (if you are accessing it from a central location):
-```
+```shell
 make clean
 make all [-j4]
 sudo make install
@@ -157,7 +157,7 @@ sudo make install
 [MoonGen](https://github.com/emmericp/MoonGen) is a Lua-based high-speed packet generator.
 
 ### Generating code for MoonGen
-```
+```shell
 ./p4-traffictool.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --moongen 
 ```
 If standard headers (Ethernet, IPv4, etc.) are detected, the user will be asked if s/he wants to use MoonGen's built-in headers instead of re-defining them.
@@ -185,11 +185,11 @@ The code for MoonGen would be generated in the output directory inside a subdire
    * if the packet has a checksum, adapt `createStack` (the loop at end of function `createStack`) and `packetCalculateChecksums`
 
 5. Add your protocol to MoonGen/libmoon/lua/proto/proto.lua so that it gets loaded : 
-     ```
+     ```lua
      proto.<protocol name> = require "proto.<file containing protocol without the .lua extension)>"
      ```
    * For example, the _foo_ protocol could be added as following:
-     ```
+     ```lua
      proto.foo = require "proto.foo"
      ```
 6. Now you can run any of the examples (or otherwise scripts) in MoonGen by using the function `get<ProtoName>Packet()` instead of the usual `getUdpPacket()`.
@@ -198,7 +198,7 @@ The code for MoonGen would be generated in the output directory inside a subdire
 ## Wireshark (Tshark) Lua Dissector
 
 ### Generating code for Wireshark Lua dissector backend
-```
+```shell
 ./p4-traffictool.sh [-p4 <p4 src>] [-json <json file>] [--std {p4-14|p4-16}] [-o <dst dir>] --wireshark
 ```
 
@@ -217,7 +217,7 @@ Apart from these, there would be a file named `init.lua` which contains the load
 
 #### Quick short term usage
 While running wireshark (or tshark) through command line just pass `-X lua_script:<path to the generated init.lua>` and you would be able to dissect the packets with your custom headers rightaway. e.g.
-    ```
+    ```shell
     wireshark -X lua_script:init.lua 
     tshark -X lua_script:init.lua -r captured_packets.pcap -Tfields -e <field_name>
     ```

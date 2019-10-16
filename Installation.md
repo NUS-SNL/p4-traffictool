@@ -12,8 +12,8 @@ filename: Installation
 
 ## Installation
 * Clone this repository. 
-```
-git clone https://github.com/djin31/p4-traffictool.git
+```shell
+git clone https://github.com/NUS-SNL/p4-traffictool.git
 ```
 * Run `configure.sh` to check for dependencies.
 * (Optional) Run `install.sh` to add the alias `p4-traffictool` to `.bashrc` in order to avoid specifying the full path to `p4-traffictool.sh` script.
