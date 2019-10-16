@@ -181,7 +181,7 @@ def find_eth_subhdr(node, sub_headers):
 def find_ethernet(node, rmv_headers, sub_headers):
     if node.name == "ethernet" or node.name == "Ether" and ETHER_DETECT == True:
             find_eth_subhdr(node, sub_headers)
-        return
+            return
     elif len(node.children) == 0:
         if node.name != "final":
             rmv_headers.append(node.name)
@@ -392,7 +392,7 @@ def make_parsers(control_graph, header_type, header, fout):
             fout.write(" and self.%s == 0x%s" % (transition_key[idx], transition[1][init_idx:init_idx+transition_dict[transition_key[idx]]]))
         fout.write("):\n\t")
         fout.write("\t\treturn %s\n" % (transition[0].capitalize()))
-        fout.write("\t    else:\n\t\t\treturn Packet.guess_payload_class(self, payload)\n\n")
+        fout.write("\t\telse:\n\t\t\treturn Packet.guess_payload_class(self, payload)\n\n")
         
 
 # creates a string of the headers in a packet in a way that Scapy expects
@@ -527,14 +527,21 @@ def make_template(json_data, destination):
         fout.write("\n## remaining bindings\n")
         for edge in control_graph:
             if start_with_eth == 'true':
-                if (edge[0] in header_ports) and (edge[-1] in header_ports):
-                    if edge[0] not in rmv_headers and edge[-1] not in rmv_headers:
-                        if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT): 
-                            fout.write("bind_layers(%s, %s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))
+                if (edge[0] in header_ports) and (edge[-1] in header_ports) and edge[0] not in rmv_headers and edge[-1] not in rmv_headers:
+                    if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT): 
+                        if (edge[0] in ["Ether", "IP", "IPv6", "UDP", "TCP"]):
+                            if (edge[2]!='default') and (edge[1]!=None) and (edge[2]!=None): 
+                                fout.write("bind_layers(%s, %s, %s=%s)\n" %(capitalise(edge[0]), capitalise(edge[-1]), edge[1], edge[2]))
+                            else:
+                                fout.write("bind_layers(%s, %s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))
             else:
                 if (edge[0] in header_ports) and (edge[-1] in header_ports):
                     if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT): 
-                        fout.write("bind_layers(%s, %s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))
+                        if (edge[0] in ["Ether", "IP", "IPv6", "UDP", "TCP"]):
+                            if (edge[2]!='default') and (edge[1]!=None) and (edge[2]!=None): 
+                                fout.write("bind_layers(%s, %s, %s=%s)\n" %(capitalise(edge[0]), capitalise(edge[-1]), edge[1], edge[2]))
+                            else:
+                                fout.write("bind_layers(%s, %s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))
                 
         #make_parsers(control_graph, header_ports, fout)
 
