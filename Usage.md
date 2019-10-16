@@ -5,7 +5,7 @@ filename: Usage.md
 --- 
 
 # Usage
-The internal working of **p4-traffictool** is as below. You provide the tool with your `.p4` or `json` file and get the plugin code as the output.
+The internal workings of **p4-traffictool** is as below. You provide the tool with your `p4` or `json` file and get the generated plugin code as the output.
 
 <br>
 
@@ -15,51 +15,33 @@ The internal working of **p4-traffictool** is as below. You provide the tool wit
 
 <br>
 
-Use the top-level script _p4-traffictool.sh_ as following:
+Use the top-level script `p4-traffictool.sh` as following:
 
-<br>
 
 ```shell
 # With P4 program as the input
 ./p4-traffictool.sh -p4 <path to p4 source> [OPTIONS] [TARGET TOOL(S)]
 
-```
 
-<br>
-
-```shell
 # With json HLIR as the input
 ./p4-traffictool.sh -json <path to json HLIR description> [OPTIONS] [TARGET TOOL(S)]
 
-```
 
-<br>
-
-```shell
 # For help
 ./p4-traffictool.sh --help
 
-```
 
-<br>
-
-```shell
 [OPTIONS]
 --std {p4-14|p4-16} : The P4 standard to use. Default is p4-16.
 -o <output dir>     : Output directory path. Default is the same as the P4/json input file.
 --debug             : Shows debugging information.
-```
 
-<br>
 
-```shell
 [TARGET TOOL(S)]
 If no target tools are specified, user is prompted for each target tool.
 Otherwise, user can specify one or more of the following:
 --scapy --wireshark --moongen --pcpp
 ```
-
-<br>
 
 The above command will generate output files for specified target tool(s). The output files for each target tool will be placed in a subdirectory inside the _output directory_.
 
@@ -106,11 +88,13 @@ The code for Scapy would be generated in the output directory inside a subdirect
     ```
     will generate the required packet.
 
-3. Also you can access a list of possible packet combinations using the variable *possible_packets_*
+3. Also you can access a list of possible packet combinations using the variable `possible_packets_`.
+
 4. To send packets on the wire, use the `send()` or `sendp()` methods:
     ```python
     sendp(a, iface=<netdev interface>)
     ```
+
 5. For receiving or parsing packets, simply use the standard Scapy methods and it should now be able to recognize and show the custom P4-defined layers.
 
 ## PcapPlusPlus
@@ -136,12 +120,12 @@ The code for PcapPlusPlus would be generated in the output directory inside a su
 ### Integration and Usage with PcapPlusPlus
 1. Copy the files `uint24_t.h`,`uint40_t.h` and `uint48_t.h` present in the `templates` directory of the tool to `packet++/header` inside you PcapPlusPlus source tree. These files contain definitions for 24, 40 and 48 bit datatypes.
 
-2. Copy the header (.h) files of custom P4-defined protocol(s) to packet++/header directory and the C++ (.cpp) files to Packet++/source directory inside your PcapPlusPlus source tree.
+2. Copy the header (.h) files of custom P4-defined protocol(s) to `packet++/header` directory and the C++ (.cpp) files to `Packet++/source` directory inside your PcapPlusPlus source tree.
 
 3. If you have used any standard PcapPlusPlus headers (e.g. Ethernet, IPv4, etc.) and if any of the new custom headers are the "next" layers, then add the new custom headers to the `parseNextLayer` function of the standard header.
-   * For example, if a new custom header _foo_ appears after the Ethernet layer and is identified by etherType `0x123`, then add a new switch case inside the function `EthLayer::parseNextLayer()` in Packet++/src/EthLayer.cpp. 
+   * For example, if a new custom header _foo_ appears after the Ethernet layer and is identified by etherType `0x123`, then add a new switch case inside the function `EthLayer::parseNextLayer()` in `Packet++/src/EthLayer.cpp`. 
 
-4. Add the newly generated protocol(s) to the `enum ProtocolType` inside Packet++/header/ProtocolType.h. The `enum ProtocolType` specifies a separate bit for each protocol. So if the already defined last protocol in the `enum ProtocolType` has value 0x20000000, then to add a newly generated protocol _foo_, add `P4_FOO = 0x40000000` to the enum.
+4. Add the newly generated protocol(s) to the `enum ProtocolType` inside `Packet++/header/ProtocolType.h`. The `enum ProtocolType` specifies a separate bit for each protocol. So if the already defined last protocol in the `enum ProtocolType` has value 0x20000000, then to add a newly generated protocol _foo_, add `P4_FOO = 0x40000000` to the enum.
 
 5. Now recompile PcapPlusPlus and also install it (if you are accessing it from a central location):
 ```shell
