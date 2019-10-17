@@ -92,8 +92,9 @@ The code for Scapy would be generated in the output directory inside a subdirect
 
 4. To send packets on the wire, use the `send()` or `sendp()` methods:
     ```python
-    sendp(a, iface=<netdev interface>)
+    sendp(p, iface=<netdev interface>)
     ```
+    `p` is the packet intended to be sent.
 
 5. For receiving or parsing packets, simply use the standard Scapy methods and it should now be able to recognize and show the custom P4-defined layers.
 
@@ -118,9 +119,9 @@ The code for PcapPlusPlus would be generated in the output directory inside a su
 *  A function named parseNextLayer which determines the next header to be parsed depending on the value of the "selector" field in the current header.
 
 ### Integration and Usage with PcapPlusPlus
-1. Copy the files `uint24_t.h`,`uint40_t.h` and `uint48_t.h` present in the `templates` directory of the tool to `packet++/header` inside you PcapPlusPlus source tree. These files contain definitions for 24, 40 and 48 bit datatypes.
+1. Copy the files `uint24_t.h`,`uint40_t.h` and `uint48_t.h` present in the `templates` directory of the tool to `Packet++/header` inside you PcapPlusPlus source tree. These files contain definitions for 24, 40 and 48 bit datatypes.
 
-2. Copy the header (.h) files of custom P4-defined protocol(s) to `packet++/header` directory and the C++ (.cpp) files to `Packet++/source` directory inside your PcapPlusPlus source tree.
+2. Copy the header (.h) files of custom P4-defined protocol(s) to `Packet++/header` directory and the C++ (.cpp) files to `Packet++/source` directory inside your PcapPlusPlus source tree.
 
 3. If you have used any standard PcapPlusPlus headers (e.g. Ethernet, IPv4, etc.) and if any of the new custom headers are the "next" layers, then add the new custom headers to the `parseNextLayer` function of the standard header.
    * For example, if a new custom header _foo_ appears after the Ethernet layer and is identified by etherType `0x123`, then add a new switch case inside the function `EthLayer::parseNextLayer()` in `Packet++/src/EthLayer.cpp`. 
@@ -157,20 +158,20 @@ The code for MoonGen would be generated in the output directory inside a subdire
 1. Copy the newly generated protocol files (Lua files) to MoonGen/libmoon/lua/proto/    
 
 2. If you used any default headers then add the corresponding next layer headers to the `resolveNextHeader` function of the default header.
-   * Let's say you wanted to add protocol _foo_ on top of the standard UDP layer. Then you need to modify MoonGen/libmoon/lua/proto/udp.lua so that _foo_ gets recognized while parsing the UDP packet. Search for the function `resolveNextHeader` in the file udp.lua. Over that you will find a map `mapNamePort`. Add the pair `foo == udp.PORT_FOO` to the map. Here, `udp.PORT_FOO` is a constant defined in the same file (udp.lua).
+   * Let's say you want to add protocol _foo_ on top of the standard UDP layer. Then you need to modify MoonGen/libmoon/lua/proto/udp.lua so that _foo_ gets recognized while parsing the UDP packet. Search for the function `resolveNextHeader` in the file udp.lua. Over that you will find a map `mapNamePort`. Add the pair `foo = udp.PORT_FOO` to the map. Here, `udp.PORT_FOO` is a constant defined in the same file (udp.lua).
     
 3. In the file MoonGen/libmoon/lua/packet.lua, register the packet header combinations using the `createStack` function.
    * Say you have defined the layer _foo_ over UDP. Then inside the file packet.lua you need to define a `getFooPacket` function to generate a packet of the _foo_ protocol:
-            ```
-            pkt.getFooPacket = createStack("eth","ip4","udp","FOO")
-            ```
+     ```lua
+     pkt.getFooPacket = createStack("eth","ip4","udp","FOO")
+     ```
 4. Additional changes in MoonGen/libmoon/lua/packet.lua may also be required:
    * if the header has a length field that depends on the next layer's length, then adapt the function `packetSetLength` 
    * if the packet has a checksum, adapt `createStack` (the loop at end of function `createStack`) and `packetCalculateChecksums`
 
 5. Add your protocol to MoonGen/libmoon/lua/proto/proto.lua so that it gets loaded : 
      ```lua
-     proto.<protocol name> = require "proto.<file containing protocol without the .lua extension)>"
+     proto.<protocol name> = require "proto.<file containing protocol without the .lua extension>"
      ```
    * For example, the _foo_ protocol could be added as following:
      ```lua
@@ -190,7 +191,7 @@ The user would also be asked to specify the length of the variable length field 
 A fixed length field would be produced for the current run of p4-traffictool. In order to modify this length, the user needs to rerun p4-traffictool. Note that this is a limitation of the target tool and p4-traffictool merely provides an option to choose the fixed length.
 
 #### Generated Code
-The code for Lua dissector would be generated in the output directory inside a subdirectory "lua_dissector". It consists of lua files corresponding to each protocol. Each file contains:
+The code for Lua dissector would be generated in the output directory inside a subdirectory "wireshark". It consists of lua files corresponding to each protocol. Each file contains:
 *  Header struct definition
 *  Table definitions for the next layers (if the current layer is not the final layer)
 *  Addition of the current layer to table definition of previous layer
@@ -200,11 +201,11 @@ Apart from these, there would be a file named `init.lua` which contains the load
 ### Integration and Usage with Wireshark (Tshark)
 
 #### Quick short term usage
-While running wireshark (or tshark) through command line just pass `-X lua_script:<path to the generated init.lua>` and you would be able to dissect the packets with your custom headers rightaway. e.g.
-    ```shell
-    wireshark -X lua_script:init.lua 
-    tshark -X lua_script:init.lua -r captured_packets.pcap -Tfields -e <field_name>
-    ```
+While running wireshark (or tshark) through command line just pass `-X lua_script:<path to the generated init.lua>` and you would be able to dissect the packets with your custom headers rightaway. e.g.:
+```shell
+wireshark -X lua_script:init.lua 
+tshark -X lua_script:init.lua -r captured_packets.pcap -Tfields -e <field_name>
+```
 The first examples shows how to open wireshark with your custom plugins imported into it.
 The second example demonstrates extraction of a field values from the packets captured in a pcap file using tshark with your custom plugins enabled.
 
