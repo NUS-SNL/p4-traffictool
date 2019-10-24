@@ -3,7 +3,7 @@ import sys
 import os
 import math
 from tabulate import tabulate
-from commonMultiHdrTrns import *
+from common import *
 
 # global variables for common header types
 ETHER_DETECT = False
@@ -838,7 +838,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
     fout_source.write("\n\tstd::string %sLayer::toString(){ return \"\"; }\n\n" % (header.capitalize()))
     fout_source.write("}")
 
-control_graph = make_control_graph(data["parsers"], DEBUG)
+control_graph = make_control_graph_multi(data["parsers"], DEBUG)
 header_ports, header_types = find_data_headers(data["headers"], data["header_types"])
 
 try:
@@ -846,7 +846,7 @@ try:
 except KeyError:
     local_name = sys.argv[1]
 local_name = local_name[local_name.rfind('/') + 1:local_name.rfind('.')]
-start_with_eth = sys.argv[4].lower()
+start_with_eth = sys.argv[-1].lower()
 
 copy_of_graph = control_graph[:]
 paths = make_tree(copy_of_graph)

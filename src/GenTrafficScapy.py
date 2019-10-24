@@ -1,7 +1,7 @@
 import json
 import sys
 import re
-from commonMultiHdrTrns import *
+from common import *
 
 # Maximum possible headers within a packet, hyperparameter with default value as 10
 MAX_PATH_LENGTH = 10
@@ -491,7 +491,7 @@ def make_template(json_data, destination):
         fout.write("\n##class definitions\n")
         
         #building metadata
-        control_graph = correct_graph(make_control_graph(json_data["parsers"], DEBUG))
+        control_graph = correct_graph(make_control_graph_multi(json_data["parsers"], DEBUG))
         init_states = []
         for parser in json_data["parsers"]:
             init_states.append(search_state(parser,parser["init_state"]))

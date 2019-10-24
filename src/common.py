@@ -77,3 +77,38 @@ def make_control_graph(parsers, DEBUG):
         for i in graph:
             print(i)
     return graph
+
+def make_control_graph_multi(parsers, DEBUG):
+    graph = []
+    for parser in parsers:
+        for state in parser["parse_states"]:
+            name = valid_state_name(state)
+            if len(state["transition_key"]) > 0:
+                for transition in state["transitions"]:
+                    if transition["next_state"] != None:
+                        # extract the headers which the transition is based on one of their fields
+                        originHdr = [d["value"][0] for d in state["transition_key"]]
+                        if(len(set(originHdr)) != 1):
+                            print("Error: Header transitions based on multiple fields from different headers are not supported.")
+                            exit(1)
+                        # extract the fields which the transition is based on
+                        transition_fields = [d["value"][1] for d in state["transition_key"]]
+                        graph.append([name,
+                                      transition_fields,
+                                      transition["value"],
+                                      search_state(
+                                          parser, transition["next_state"])
+                                      ])
+                    else:
+                        graph.append([name, None, None, "final"])
+            else:
+                if state["transitions"][0]["next_state"] != None:
+                    graph.append([name, None, None, search_state(
+                        parser, state["transitions"][0]["next_state"])])
+                else:
+                    graph.append([name, None, None, "final"])
+    if (DEBUG):
+        print("\nEdges in the control_graph\n")
+        for i in graph:
+            print(i)
+    return graph

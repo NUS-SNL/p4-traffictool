@@ -2,7 +2,7 @@ import json
 import sys
 import os
 from tabulate import tabulate
-from commonMultiHdrTrns import *
+from common import *
 
 # global variables for common header types
 ETHER_DETECT = False
@@ -462,7 +462,7 @@ def make_template(control_graph, header, header_type, destination, header_ports,
 
         fout.close()
 
-control_graph = make_control_graph(data["parsers"], DEBUG)
+control_graph = make_control_graph_multi(data["parsers"], DEBUG)
 header_ports, header_types = find_data_headers(
     data["headers"], data["header_types"])
 try:
