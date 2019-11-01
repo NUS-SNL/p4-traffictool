@@ -48,7 +48,7 @@ filename: People
 
   <div class="column">
     <div class="card">
-      <img src="img3.jpg" alt="Nona Rajabi" style="width:100%">
+      <img src="https://raw.githubusercontent.com/NUS-SNL/p4-traffictool/master/images/nona.png" alt="Nona Rajabi" style="width:100%">
       <div class="container">
         <h2>Nona Rajabi</h2>
         <p class="title">Developer</p>
