@@ -48,7 +48,9 @@ filename: People
       </div>
     </div>
   </div>
+</div>
 
+<div class="row">
   <div class="column">
     <div class="card">
       <img src="https://raw.githubusercontent.com/NUS-SNL/p4-traffictool/master/images/nona.png" alt="Nona Rajabi" style="width:100%">
