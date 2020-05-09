@@ -11,7 +11,7 @@ The flexibility provided by P4 and programmable network hardware, has enabled de
 <br>
 
 <p align="center">
-	<img src="https://raw.githubusercontent.com/NUS-SNL/p4-traffictool/master/images/problem-new.png" style="width:80%">
+	<img src="/p4-traffictool/images/problem-new.png" style="width:80%">
 </p>
 
 <br>

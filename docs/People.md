@@ -7,7 +7,7 @@ filename: People
 <div class="row">
   <div class="column">
     <div class="card">
-      <img src="https://raw.githubusercontent.com/NUS-SNL/p4-traffictool/master/images/Ben_leong.jpg" alt="Ben Leong" style="width:100%">
+      <img src="/p4-traffictool/images/Ben_leong.jpg" alt="Ben Leong" style="width:100%">
       <div class="container">
         <h2>Ben Leong</h2>
         <p class="title">Faculty</p>
@@ -25,7 +25,7 @@ filename: People
 <div class="row">
   <div class="column">
     <div class="card">
-      <img src="https://raw.githubusercontent.com/NUS-SNL/p4-traffictool/master/images/Raj.jpg" alt="Raj Joshi" style="width:100%">
+      <img src="/p4-traffictool/images/Raj.jpg" alt="Raj Joshi" style="width:100%">
       <div class="container">
         <h2>Raj Joshi</h2>
         <p class="title">Developer</p>
@@ -38,7 +38,7 @@ filename: People
 
   <div class="column">
     <div class="card">
-      <img src="https://raw.githubusercontent.com/NUS-SNL/p4-traffictool/master/images/deepanshu.jpg" alt="Deepanshu Jindal" style="width:100%">
+      <img src="/p4-traffictool/images/deepanshu.jpg" alt="Deepanshu Jindal" style="width:100%">
       <div class="container">
         <h2>Deepanshu Jindal</h2>
         <p class="title">Developer</p>
@@ -53,7 +53,7 @@ filename: People
 <div class="row">
   <div class="column">
     <div class="card">
-      <img src="https://raw.githubusercontent.com/NUS-SNL/p4-traffictool/master/images/nona.png" alt="Nona Rajabi" style="width:100%">
+      <img src="/p4-traffictool/images/nona.png" alt="Nona Rajabi" style="width:100%">
       <div class="container">
         <h2>Nona Rajabi</h2>
         <p class="title">Developer</p>
