@@ -3,6 +3,6 @@
 *.p4rt
 tests/*.pcap
 *.pcap
-/_site/*
-/.jekyll-cache/*
-/.sass-cache/*
+docs/_site/*
+docs/.jekyll-cache/*
+docs/.sass-cache/*
