@@ -25,7 +25,7 @@ So whether behavioral (qualitative) testing on software targets (e.g. [bmv2](htt
 git clone https://github.com/djin31/p4-traffictool.git
 ```
 * Run `configure.sh` to check for dependencies.
-* (Optional) Run `install.sh` to add the alias `p4-traffictool` to `.bashrc` in order to avoid specifying the full path to `p4-traffictool.sh` script.
+* (Optional) Run `install.sh` to add the alias `p4-traffictool` to your bash configuration in order to avoid specifying the full path to `p4-traffictool.sh` script.
 
 ### Installation checks and tests (optional)
 To perform a sanity check that the code produced by the tool is compatible with the tools available on your system you can use `./runtests.sh`. It runs the tool with a sample p4 program and its corresponding json file to produce scapy codes and checks that they are equivalent.
