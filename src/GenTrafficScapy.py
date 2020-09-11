@@ -36,20 +36,24 @@ if (len(sys.argv)>3):
 
 # check if debug mode activated or not
 if (len(sys.argv)>3):
-    if (sys.argv[-1]=='-d'):
+    if (sys.argv[-2]=='-d'):
         DEBUG = True
 
+start_with_eth = sys.argv[-1].lower()
+
 # find all possible header orderings that are valid
-def possible_paths(init, control_graph, length_till_now):
+def possible_paths(init, control_graph, length_till_now, rmv_headers):
     if (init == 'final'):
         return [['final']]
     if (length_till_now == MAX_PATH_LENGTH):
         return []
+    if (init in rmv_headers):
+        return[]
     temp = []
     possible_stops = [i[-1] for i in control_graph if i[0] == init]
     paths = []
     for i in possible_stops:
-        temp += (possible_paths(i, control_graph, length_till_now+1))
+        temp += (possible_paths(i, control_graph, length_till_now+1, rmv_headers))
     for i in temp:
         paths.append([init] + i)
     return paths
@@ -94,9 +98,140 @@ def detect_field_type(field):
     else:
         return ("XBitField('"+field[0]+"', 0, "+ str(field[1])+")")
 
-# declares header fields and initialises them with default value zero, also specifies if there is any checksum fields which needs to be post-build
-# other post-build fields need to be added manually
-def make_header(headers, header_types, header_id, checksums, calculations, fout):
+def nibble(size):
+    if (size <= 8):
+        return 2
+    if (size <= 16):
+	return 4
+    if (size <= 24):
+        return 6
+    if (size <= 32):
+	return 8
+    if (size <= 40):
+	return 10
+    if (size <= 48):
+	return 12
+    if (size <= 56):
+	return 14
+    if (size <= 64):
+	return 16
+    return "-- fill blank here"
+
+class State:
+    def __init__(self, name):
+        self.name = name
+        self.children = []
+
+    def print_state(self):
+        print("node's name: ", self.name)
+        print("node's children: ", [self.children[i].name for i in range(len(self.children))])
+
+
+def delete_obj(del_list, orig_list):
+    for item in del_list:
+        orig_list.remove(item)
+
+def find_children(root, nodes):
+    if len(nodes) == 0:
+        return
+    else:
+        children = []
+        del_list = []
+        for node in nodes:
+            if node[0] == root.name:
+                children.append(node[-1])
+                del_list.append(node)
+        delete_obj(del_list, nodes)
+        children = set(children)
+        for child in children:
+            state = State(child)
+            find_children(state, nodes)
+            root.children.append(state)
+        return 
+
+def make_tree(graph):
+    paths = []
+    state_names = [edge[0] for edge in graph]
+    state_names = set(state_names)
+    states = []
+    non_roots = [edge[-1] for edge in graph]
+    non_roots = set(non_roots)
+    for name in state_names:
+        if name not in non_roots:
+            root = State(name)
+            #copy_of_graph = graph
+            find_children(root, graph)
+            paths.append(root)
+            root.print_state()
+    return paths
+
+def find_eth_subhdr(node, sub_headers):
+    if len(node.children) == 0:
+        if node.name != "final":
+            sub_headers.append(node.name)
+        return
+    else:
+        for child in node.children:
+            if child.name != "final":
+                sub_headers.append(child.name)
+            find_eth_subhdr(child, sub_headers)
+        return
+
+
+def find_ethernet(node, rmv_headers, sub_headers):
+    if node.name == "ethernet" or node.name == "Ether" and ETHER_DETECT == True:
+            find_eth_subhdr(node, sub_headers)
+            return
+    elif len(node.children) == 0:
+        if node.name != "final":
+            rmv_headers.append(node.name)
+        return
+    else:
+        if node.name != "scalars" and node.name != "final":
+            rmv_headers.append(node.name)
+        for child in node.children:
+            find_ethernet(child, rmv_headers, sub_headers)
+        return
+
+
+def detect_builtin_hdr(headers):
+        
+    global ETHER_DETECT
+    global IPv4_DETECT
+    global IPv6_DETECT
+    global TCP_DETECT
+    global UDP_DETECT
+    for header_id in range(len(headers)):
+        global input
+        try:
+            input = raw_input
+        except NameError:
+            pass
+        if (headers[header_id]['metadata']) == False:
+            # header_ports.append(correct_name(headers[header_id]['name']))
+            if (headers[header_id]['name']=='ethernet'):
+                temp = input("\nEthernet header detected, would you like the standard ethernet header to be used(y/n) : ").strip()
+                if (temp == 'y'):
+                    ETHER_DETECT = True
+            elif (headers[header_id]['name']=='ipv4'):
+                temp = input("\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ").strip()
+                if (temp == 'y'):
+                    IPv4_DETECT = True
+            elif (headers[header_id]['name']=='ipv6'):
+                temp = input("\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ").strip()
+                if (temp == 'y'):
+                    IPv6_DETECT = True
+            elif (headers[header_id]['name']=='tcp'):
+                temp = input("\nTCP header detected, would you like the standard TCP header to be used(y/n) : ").strip()
+                if (temp == 'y'):
+                    TCP_DETECT = True
+            elif (headers[header_id]['name']=='udp'):
+                temp = input("\nUDP header detected, would you like the standard UDP header to be used(y/n) : ").strip()
+                if (temp == 'y'):
+                    UDP_DETECT = True
+    return
+
+def make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout):
     fout.write("class %s(Packet):\n" %(capitalise(headers[header_id]['name'])))
     fout.write("\tname = '%s'\n" %(headers[header_id]['name']))
     fout.write("\tfields_desc = [\n")
@@ -116,9 +251,16 @@ def make_header(headers, header_types, header_id, checksums, calculations, fout)
             fout.write("\t\t%s,\n" % (detect_field_type(header_type['fields'][-1])))
            
     fout.write("\t]\n")
+
+    # bind layers
+    header = header_ports[header_id]
+    make_parsers(control_graph, header_type, header, fout)
+    
+
     chksum,target,fields,algo = check_checksum_fields(checksums, calculations, data["headers"][header_id]['name'])
     if (chksum):
         fout.write("\t#update %s over %s using %s in post_build method\n\n" %(target,fields,algo))
+
 
 def remove_number(headers):
     unique_headers = {}
@@ -131,8 +273,7 @@ def remove_number(headers):
         unique_headers[header['name']] = header
     return unique_headers.keys(),unique_headers.values()
 
-# defines various header types and check if any common header type can be substituted in its place, calls make_header function
-def make_classes(data, fout):
+def make_classes(data, control_graph, header_ports, headers, rmv_headers, fout):
     global ETHER_DETECT
     global IPv4_DETECT
     global IPv6_DETECT
@@ -140,7 +281,6 @@ def make_classes(data, fout):
     global UDP_DETECT
 
     
-    header_ports, headers = remove_number(data["headers"])
     header_types = data["header_types"]
     checksums = data["checksums"]
     calculations = data["calculations"]
@@ -151,50 +291,50 @@ def make_classes(data, fout):
             input = raw_input
         except NameError:
             pass
+
         if (headers[header_id]['metadata']) == False:
-            # header_ports.append(correct_name(headers[header_id]['name']))
             if (headers[header_id]['name']=='ethernet'):
-                temp = input("\nEthernet header detected, would you like the standard ethernet header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    ETHER_DETECT = True
-                else:
-                    make_header(headers, header_types, header_id, checksums, calculations, fout)
+                if (ETHER_DETECT == False):
+                    if start_with_eth == 'true':
+                        if headers[header_id]['name'] not in rmv_headers:
+                            make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    else:
+                        make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             elif (headers[header_id]['name']=='ipv4'):
-                temp = input("\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    IPv4_DETECT = True
-                else:
-                    make_header(headers, header_types, header_id, checksums, calculations, fout)
+                if (IPv4_DETECT == False): 
+                    if start_with_eth == 'true':
+                        if headers[header_id]['name'] not in rmv_headers:
+                            make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    else:
+                        make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             elif (headers[header_id]['name']=='ipv6'):
-                temp = input("\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    IPv6_DETECT = True
-                else:
-                    make_header(headers, header_types, header_id, checksums, calculations, fout)
+                if (IPv6_DETECT == False):
+                    if start_with_eth == 'true':
+                        if headers[header_id]['name'] not in rmv_headers:
+                            make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    else:
+                        make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             elif (headers[header_id]['name']=='tcp'):
-                temp = input("\nTCP header detected, would you like the standard TCP header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    TCP_DETECT = True
-                else:
-                    make_header(headers, header_types, header_id, checksums, calculations, fout)
+                if (TCP_DETECT == False):
+                    if start_with_eth == 'true':
+                        if headers[header_id]['name'] not in rmv_headers:
+                            make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    else:
+                        make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             elif (headers[header_id]['name']=='udp'):
-                temp = input("\nUDP header detected, would you like the standard UDP header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    UDP_DETECT = True
-                else:
-                    make_header(headers, header_types, header_id, checksums, calculations, fout)
+                if (UDP_DETECT == False):
+                    if start_with_eth == 'true':
+                        if headers[header_id]['name'] not in rmv_headers:
+                            make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                    else:
+                        make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
             else:
-                make_header(headers, header_types, header_id, checksums, calculations, fout)
-
-    if (DEBUG):
-        print("\nHeaders \n")
-        for i in header_ports:
-            print (i)
-        print("\nHeader arrays\n")
-        for i in set(multi_headers):
-            print (i)
-
-    return header_ports
+                if start_with_eth == 'true':
+                    if headers[header_id]['name'] not in rmv_headers:
+                        make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+                else:
+                    make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout)
+    return
 
 # correct graph for inbuilt headers
 def correct_graph(graph):
@@ -214,13 +354,46 @@ def correct_graph(graph):
     return graph
 
 # defines bindings based on control graph
-def make_parsers(control_graph, header_ports, fout):
+def make_parsers(control_graph, header_type, header, fout):
+    
+    transition_key = None
+    next_transitions = []
+
     for edge in control_graph:
-        if (edge[0] in header_ports) and (edge[-1] in header_ports):
-            if (edge[2]!='default') and (edge[1]!=None) and (edge[2]!=None): 
-                fout.write("bind_layers(%s, %s, %s = %s)\n" % (capitalise(edge[0]), capitalise(edge[-1]), edge[1], edge[2]))
+        if (header == edge[0]):
+            if (edge[1] != None):
+                transition_key = edge[1]
+                next_transitions.append((edge[-1], edge[-2]))
             else:
-                fout.write("bind_layers(%s,%s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))
+                default_next_transition = edge[-1]
+
+    if (len(next_transitions) > 0):
+        fout.write("\n\tdef guess_payload_class(self, payload):\n\t\t")
+        transition_dict = {}
+        for tk in transition_key: 
+            for field in header_type['fields']:
+                if (field[0] == tk):
+                    transition_dict[field[0]] = nibble(field[1])
+                    break
+        for transition in next_transitions[:-1]:
+            init_idx = 2
+            fout.write("if (self.%s == 0x%s" % (transition_key[0], transition[1][init_idx:init_idx+transition_dict[transition_key[0]]]))
+            for idx in range(1, len(transition_key)):
+                init_idx += transition_dict[transition_key[idx-1]]
+                fout.write(" and self.%s == 0x%s" % (transition_key[idx], transition[1][init_idx:init_idx+transition_dict[transition_key[idx]]]))
+            fout.write("):\n\t")
+            fout.write("\t\treturn %s\n" % (transition[0].capitalize()))
+            fout.write("\t\tel")
+        transition = next_transitions[-1]
+        init_idx = 2
+        fout.write("if (self.%s == 0x%s" % (transition_key[0], transition[1][init_idx:init_idx+transition_dict[transition_key[0]]]))
+        for idx in range(1, len(transition_key)):
+            init_idx += transition_dict[transition_key[idx-1]]
+            fout.write(" and self.%s == 0x%s" % (transition_key[idx], transition[1][init_idx:init_idx+transition_dict[transition_key[idx]]]))
+        fout.write("):\n\t")
+        fout.write("\t\treturn %s\n" % (transition[0].capitalize()))
+        fout.write("\t\telse:\n\t\t\treturn Packet.guess_payload_class(self, payload)\n\n")
+        
 
 # creates a string of the headers in a packet in a way that Scapy expects
 def string_packet(header_ports,packet):
@@ -248,10 +421,10 @@ def rectify_paths(paths):
     return paths
 
 # prints the possible packet list into the file
-def make_packets(header_ports, init_states, control_graph, fout):
+def make_packets(header_ports, init_states, control_graph, rmv_headers, fout):
     paths = []
     for i in init_states:
-        paths += possible_paths(i, control_graph, 0)
+        paths += possible_paths(i, control_graph, 0, rmv_headers)
 
     paths = set(map(tuple,paths))
     paths = list(map(list,paths))
@@ -302,25 +475,78 @@ def correct_metadata(header_ports, control_graph, init_states):
 
 # top level module that calls other functions, accepts the json_data and the file destination as input
 def make_template(json_data, destination):
+    
+    global ETHER_DETECT
+    global IPv4_DETECT
+    global IPv6_DETECT
+    global TCP_DETECT
+    global UDP_DETECT
+
     try:
         fout = open(destination, 'w')
         fout.write("from scapy.all import *\n")
-
+        header_ports, headers = remove_number(data["headers"])
+        detect_builtin_hdr(headers)
+	
         fout.write("\n##class definitions\n")
-        header_ports = make_classes(json_data, fout)
-
+        
         #building metadata
-        control_graph = correct_graph(make_control_graph(json_data["parsers"], DEBUG))
+        control_graph = correct_graph(make_control_graph_multi(json_data["parsers"], DEBUG))
         init_states = []
         for parser in json_data["parsers"]:
             init_states.append(search_state(parser,parser["init_state"]))
-        (header_ports,control_graph,init_states) = correct_metadata(header_ports,control_graph,init_states) 
-            
-        fout.write("\n##bindings\n")
-        make_parsers(control_graph, header_ports, fout)
+        (header_ports,control_graph,init_states) = correct_metadata(header_ports,control_graph,init_states)
+
+        copy_of_graph = control_graph[:]
+        paths = make_tree(copy_of_graph)
+        rmv_headers = []
+        sub_headers = []
+        for path in paths:
+            find_ethernet(path, rmv_headers, sub_headers)
+            print("rmv_headers = ", rmv_headers)
+            print("sub_headers = ", sub_headers)
+            #if path.name != "ethernet": # header doesn't start with ethernet. search for ethernet in next levels. 
+            # search for ethernet
+            rmv_headers = set(rmv_headers)
+            sub_headers = set(sub_headers)
+            for item in sub_headers:
+                if item in rmv_headers:
+                    rmv_headers.remove(item)
+        
+        make_classes(json_data, control_graph, header_ports, headers, rmv_headers, fout)
+        print('rmv_headers 517: ', rmv_headers)
+
+        if (DEBUG):
+            print("\nHeaders \n")
+            for i in header_ports:
+                print (i)
+            print("\nHeader arrays\n")
+            for i in set(multi_headers):
+                print (i)
+          
+        fout.write("\n## remaining bindings\n")
+        for edge in control_graph:
+            if start_with_eth == 'true':
+                if (edge[0] in header_ports) and (edge[-1] in header_ports) and edge[0] not in rmv_headers and edge[-1] not in rmv_headers:
+                    if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT): 
+                        if (edge[0] in ["Ether", "IP", "IPv6", "UDP", "TCP"]):
+                            if (edge[2]!='default') and (edge[1]!=None) and (edge[2]!=None): 
+                                fout.write("bind_layers(%s, %s, %s=%s)\n" %(capitalise(edge[0]), capitalise(edge[-1]), edge[1], edge[2]))
+                            else:
+                                fout.write("bind_layers(%s, %s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))
+            else:
+                if (edge[0] in header_ports) and (edge[-1] in header_ports):
+                    if (ETHER_DETECT or IPv4_DETECT or IPv6_DETECT or TCP_DETECT or UDP_DETECT): 
+                        if (edge[0] in ["Ether", "IP", "IPv6", "UDP", "TCP"]):
+                            if (edge[2]!='default') and (edge[1]!=None) and (edge[2]!=None): 
+                                fout.write("bind_layers(%s, %s, %s=%s)\n" %(capitalise(edge[0]), capitalise(edge[-1]), edge[1], edge[2]))
+                            else:
+                                fout.write("bind_layers(%s, %s)\n" %(capitalise(edge[0]), capitalise(edge[-1])))
+                
+        #make_parsers(control_graph, header_ports, fout)
 
         fout.write("\n##packet_list\n")
-        make_packets(header_ports, init_states, control_graph, fout)
+        make_packets(header_ports, init_states, control_graph, rmv_headers, fout)
 
     except IOError:
         print("Destination file cannot be created\n")
