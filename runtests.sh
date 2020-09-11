@@ -2,8 +2,8 @@
 
 p4-traffictool > /dev/null 2>&1
 if [[ $? != "0" ]]; then
-	echo "Name alias for p4-traffictool not found in ~/.bashrc"
-	echo "If you wish to do it then run install.sh"
+	echo "Name alias for p4-traffictool not detected"
+	echo "If you wish to add it then run install.sh"
 fi
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"  
