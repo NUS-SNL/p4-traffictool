@@ -122,8 +122,8 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 
     fout.write("\n-- protocol dissector function\n")
     fout.write("function %s.dissector(buffer,pinfo,tree)\n"%(header_lower))
-    fout.write("\tpinfo.cols.protocol = '%s'\n" % ("P4_" + header.upper()))
-    fout.write("\tlocal subtree = tree:add(%s,buffer(),'%s Protocol Data')\n" % (header_lower,
+    fout.write(spaces(4) + "pinfo.cols.protocol = '%s'\n" % ("P4_" + header.upper()))
+    fout.write(spaces(4) + "local subtree = tree:add(%s,buffer(),'%s Protocol Data')\n" % (header_lower,
         "P4_" + header.upper()))
 
     next_state_key = ''
@@ -149,7 +149,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
             # if (bytefield2>((field[1])/8+1)):
             #     bytefield2=(field[1])/8+1
 
-            fout.write("\t\tsubtree:add(%s_%s,tostring(buffer(%d,%d):bitfield(%d,%d)))\n" %(header_lower,field[0],bytefield1,bytefield2,bitfield1,bitfield2))
+            fout.write(spaces(8) + "subtree:add(%s_%s,tostring(buffer(%d,%d):bitfield(%d,%d)))\n" %(header_lower,field[0],bytefield1,bytefield2,bitfield1,bitfield2))
         except TypeError:
             field[1] = int(input('Variable length field "' + field[0] + '" detected in "' + header + '". Enter its length\n'))
             bitfield1, bitfield2 = bit_count, field[1]      
@@ -164,17 +164,17 @@ def make_template(control_graph, header, header_type, destination, header_ports)
             if (bytefield2>((field[1])/8+1)):
                 bytefield2=(field[1])/8+1
 
-            fout.write("\t\tsubtree:add(%s_%s,tostring(buffer(%d,%d):bitfield(%d,%d)))\n" %(header_lower,field[0],bytefield1,bytefield2,bitfield1,bitfield2))
+            fout.write(spaces(8) + "subtree:add(%s_%s,tostring(buffer(%d,%d):bitfield(%d,%d)))\n" %(header_lower,field[0],bytefield1,bytefield2,bitfield1,bitfield2))
             
     if (DEBUG):
         print (header,header_type["name"], next_state_key, transition_param)
 
     if (next_state_key!='' and next_state_key!=None):
         try:
-            fout.write("\tlocal mydissectortable = DissectorTable.get('%s.%s')\n" %("p4_"+header, next_state_key))
-            fout.write("\tmydissectortable:try(buffer(%d,%d):bitfield(%d,%d), buffer:range(%d):tvb(),pinfo,tree)\n" % (transition_param[0], transition_param[1], transition_param[2], transition_param[3], byte_count))
+            fout.write(spaces(4) + "local mydissectortable = DissectorTable.get('%s.%s')\n" %("p4_"+header, next_state_key))
+            fout.write(spaces(4) + "mydissectortable:try(buffer(%d,%d):bitfield(%d,%d), buffer:range(%d):tvb(),pinfo,tree)\n" % (transition_param[0], transition_param[1], transition_param[2], transition_param[3], byte_count))
         except IndexError:
-            fout.write("\t Could not detect suitable parameters\n")
+            fout.write(spaces(4) + " Could not detect suitable parameters\n")
             print ("Parameter error in %s, Please update the file to call next dissector with suitably\n" % (destination))
     fout.write("\nend\n")
     

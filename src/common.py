@@ -112,3 +112,7 @@ def make_control_graph_multi(parsers, DEBUG):
         for i in graph:
             print(i)
     return graph
+
+
+def spaces(count):
+    return (" " * count)

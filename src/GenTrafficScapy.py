@@ -233,24 +233,24 @@ def detect_builtin_hdr(headers):
 
 def make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout):
     fout.write("class %s(Packet):\n" %(capitalise(headers[header_id]['name'])))
-    fout.write("\tname = '%s'\n" %(headers[header_id]['name']))
-    fout.write("\tfields_desc = [\n")
+    fout.write(spaces(4) + "name = '%s'\n" %(headers[header_id]['name']))
+    fout.write(spaces(4) + "fields_desc = [\n")
     header_type = search_header_type(header_types, headers[header_id]["header_type"])
     for field in header_type['fields'][:-1]:
         if field[1]!="*":
-            fout.write("\t\t%s,\n" % (detect_field_type(field)))
+            fout.write(spaces(8) + "%s,\n" % (detect_field_type(field)))
         else:
             field[1] = int(input('Variable length field "' + field[0] + '" detected in "' + header_type['name'] + '". Enter its length\n'))
-            fout.write("\t\t%s,\n" % (detect_field_type(field)))
+            fout.write(spaces(8) + "%s,\n" % (detect_field_type(field)))
             
     if (len(header_type['fields'])>0):
         if header_type['fields'][-1][1]!="*":
-            fout.write("\t\t%s,\n" % (detect_field_type(header_type['fields'][-1])))
+            fout.write(spaces(8) + "%s,\n" % (detect_field_type(header_type['fields'][-1])))
         else:
             header_type['fields'][-1][1] = int(input('Variable length field "' + header_type['fields'][-1][0] + '" detected in "' + header_type['name'] + '". Enter its length\n'))
-            fout.write("\t\t%s,\n" % (detect_field_type(header_type['fields'][-1])))
+            fout.write(spaces(8) + "%s,\n" % (detect_field_type(header_type['fields'][-1])))
            
-    fout.write("\t]\n")
+    fout.write(spaces(4) + "]\n")
 
     # bind layers
     header = header_ports[header_id]
@@ -259,7 +259,7 @@ def make_header(headers, header_ports, header_types, header_id, checksums, calcu
 
     chksum,target,fields,algo = check_checksum_fields(checksums, calculations, data["headers"][header_id]['name'])
     if (chksum):
-        fout.write("\t#update %s over %s using %s in post_build method\n\n" %(target,fields,algo))
+        fout.write(spaces(4) + "#update %s over %s using %s in post_build method\n\n" %(target,fields,algo))
 
 
 def remove_number(headers):
@@ -368,7 +368,7 @@ def make_parsers(control_graph, header_type, header, fout):
                 default_next_transition = edge[-1]
 
     if (len(next_transitions) > 0):
-        fout.write("\n\tdef guess_payload_class(self, payload):\n\t\t")
+        fout.write("\n" + spaces(4) + "def guess_payload_class(self, payload):\n" + spaces(8) + "")
         transition_dict = {}
         for tk in transition_key: 
             for field in header_type['fields']:
@@ -381,18 +381,18 @@ def make_parsers(control_graph, header_type, header, fout):
             for idx in range(1, len(transition_key)):
                 init_idx += transition_dict[transition_key[idx-1]]
                 fout.write(" and self.%s == 0x%s" % (transition_key[idx], transition[1][init_idx:init_idx+transition_dict[transition_key[idx]]]))
-            fout.write("):\n\t")
-            fout.write("\t\treturn %s\n" % (transition[0].capitalize()))
-            fout.write("\t\tel")
+            fout.write("):\n" + spaces(4))
+            fout.write(spaces(8) + "return %s\n" % (transition[0].capitalize()))
+            fout.write(spaces(8) + "el")
         transition = next_transitions[-1]
         init_idx = 2
         fout.write("if (self.%s == 0x%s" % (transition_key[0], transition[1][init_idx:init_idx+transition_dict[transition_key[0]]]))
         for idx in range(1, len(transition_key)):
             init_idx += transition_dict[transition_key[idx-1]]
             fout.write(" and self.%s == 0x%s" % (transition_key[idx], transition[1][init_idx:init_idx+transition_dict[transition_key[idx]]]))
-        fout.write("):\n\t")
-        fout.write("\t\treturn %s\n" % (transition[0].capitalize()))
-        fout.write("\t\telse:\n\t\t\treturn Packet.guess_payload_class(self, payload)\n\n")
+        fout.write("):\n" + spaces(4))
+        fout.write(spaces(8) + "return %s\n" % (transition[0].capitalize()))
+        fout.write(spaces(8) + "else:\n" + spaces(12) + "return Packet.guess_payload_class(self, payload)\n\n")
         
 
 # creates a string of the headers in a packet in a way that Scapy expects
@@ -441,8 +441,8 @@ def make_packets(header_ports, init_states, control_graph, rmv_headers, fout):
         return
     fout.write("possible_packets_ = [\n")
     for i in paths[:-1]:
-        fout.write("\t(%s)),\n" % (string_packet(header_ports,i)))
-    fout.write("\t(%s))\n" % (string_packet(header_ports,paths[-1])))
+        fout.write(spaces(4) + "(%s)),\n" % (string_packet(header_ports,i)))
+    fout.write(spaces(4) + "(%s))\n" % (string_packet(header_ports,paths[-1])))
     fout.write("]\n")                
 
 # rectifies array names for inbuilt header types

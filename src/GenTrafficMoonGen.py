@@ -294,12 +294,12 @@ def make_template(control_graph, header, header_type, destination, header_ports,
         fout.write("%s.headerFormat = [[\n" %(headerUpper))
         for field in header_type["fields"][:-1]:
             try:
-                fout.write("\t%s \t %s;\n" %(predict_type(field),field[0]))
+                fout.write(spaces(4) + "%s " + spaces(4) + " %s;\n" %(predict_type(field),field[0]))
             except TypeError:
                 variable_fields.append(field[0])
         field = header_type["fields"][-1]
         try:
-            fout.write("\t%s \t %s;\n" %(predict_type(field),field[0]))
+            fout.write(spaces(4) + "%s " + spaces(4) + " %s;\n" %(predict_type(field),field[0]))
         except TypeError:
             variable_fields.append(field[0])
         fout.write("]]\n")
@@ -319,29 +319,29 @@ def make_template(control_graph, header, header_type, destination, header_ports,
         for field in header_type["fields"]:
             if (not(predict_type(field).startswith("union")) and field[1]<65):
                 fout.write("function %sHeader:get%s()\n" %(headerUpper, field[0].upper()))
-                fout.write("\treturn %s(self.%s)\n" %(host_network_conversion(field),field[0]))
+                fout.write(spaces(4) + "return %s(self.%s)\n" %(host_network_conversion(field),field[0]))
                 fout.write("end\n\n")
 
                 fout.write("function %sHeader:get%sstring()\n" %(headerUpper, field[0].upper()))
-                fout.write("\treturn self:get%s()\n" %(field[0].upper()))
+                fout.write(spaces(4) + "return self:get%s()\n" %(field[0].upper()))
                 fout.write("end\n\n")
 
                 fout.write("function %sHeader:set%s(int)\n" %(headerUpper, field[0].upper()))
-                fout.write("\tint = int or 0\n")
-                fout.write("\tself.%s = %s(int)\n" %(field[0],host_network_conversion(field)))
+                fout.write(spaces(4) + "int = int or 0\n")
+                fout.write(spaces(4) + "self.%s = %s(int)\n" %(field[0],host_network_conversion(field)))
                 fout.write("end\n\n\n")
             else:
                 fout.write("function %sHeader:get%s()\n" %(headerUpper, field[0].upper()))
-                fout.write("\treturn (self.%s:get())\n" %(field[0]))
+                fout.write(spaces(4) + "return (self.%s:get())\n" %(field[0]))
                 fout.write("end\n\n")
 
                 fout.write("function %sHeader:get%sstring()\n" %(headerUpper, field[0].upper()))
-                fout.write("\treturn self:get%s()\n" %(field[0].upper()))
+                fout.write(spaces(4) + "return self:get%s()\n" %(field[0].upper()))
                 fout.write("end\n\n")
 
                 fout.write("function %sHeader:set%s(int)\n" %(headerUpper, field[0].upper()))
-                fout.write("\tint = int or 0\n")
-                fout.write("\tself.%s:set(int)\n" %(field[0]))
+                fout.write(spaces(4) + "int = int or 0\n")
+                fout.write(spaces(4) + "self.%s:set(int)\n" %(field[0]))
                 fout.write("end\n\n\n")                
 
         fout.write("\n-----------------------------------------------------\n")
@@ -349,25 +349,25 @@ def make_template(control_graph, header, header_type, destination, header_ports,
         fout.write("\n-----------------------------------------------------\n")
         fout.write("-- Set all members of the PROTO header\n")
         fout.write("function %sHeader:fill(args,pre)\n" %(headerUpper))
-        fout.write("\targs = args or {}\n")
-        fout.write("\tpre = pre or '%s'\n\n" %(headerUpper))
+        fout.write(spaces(4) + "args = args or {}\n")
+        fout.write(spaces(4) + "pre = pre or '%s'\n\n" %(headerUpper))
 
         for field in header_type["fields"]:
-            fout.write("\tself:set%s(args[pre .. '%s'])\n" %(field[0].upper(), field[0].upper()))
+            fout.write(spaces(4) + "self:set%s(args[pre .. '%s'])\n" %(field[0].upper(), field[0].upper()))
         fout.write("end\n\n")
 
         fout.write("-- Retrieve the values of all members\n")
         fout.write("function %sHeader:get(pre)\n" %(headerUpper))
-        fout.write("\tpre = pre or '%s'\n\n" %(headerUpper))
-        fout.write("\tlocal args = {}\n")
+        fout.write(spaces(4) + "pre = pre or '%s'\n\n" %(headerUpper))
+        fout.write(spaces(4) + "local args = {}\n")
         for field in header_type["fields"]:
-            fout.write("\targs[pre .. '%s'] = self:get%s()\n" %(field[0].upper(), field[0].upper()))
-        fout.write("\n\treturn args\nend\n\n")
+            fout.write(spaces(4) + "args[pre .. '%s'] = self:get%s()\n" %(field[0].upper(), field[0].upper()))
+        fout.write("\n" + spaces(4) + "return args\nend\n\n")
 
         fout.write("function %sHeader:getString()\n" %(headerUpper))
-        fout.write("\treturn '%s \\n'\n" %(headerUpper))
+        fout.write(spaces(4) + "return '%s \\n'\n" %(headerUpper))
         for field in header_type["fields"]:
-            fout.write("\t\t.. '%s' .. self:get%sString() .. '\\n'\n" %(field[0].upper(), field[0].upper()))
+            fout.write(spaces(8) + ".. '%s' .. self:get%sString() .. '\\n'\n" %(field[0].upper(), field[0].upper()))
         fout.write("end\n\n")
 
         default_next_transition = None
@@ -383,7 +383,7 @@ def make_template(control_graph, header, header_type, destination, header_ports,
         fout.write("-- Dictionary for next level headers\n")
         fout.write("local nextHeaderResolve = {\n")
         for transition in next_transitions:
-            fout.write("\t%s = %s,\n" %((local_name + transition[0]).lower(),transition[1]))
+            fout.write(spaces(4) + "%s = %s,\n" %((local_name + transition[0]).lower(),transition[1]))
         fout.write("}\n")
 
 
@@ -396,22 +396,22 @@ def make_template(control_graph, header, header_type, destination, header_ports,
 	        for field in header_type["fields"]:
 		    if(field[0] == tk):
 			if len(transition_key) == 1:
-                            fout.write("\tlocal key = self:get%s()\n" %(tk.upper()))
+                            fout.write(spaces(4) + "local key = self:get%s()\n" %(tk.upper()))
 			else:
-			    fout.write("\tlocal key%s = self:get%s()\n" %(offset, tk.upper()))
+			    fout.write(spaces(4) + "local key%s = self:get%s()\n" %(offset, tk.upper()))
 			    offset += 1
 	    		    transition_dict[field[0]] = nibble(field[1])
 			break
 
-            fout.write("\tfor name, value in pairs(nextHeaderResolve) do\n")
+            fout.write(spaces(4) + "for name, value in pairs(nextHeaderResolve) do\n")
 	    if len(transition_key) == 1:
-		fout.write("\t\tif key == value then\n\t\t\treturn name\n\t\tend\n\tend\n")
+		fout.write(spaces(8) + "if key == value then\n" + spaces(12) + "return name\n" + spaces(8) + "end\n" + spaces(4) + "end\n")
 	    elif len(transition_key) > 1:
 	 	vals = transition_dict.values()
 		rbit_num = sum(vals) - transition_dict[transition_key[0]]
 		offset = 1
 		mask = gen_hex_mask(rbit_num, transition_dict[transition_key[0]])
-		fout.write("\t\tif key%s == rshift(band(value, %sULL), %s)" %(offset, mask, rbit_num))
+		fout.write(spaces(8) + "if key%s == rshift(band(value, %sULL), %s)" %(offset, mask, rbit_num))
 		offset += 1
 		for i in range(1, len(transition_key[:-1])):
 		    rbit_num -= transition_dict[transition_key[i]]
@@ -420,12 +420,12 @@ def make_template(control_graph, header, header_type, destination, header_ports,
 		    offset += 1
 		rbit_num -= transition_dict[transition_key[-1]]
 		mask = gen_hex_mask(rbit_num, transition_dict[transition_key[-1]])
-		fout.write(" and key%s == band(value, %sULL) then\n\t\t\treturn name\n\t\tend\n\tend\n" %(offset, mask))
+		fout.write(" and key%s == band(value, %sULL) then\n" + spaces(12) + "return name\n" + spaces(8) + "end\n" + spaces(4) + "end\n" %(offset, mask))
 		    
         if (default_next_transition!= None):
-            fout.write("\treturn %s\n" %(default_next_transition))
+            fout.write(spaces(4) + "return %s\n" %(default_next_transition))
         else:
-            fout.write("\treturn nil\n")
+            fout.write(spaces(4) + "return nil\n")
         fout.write("end\n\n")
 
 	
@@ -434,22 +434,22 @@ def make_template(control_graph, header, header_type, destination, header_ports,
 	    vals = transition_dict.values()
 	    rbit_num = sum(vals)
 	    for tk in transition_key:	
-                fout.write("\tif not namedArgs[pre .. '%s'] then\n" %(tk.upper()))
-                fout.write("\t\tfor name, _port in pairs(nextHeaderResolve) do\n")
-                fout.write("\t\t\tif nextHeader == name then\n")
+                fout.write(spaces(4) + "if not namedArgs[pre .. '%s'] then\n" %(tk.upper()))
+                fout.write(spaces(8) + "for name, _port in pairs(nextHeaderResolve) do\n")
+                fout.write(spaces(12) + "if nextHeader == name then\n")
 		if len(transition_key) == 1:
-                    fout.write("\t\t\t\tnamedArgs[pre .. '%s'] = _port\n" %(tk.upper()))
+                    fout.write(spaces(16) + "namedArgs[pre .. '%s'] = _port\n" %(tk.upper()))
 		    break
 		elif len(transition_key) > 1:
 		    rbit_num -= transition_dict[tk]
 		    mask = gen_hex_mask(rbit_num, transition_dict[tk])
 		    if rbit_num > 0:
-		    	fout.write("\t\t\t\tnamedArgs[pre .. '%s'] = rshift(band(_port, %sULL), %s)\n" %(tk.upper(), mask, rbit_num))
+		    	fout.write(spaces(16) + "namedArgs[pre .. '%s'] = rshift(band(_port, %sULL), %s)\n" %(tk.upper(), mask, rbit_num))
 		    else:
-			fout.write("\t\t\t\tnamedArgs[pre .. '%s'] = band(_port, %sULL)\n" %(tk.upper(), mask))
-                fout.write("\t\t\t\tbreak\n")
-                fout.write("\t\t\tend\n\t\tend\n\tend\n")
-        fout.write("\treturn namedArgs\n")
+			fout.write(spaces(16) + "namedArgs[pre .. '%s'] = band(_port, %sULL)\n" %(tk.upper(), mask))
+                fout.write(spaces(16) + "break\n")
+                fout.write(spaces(12) + "end\n" + spaces(8) + "end\n" + spaces(4) + "end\n")
+        fout.write(spaces(4) + "return namedArgs\n")
         fout.write("end\n")
 	
 
