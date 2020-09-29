@@ -4,14 +4,6 @@ import os
 import config
 from common import *
 
-
-# to maintain compatibility
-global input
-try:
-    input = raw_input
-except NameError:
-    pass
-
 # open file to load json data
 # standardize destination path
 data = read_jsondata(sys.argv[1])

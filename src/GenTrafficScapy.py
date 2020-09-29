@@ -196,11 +196,6 @@ def find_ethernet(node, rmv_headers, sub_headers):
 
 def detect_builtin_hdr(headers):
     for header_id in range(len(headers)):
-        global input
-        try:
-            input = raw_input
-        except NameError:
-            pass
         if (headers[header_id]['metadata']) == False:
             if (headers[header_id]['name'] == 'ethernet'):
                 temp = input(
@@ -286,12 +281,6 @@ def make_classes(data, control_graph, header_ports, headers, rmv_headers, fout):
     calculations = data["calculations"]
 
     for header_id in range(len(headers)):
-        global input
-        try:
-            input = raw_input
-        except NameError:
-            pass
-
         if (headers[header_id]['metadata']) == False:
             if (headers[header_id]['name'] == 'ethernet'):
                 if (config.ETHER_DETECT == False):

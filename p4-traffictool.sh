@@ -256,28 +256,28 @@ if [[ "$SCAPY" = true ]];then
     temp="$OUTPUT/scapy"
     echo "Running Scapy backend script"
     mkdir -p $temp
-    python $DIR/src/GenTrafficScapy.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
+    python3 $DIR/src/GenTrafficScapy.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
     echo -e "------------------------------------\n"
 fi
 if [[ "$WIRESHARK" = true ]];then
     temp="$OUTPUT/wireshark"
     echo "Running Lua dissector backend script"
     mkdir -p $temp
-    python $DIR/src/DissectTrafficLua.py $JSONSOURCE $temp $DEBUG_MODE
+    python3 $DIR/src/DissectTrafficLua.py $JSONSOURCE $temp $DEBUG_MODE
     echo -e "------------------------------------\n"
 fi
 if [[ "$MOONGEN" = true ]];then
     temp="$OUTPUT/moongen"
     echo "Running MoonGen backend script"
     mkdir -p $temp
-    python $DIR/src/GenTrafficMoonGen.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
+    python3 $DIR/src/GenTrafficMoonGen.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
     echo -e "------------------------------------\n"
 fi
 if [[ "$PCAPPLUSPLUS" = true ]];then
     temp="$OUTPUT/pcapplusplus"
     echo "Running PcapPlusPlus backend script"
     mkdir -p $temp
-    python $DIR/src/DissectTrafficPcap.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
+    python3 $DIR/src/DissectTrafficPcap.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
     echo -e "------------------------------------\n"
 fi
 
