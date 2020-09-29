@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import json
 import config
-
+from typing import List, Tuple
 
 def read_jsondata(filename):
     '''open file to load json data'''
@@ -58,7 +58,7 @@ def search_header_type(header_types, name):
             return header_type
 
 
-def make_control_graph(parsers):
+def make_control_graph(parsers: List[dict]) -> List[List]:
     '''make a control graph for all possible state transitions
     returns the list of edges in graph'''
     graph = []
@@ -89,7 +89,8 @@ def make_control_graph(parsers):
     return graph
 
 
-def make_control_graph_multi(parsers):
+# TODO (pro-panda): define elements of list
+def make_control_graph_multi(parsers: List[dict]) -> List[List]:
     graph = []
     for parser in parsers:
         for state in parser["parse_states"]:
@@ -134,3 +135,45 @@ def spaces(count):
 
 def gen_hex_mask(rbit_num, length):
     return hex(int('0b' + '1'*length + '0'*rbit_num, 2))
+
+
+def sanitize_headers(headers: List[dict]) -> Tuple[List[str], List[dict]]:
+    unique_headers = {}
+    for header in headers:
+        if header['metadata']:
+            continue
+        name = header['name']
+        if name.find('[') != (-1):
+            header['name'] = name[:name.find('[')]
+        unique_headers[header['name']] = header
+    return list(unique_headers.keys()), list(unique_headers.values())
+
+
+def detect_builtin_hdr(headers: List[dict]) -> None:
+    for header_id in range(len(headers)):
+        if (headers[header_id]['name'] == 'ethernet'):
+            temp = input(
+                "\nEthernet header detected, would you like the standard ethernet header to be used(y/n) : ").strip()
+            if (temp == 'y'):
+                config.ETHER_DETECT = True
+        elif (headers[header_id]['name'] == 'ipv4'):
+            temp = input(
+                "\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ").strip()
+            if (temp == 'y'):
+                config.IPv4_DETECT = True
+        elif (headers[header_id]['name'] == 'ipv6'):
+            temp = input(
+                "\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ").strip()
+            if (temp == 'y'):
+                config.IPv6_DETECT = True
+        elif (headers[header_id]['name'] == 'tcp'):
+            temp = input(
+                "\nTCP header detected, would you like the standard TCP header to be used(y/n) : ").strip()
+            if (temp == 'y'):
+                config.TCP_DETECT = True
+        elif (headers[header_id]['name'] == 'udp'):
+            temp = input(
+                "\nUDP header detected, would you like the standard UDP header to be used(y/n) : ").strip()
+            if (temp == 'y'):
+                config.UDP_DETECT = True
+    return

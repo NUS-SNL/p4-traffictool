@@ -3,6 +3,7 @@ import sys
 import re
 import config
 from common import *
+from typing import List, Tuple
 
 
 # multi-headers stores headers that appear in the form of array
@@ -192,37 +193,6 @@ def find_ethernet(node, rmv_headers, sub_headers):
         for child in node.children:
             find_ethernet(child, rmv_headers, sub_headers)
         return
-
-
-def detect_builtin_hdr(headers):
-    for header_id in range(len(headers)):
-        if (headers[header_id]['metadata']) == False:
-            if (headers[header_id]['name'] == 'ethernet'):
-                temp = input(
-                    "\nEthernet header detected, would you like the standard ethernet header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    config.ETHER_DETECT = True
-            elif (headers[header_id]['name'] == 'ipv4'):
-                temp = input(
-                    "\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    config.IPv4_DETECT = True
-            elif (headers[header_id]['name'] == 'ipv6'):
-                temp = input(
-                    "\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    config.IPv6_DETECT = True
-            elif (headers[header_id]['name'] == 'tcp'):
-                temp = input(
-                    "\nTCP header detected, would you like the standard TCP header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    config.TCP_DETECT = True
-            elif (headers[header_id]['name'] == 'udp'):
-                temp = input(
-                    "\nUDP header detected, would you like the standard UDP header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    config.UDP_DETECT = True
-    return
 
 
 def make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout):
@@ -491,14 +461,14 @@ def correct_metadata(header_ports, control_graph, init_states):
     return (header_ports, control_graph, init_states)
 
 
-def make_template(json_data, destination):
+def make_template(json_data: dict, destination: str) -> None:
     '''top level module that calls other functions, accepts the json_data and the file destination as input'''
     try:
-        fout = open(destination, 'w')
-        fout.write("from scapy.all import *\n")
-        header_ports, headers = remove_number(data["headers"])
+        header_ports, headers = sanitize_headers(json_data["headers"])
         detect_builtin_hdr(headers)
 
+        fout = open(destination, 'w')
+        fout.write("from scapy.all import *\n")
         fout.write("\n##class definitions\n")
 
         # building metadata
