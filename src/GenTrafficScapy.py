@@ -96,17 +96,6 @@ def detect_field_type(field):
         return ("XBitField('"+field[0]+"', 0, " + str(field[1])+")")
 
 
-class State:
-    def __init__(self, name):
-        self.name = name
-        self.children = []
-
-    def print_state(self):
-        print("node's name: ", self.name)
-        print("node's children: ", [
-              self.children[i].name for i in range(len(self.children))])
-
-
 def delete_obj(del_list, orig_list):
     for item in del_list:
         orig_list.remove(item)

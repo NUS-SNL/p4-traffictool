@@ -197,3 +197,13 @@ def nibble(size):
     if (size <= 64):
         return 16
     raise ValueError("Size exceeds max limit for converting to nibble")
+
+class State:
+    def __init__(self, name):
+        self.name = name
+        self.children = []
+
+    def print_state(self):
+        print("node's name: ", self.name)
+        print("node's children: ", [
+              self.children[i].name for i in range(len(self.children))])
