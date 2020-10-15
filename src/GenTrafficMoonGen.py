@@ -160,11 +160,6 @@ def host_network_conversion(field):
     return "-- fill blank here"
 
 
-def delete_obj(del_list, orig_list):
-    for item in del_list:
-        orig_list.remove(item)
-
-
 def find_children(root, nodes):
     if len(nodes) == 0:
         return

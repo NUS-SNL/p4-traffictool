@@ -207,3 +207,8 @@ class State:
         print("node's name: ", self.name)
         print("node's children: ", [
               self.children[i].name for i in range(len(self.children))])
+
+
+def delete_obj(del_list, orig_list):
+    for item in del_list:
+        orig_list.remove(item)

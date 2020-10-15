@@ -96,11 +96,6 @@ def detect_field_type(field):
         return ("XBitField('"+field[0]+"', 0, " + str(field[1])+")")
 
 
-def delete_obj(del_list, orig_list):
-    for item in del_list:
-        orig_list.remove(item)
-
-
 def find_children(root, nodes):
     if len(nodes) == 0:
         return
