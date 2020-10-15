@@ -149,19 +149,6 @@ def host_network_conversion(field):
     return "-- fill blank here"
 
 
-def find_eth_subhdr(node, sub_headers):
-    if len(node.children) == 0:
-        if node.name != "final":
-            sub_headers.append(node.name)
-        return
-    else:
-        for child in node.children:
-            if child.name != "final":
-                sub_headers.append(child.name)
-            find_eth_subhdr(child, sub_headers)
-        return
-
-
 def field_segmenter(fout_header, field, cap, size, field_parts, tmp_list, field_sgmnt_lst):
     if (size - cap) <= 0:
         fout_header.write(",\n" + spaces(12) + " " +

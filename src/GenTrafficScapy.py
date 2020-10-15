@@ -96,19 +96,6 @@ def detect_field_type(field):
         return ("XBitField('"+field[0]+"', 0, " + str(field[1])+")")
 
 
-def find_eth_subhdr(node, sub_headers):
-    if len(node.children) == 0:
-        if node.name != "final":
-            sub_headers.append(node.name)
-        return
-    else:
-        for child in node.children:
-            if child.name != "final":
-                sub_headers.append(child.name)
-            find_eth_subhdr(child, sub_headers)
-        return
-
-
 def make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout):
     fout.write("class %s(Packet):\n" %
                (capitalise(headers[header_id]['name'])))
@@ -145,18 +132,6 @@ def make_header(headers, header_ports, header_types, header_id, checksums, calcu
     if (chksum):
         fout.write(spaces(
             4) + "#update %s over %s using %s in post_build method\n\n" % (target, fields, algo))
-
-
-def remove_number(headers):
-    unique_headers = {}
-    for header in headers:
-        if header['metadata']:
-            continue
-        name = header['name']
-        if name.find('[') != (-1):
-            header['name'] = name[:name.find('[')]
-        unique_headers[header['name']] = header
-    return unique_headers.keys(), unique_headers.values()
 
 
 def make_classes(data, control_graph, header_ports, headers, rmv_headers, fout):

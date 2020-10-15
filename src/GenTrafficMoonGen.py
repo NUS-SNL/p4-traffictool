@@ -160,19 +160,6 @@ def host_network_conversion(field):
     return "-- fill blank here"
 
 
-def find_eth_subhdr(node, sub_headers):
-    if len(node.children) == 0:
-        if node.name != "final":
-            sub_headers.append(node.name)
-        return
-    else:
-        for child in node.children:
-            if child.name != "final":
-                sub_headers.append(child.name)
-            find_eth_subhdr(child, sub_headers)
-        return
-
-
 def make_template(control_graph, header, header_type, destination, header_ports, local_name):
     '''makes the actual lua script given the relevant header type and next and previous state transition information'''
     headerUpper = local_name + header.lower()

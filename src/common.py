@@ -262,3 +262,16 @@ def find_ethernet(node, rmv_headers, sub_headers):
         for child in node.children:
             find_ethernet(child, rmv_headers, sub_headers)
         return
+
+
+def find_eth_subhdr(node, sub_headers):
+    if len(node.children) == 0:
+        if node.name != "final":
+            sub_headers.append(node.name)
+        return
+    else:
+        for child in node.children:
+            if child.name != "final":
+                sub_headers.append(child.name)
+            find_eth_subhdr(child, sub_headers)
+        return
