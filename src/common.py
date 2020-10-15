@@ -246,3 +246,19 @@ def make_tree(graph):
             paths.append(root)
             root.print_state()
     return paths
+
+
+def find_ethernet(node, rmv_headers, sub_headers):
+    if (node.name == "ethernet" or node.name == "Ether") and config.ETHER_DETECT == True:
+        find_eth_subhdr(node, sub_headers)
+        return
+    elif len(node.children) == 0:
+        if node.name != "final":
+            rmv_headers.append(node.name)
+        return
+    else:
+        if node.name != "scalars" and node.name != "final":
+            rmv_headers.append(node.name)
+        for child in node.children:
+            find_ethernet(child, rmv_headers, sub_headers)
+        return

@@ -173,22 +173,6 @@ def find_eth_subhdr(node, sub_headers):
         return
 
 
-def find_ethernet(node, rmv_headers, sub_headers):
-    if node.name == "ethernet" and config.ETHER_DETECT == True:
-        find_eth_subhdr(node, sub_headers)
-        return
-    elif len(node.children) == 0:
-        if node.name != "final":
-            rmv_headers.append(node.name)
-        return
-    else:
-        if node.name != "scalars" and node.name != "final":
-            rmv_headers.append(node.name)
-        for child in node.children:
-            find_ethernet(child, rmv_headers, sub_headers)
-        return
-
-
 def make_template(control_graph, header, header_type, destination, header_ports, local_name):
     '''makes the actual lua script given the relevant header type and next and previous state transition information'''
     headerUpper = local_name + header.lower()
