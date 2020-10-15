@@ -160,25 +160,6 @@ def host_network_conversion(field):
     return "-- fill blank here"
 
 
-def find_children(root, nodes):
-    if len(nodes) == 0:
-        return
-    else:
-        children = []
-        del_list = []
-        for node in nodes:
-            if node[0] == root.name:
-                children.append(node[-1])
-                del_list.append(node)
-        delete_obj(del_list, nodes)
-        children = set(children)
-        for child in children:
-            state = State(child)
-            find_children(state, nodes)
-            root.children.append(state)
-        return
-
-
 def make_tree(graph):
     paths = []
     state_names = [edge[0] for edge in graph]
