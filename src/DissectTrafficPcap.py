@@ -149,21 +149,6 @@ def host_network_conversion(field):
     return "-- fill blank here"
 
 
-def make_tree(graph):
-    paths = []
-    state_names = [edge[0] for edge in graph]
-    state_names = set(state_names)
-    non_roots = [edge[-1] for edge in graph]
-    non_roots = set(non_roots)
-    for name in state_names:
-        if name not in non_roots:
-            root = State(name)
-            find_children(root, graph)
-            paths.append(root)
-            root.print_state()
-    return paths
-
-
 def find_eth_subhdr(node, sub_headers):
     if len(node.children) == 0:
         if node.name != "final":
