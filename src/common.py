@@ -177,3 +177,23 @@ def detect_builtin_hdr(headers: List[dict]) -> None:
             if (temp == 'y'):
                 config.UDP_DETECT = True
     return
+
+
+def nibble(size):
+    if (size <= 8):
+        return 2
+    if (size <= 16):
+        return 4
+    if (size <= 24):
+        return 6
+    if (size <= 32):
+        return 8
+    if (size <= 40):
+        return 10
+    if (size <= 48):
+        return 12
+    if (size <= 56):
+        return 14
+    if (size <= 64):
+        return 16
+    raise ValueError("Size exceeds max limit for converting to nibble")

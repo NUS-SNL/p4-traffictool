@@ -149,26 +149,6 @@ def host_network_conversion(field):
     return "-- fill blank here"
 
 
-def nibble(size):
-    if (size <= 8):
-        return 2
-    if (size <= 16):
-        return 4
-    if (size <= 24):
-        return 6
-    if (size <= 32):
-        return 8
-    if (size <= 40):
-        return 10
-    if (size <= 48):
-        return 12
-    if (size <= 56):
-        return 14
-    if (size <= 64):
-        return 16
-    return "-- fill blank here"
-
-
 class State:
     def __init__(self, name):
         self.name = name
