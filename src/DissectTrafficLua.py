@@ -8,8 +8,6 @@ from common import *
 # standardize destination path
 data = read_jsondata(sys.argv[1])
 DESTINATION = sys.argv[2]
-if (DESTINATION[-1] != '/'):
-    DESTINATION += '/'
 
 # debug mode activated or not
 if (len(sys.argv) > 3):
@@ -209,7 +207,7 @@ header_ports, header_types = find_data_headers(
     data["headers"], data["header_types"])
 header_ports, header_types = topo_sort_headers(
     control_graph, header_ports, header_types)
-fout = open(DESTINATION+"init.lua", 'w')
+fout = open(os.path.join(DESTINATION,"init.lua"), 'w')
 try:
     local_name = data["program"]
 except KeyError:
@@ -219,8 +217,8 @@ local_name = local_name[local_name.rfind('/')+1:local_name.rfind('.')]
 for i in range(len(header_ports)):
     if (header_ports[i] == 'ethernet'):
         continue
-    destination = DESTINATION + local_name + "_" + \
-        str(i) + "_" + header_ports[i] + ".lua"
+    destination = os.path.join(DESTINATION, local_name + "_" + \
+        str(i) + "_" + header_ports[i] + ".lua")
     fout.write("dofile('%s')\n" % (os.path.abspath(destination)))
     make_template(
         control_graph, header_ports[i], header_types[i], destination, header_ports)

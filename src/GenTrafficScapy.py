@@ -1,6 +1,7 @@
 import json
 import sys
 import re
+import os
 import config
 from common import *
 from typing import List, Tuple
@@ -15,8 +16,6 @@ array_match = re.compile('[a-z A-Z 0-9 _ -]+''[''[0-9]+'']')
 # standardize destination path
 data = read_jsondata(sys.argv[1])
 DESTINATION = sys.argv[2]
-if (DESTINATION[-1] != '/'):
-    DESTINATION += '/'
 
 # check if max path length has been set
 if (len(sys.argv) > 3):
@@ -433,4 +432,4 @@ except KeyError:
     local_name = sys.argv[1]
 local_name = local_name[local_name.rfind('/')+1:local_name.rfind('.')]
 
-make_template(data, DESTINATION+local_name+".py")
+make_template(data, os.path.join(DESTINATION, local_name+".py"))

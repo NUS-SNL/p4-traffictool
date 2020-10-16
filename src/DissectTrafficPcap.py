@@ -11,8 +11,6 @@ from common import *
 # standardize destination path
 data = merge_padding(read_jsondata(sys.argv[1]))
 DESTINATION = sys.argv[2]
-if (DESTINATION[-1] != '/'):
-    DESTINATION += '/'
 
 # check if debug mode activated or not
 if (len(sys.argv) > 3):
@@ -836,12 +834,7 @@ for i in range(len(header_ports)):
     if is_builtin_header(header_ports[i]):
         continue
 
-    if start_with_eth == 'true':
-        if header_ports[i] not in rmv_headers:
-            destination = DESTINATION + local_name + "_" + header_ports[i]
-            make_template(
-                control_graph, header_ports[i], header_types[i], destination, header_ports)
-    else:
-        destination = DESTINATION + local_name + "_" + header_ports[i]
+    if not start_with_eth == 'true' or header_ports[i] not in rmv_headers:
+        destination = os.path.join(DESTINATION, local_name + "_" + header_ports[i])
         make_template(
             control_graph, header_ports[i], header_types[i], destination, header_ports)
