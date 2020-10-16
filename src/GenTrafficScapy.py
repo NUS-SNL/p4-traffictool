@@ -140,59 +140,14 @@ def make_classes(data, control_graph, header_ports, headers, rmv_headers, fout):
 
     for header_id in range(len(headers)):
         if (headers[header_id]['metadata']) == False:
-            if (headers[header_id]['name'] == 'ethernet'):
-                if (config.ETHER_DETECT == False):
-                    if start_with_eth == 'true':
-                        if headers[header_id]['name'] not in rmv_headers:
-                            make_header(headers, header_ports, header_types, header_id,
-                                        checksums, calculations, control_graph, fout)
-                    else:
-                        make_header(headers, header_ports, header_types, header_id,
-                                    checksums, calculations, control_graph, fout)
-            elif (headers[header_id]['name'] == 'ipv4'):
-                if (config.IPv4_DETECT == False):
-                    if start_with_eth == 'true':
-                        if headers[header_id]['name'] not in rmv_headers:
-                            make_header(headers, header_ports, header_types, header_id,
-                                        checksums, calculations, control_graph, fout)
-                    else:
-                        make_header(headers, header_ports, header_types, header_id,
-                                    checksums, calculations, control_graph, fout)
-            elif (headers[header_id]['name'] == 'ipv6'):
-                if (config.IPv6_DETECT == False):
-                    if start_with_eth == 'true':
-                        if headers[header_id]['name'] not in rmv_headers:
-                            make_header(headers, header_ports, header_types, header_id,
-                                        checksums, calculations, control_graph, fout)
-                    else:
-                        make_header(headers, header_ports, header_types, header_id,
-                                    checksums, calculations, control_graph, fout)
-            elif (headers[header_id]['name'] == 'tcp'):
-                if (config.TCP_DETECT == False):
-                    if start_with_eth == 'true':
-                        if headers[header_id]['name'] not in rmv_headers:
-                            make_header(headers, header_ports, header_types, header_id,
-                                        checksums, calculations, control_graph, fout)
-                    else:
-                        make_header(headers, header_ports, header_types, header_id,
-                                    checksums, calculations, control_graph, fout)
-            elif (headers[header_id]['name'] == 'udp'):
-                if (config.UDP_DETECT == False):
-                    if start_with_eth == 'true':
-                        if headers[header_id]['name'] not in rmv_headers:
-                            make_header(headers, header_ports, header_types, header_id,
-                                        checksums, calculations, control_graph, fout)
-                    else:
-                        make_header(headers, header_ports, header_types, header_id,
-                                    checksums, calculations, control_graph, fout)
-            else:
-                if start_with_eth == 'true':
-                    if headers[header_id]['name'] not in rmv_headers:
-                        make_header(headers, header_ports, header_types, header_id,
-                                    checksums, calculations, control_graph, fout)
-                else:
-                    make_header(headers, header_ports, header_types, header_id,
-                                checksums, calculations, control_graph, fout)
+            if start_with_eth == 'true' and headers[header_id]['name'] in rmv_headers:
+                continue
+
+            if is_builtin_header(headers[header_id]['name']):
+                continue
+
+            make_header(headers, header_ports, header_types, header_id,
+                checksums, calculations, control_graph, fout)
     return
 
 
@@ -396,26 +351,15 @@ def make_template(json_data: dict, destination: str) -> None:
 
         fout.write("\n## remaining bindings\n")
         for edge in control_graph:
-            if start_with_eth == 'true':
-                if (edge[0] in header_ports) and (edge[-1] in header_ports) and edge[0] not in rmv_headers and edge[-1] not in rmv_headers:
-                    if (config.ETHER_DETECT or config.IPv4_DETECT or config.IPv6_DETECT or config.TCP_DETECT or config.UDP_DETECT):
-                        if (edge[0] in ["Ether", "IP", "IPv6", "UDP", "TCP"]):
-                            if (edge[2] != 'default') and (edge[1] != None) and (edge[2] != None):
-                                fout.write("bind_layers(%s, %s, %s=%s)\n" % (
-                                    capitalise(edge[0]), capitalise(edge[-1]), edge[1], edge[2]))
-                            else:
-                                fout.write("bind_layers(%s, %s)\n" % (
-                                    capitalise(edge[0]), capitalise(edge[-1])))
-            else:
-                if (edge[0] in header_ports) and (edge[-1] in header_ports):
-                    if (config.ETHER_DETECT or config.IPv4_DETECT or config.IPv6_DETECT or config.TCP_DETECT or config.UDP_DETECT):
-                        if (edge[0] in ["Ether", "IP", "IPv6", "UDP", "TCP"]):
-                            if (edge[2] != 'default') and (edge[1] != None) and (edge[2] != None):
-                                fout.write("bind_layers(%s, %s, %s=%s)\n" % (
-                                    capitalise(edge[0]), capitalise(edge[-1]), edge[1], edge[2]))
-                            else:
-                                fout.write("bind_layers(%s, %s)\n" % (
-                                    capitalise(edge[0]), capitalise(edge[-1])))
+            if edge[0] in header_ports and edge[-1] in header_ports and (start_with_eth != 'true' or (edge[0] not in rmv_headers and edge[-1] not in rmv_headers)):
+                if (config.ETHER_DETECT or config.IPv4_DETECT or config.IPv6_DETECT or config.TCP_DETECT or config.UDP_DETECT):
+                    if (edge[0] in ["Ether", "IP", "IPv6", "UDP", "TCP"]):
+                        if (edge[2] != 'default') and (edge[1] != None) and (edge[2] != None):
+                            fout.write("bind_layers(%s, %s, %s=%s)\n" % (
+                                capitalise(edge[0]), capitalise(edge[-1]), edge[1], edge[2]))
+                        else:
+                            fout.write("bind_layers(%s, %s)\n" % (
+                                capitalise(edge[0]), capitalise(edge[-1])))
 
         fout.write("\n##packet_list\n")
         make_packets(header_ports, init_states,
