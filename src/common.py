@@ -275,3 +275,14 @@ def find_eth_subhdr(node, sub_headers):
                 sub_headers.append(child.name)
             find_eth_subhdr(child, sub_headers)
         return
+
+
+def is_builtin_header(header_port):
+    if ((config.ETHER_DETECT and header_port == 'ethernet')
+        or (config.IPv4_DETECT and header_port == 'ipv4')
+        or (config.IPv6_DETECT and header_port == 'ipv6')
+        or (config.TCP_DETECT and header_port == 'tcp')
+        or (config.UDP_DETECT and header_port == 'udp')):
+        return True
+    else:
+        return False

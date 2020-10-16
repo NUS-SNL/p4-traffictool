@@ -833,9 +833,7 @@ for item in sub_headers:
 
 
 for i in range(len(header_ports)):
-    if ((config.ETHER_DETECT and header_ports[i] == 'ethernet') or (config.IPv4_DETECT and header_ports[i] == 'ipv4') or (
-            config.IPv6_DETECT and header_ports[i] == 'ipv6') or (config.TCP_DETECT and header_ports[i] == 'tcp') or (
-            config.UDP_DETECT and header_ports[i] == 'udp')):
+    if is_builtin_header(header_ports[i]):
         continue
 
     if start_with_eth == 'true':
