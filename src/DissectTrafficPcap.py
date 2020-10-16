@@ -21,77 +21,6 @@ if (len(sys.argv) > 3):
 tables_created = []
 
 
-# find headers and their types which appear within a packet i.e. are not metadata
-def find_data_headers(headers, header_types):
-    header_ports = []
-    header_dict = {}
-
-    for header_id in range(len(headers)):
-        if not (headers[header_id]['metadata']):
-            name = headers[header_id]['name']
-            if name.find('[') != (-1):
-                name = name[:name.find('[')]
-            header_ports.append(name)
-            header_dict[name] = search_header_type(
-                header_types, headers[header_id]["header_type"])
-
-            # functionality to use common headers to be added
-            if name == 'ethernet':
-                temp = input(
-                    "\nEthernet header detected, would you like the standard ethernet header to be used(y/n) : ").strip()
-                if temp == 'y':
-                    config.ETHER_DETECT = True
-            elif name == 'ipv4':
-                temp = input(
-                    "\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ").strip()
-                if temp == 'y':
-                    config.IPv4_DETECT = True
-            elif name == 'ipv6':
-                temp = input(
-                    "\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ").strip()
-                if temp == 'y':
-                    config.IPv6_DETECT = True
-            elif name == 'tcp':
-                temp = input(
-                    "\nTCP header detected, would you like the standard TCP header to be used(y/n) : ").strip()
-                if temp == 'y':
-                    config.TCP_DETECT = True
-            elif name == 'udp':
-                temp = input(
-                    "\nUDP header detected, would you like the standard UDP header to be used(y/n) : ").strip()
-                if temp == 'y':
-                    config.UDP_DETECT = True
-
-    header_ports = list(set(header_ports))
-
-    header_types = []
-    for i in header_ports:
-        header_types.append(header_dict[i])
-
-    if config.DEBUG:
-        print("\nHeaders \n")
-        for i in range(len(header_ports)):
-            print(header_ports[i], header_types[i]["name"])
-
-    for i in range(len(header_types)):
-        if config.ETHER_DETECT and header_ports[i] == 'ethernet' or config.IPv4_DETECT and header_ports[
-                i] == 'ipv4' or config.IPv6_DETECT and header_ports[i] == 'ipv6' or config.TCP_DETECT and header_ports[
-                i] == 'tcp' or config.UDP_DETECT and header_ports[i] == 'udp':
-            continue
-        else:
-            header_type = header_types[i]
-            total_hdr_length = 0
-            hdr_field_cnt = 0
-            for field in header_type['fields']:
-                try:
-                    total_hdr_length += field[1]
-                    hdr_field_cnt += 1
-                except:
-                    pass
-
-    return header_ports, header_types
-
-
 # returns suitable datatype for the field
 # currently promoting all fields to 8, 16, 32, or 64 bit fields
 def predict_type(field):
@@ -805,7 +734,7 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 
 
 control_graph = make_control_graph_multi(data["parsers"])
-header_ports, header_types = find_data_headers(
+header_ports, header_types = sanitize_headers(
     data["headers"], data["header_types"])
 
 try:

@@ -100,8 +100,7 @@ def make_header(headers, header_ports, header_types, header_id, checksums, calcu
                (capitalise(headers[header_id]['name'])))
     fout.write(spaces(4) + "name = '%s'\n" % (headers[header_id]['name']))
     fout.write(spaces(4) + "fields_desc = [\n")
-    header_type = search_header_type(
-        header_types, headers[header_id]["header_type"])
+    header_type = headers[header_id]
     for field in header_type['fields'][:-1]:
         if field[1] != "*":
             fout.write(spaces(8) + "%s,\n" % (detect_field_type(field)))
@@ -139,15 +138,14 @@ def make_classes(data, control_graph, header_ports, headers, rmv_headers, fout):
     calculations = data["calculations"]
 
     for header_id in range(len(headers)):
-        if (headers[header_id]['metadata']) == False:
-            if start_with_eth == 'true' and headers[header_id]['name'] in rmv_headers:
-                continue
+        if start_with_eth == 'true' and headers[header_id]['name'] in rmv_headers:
+            continue
 
-            if is_builtin_header(headers[header_id]['name']):
-                continue
+        if is_builtin_header(headers[header_id]['name']):
+            continue
 
-            make_header(headers, header_ports, header_types, header_id,
-                checksums, calculations, control_graph, fout)
+        make_header(headers, header_ports, header_types, header_id,
+            checksums, calculations, control_graph, fout)
     return
 
 
@@ -307,8 +305,7 @@ def correct_metadata(header_ports, control_graph, init_states):
 def make_template(json_data: dict, destination: str) -> None:
     '''top level module that calls other functions, accepts the json_data and the file destination as input'''
     try:
-        header_ports, headers = sanitize_headers(json_data["headers"])
-        detect_builtin_hdr(headers)
+        header_ports, headers = sanitize_headers(json_data["headers"], json_data["header_types"])
 
         fout = open(destination, 'w')
         fout.write("from scapy.all import *\n")

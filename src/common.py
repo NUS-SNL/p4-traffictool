@@ -137,7 +137,7 @@ def gen_hex_mask(rbit_num, length):
     return hex(int('0b' + '1'*length + '0'*rbit_num, 2))
 
 
-def sanitize_headers(headers: List[dict]) -> Tuple[List[str], List[dict]]:
+def sanitize_headers(headers: List[dict], header_types, use_inbuilt = True) -> Tuple[List[str], List[dict]]:
     unique_headers = {}
     for header in headers:
         if header['metadata']:
@@ -145,38 +145,45 @@ def sanitize_headers(headers: List[dict]) -> Tuple[List[str], List[dict]]:
         name = header['name']
         if name.find('[') != (-1):
             header['name'] = name[:name.find('[')]
-        unique_headers[header['name']] = header
-    return list(unique_headers.keys()), list(unique_headers.values())
+        unique_headers[header['name']] = search_header_type(
+                header_types, header["header_type"])
+        
+        if use_inbuilt:
+            if (header['name'] == 'ethernet'):
+                temp = input(
+                    "\nEthernet header detected, would you like the standard ethernet header to be used(y/n) : ").strip()
+                if (temp == 'y'):
+                    config.ETHER_DETECT = True
+            elif (header['name'] == 'ipv4'):
+                temp = input(
+                    "\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ").strip()
+                if (temp == 'y'):
+                    config.IPv4_DETECT = True
+            elif (header['name'] == 'ipv6'):
+                temp = input(
+                    "\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ").strip()
+                if (temp == 'y'):
+                    config.IPv6_DETECT = True
+            elif (header['name'] == 'tcp'):
+                temp = input(
+                    "\nTCP header detected, would you like the standard TCP header to be used(y/n) : ").strip()
+                if (temp == 'y'):
+                    config.TCP_DETECT = True
+            elif (header['name'] == 'udp'):
+                temp = input(
+                    "\nUDP header detected, would you like the standard UDP header to be used(y/n) : ").strip()
+                if (temp == 'y'):
+                    config.UDP_DETECT = True
+    
+    header_ports = list(unique_headers.keys())
+    header_types = list(unique_headers.values())
 
+    if config.DEBUG:
+        print("\nHeaders \n")
+        for i in range(len(header_ports)):
+            print(header_ports[i], header_types[i]["name"])
 
-def detect_builtin_hdr(headers: List[dict]) -> None:
-    for header_id in range(len(headers)):
-        if (headers[header_id]['name'] == 'ethernet'):
-            temp = input(
-                "\nEthernet header detected, would you like the standard ethernet header to be used(y/n) : ").strip()
-            if (temp == 'y'):
-                config.ETHER_DETECT = True
-        elif (headers[header_id]['name'] == 'ipv4'):
-            temp = input(
-                "\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ").strip()
-            if (temp == 'y'):
-                config.IPv4_DETECT = True
-        elif (headers[header_id]['name'] == 'ipv6'):
-            temp = input(
-                "\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ").strip()
-            if (temp == 'y'):
-                config.IPv6_DETECT = True
-        elif (headers[header_id]['name'] == 'tcp'):
-            temp = input(
-                "\nTCP header detected, would you like the standard TCP header to be used(y/n) : ").strip()
-            if (temp == 'y'):
-                config.TCP_DETECT = True
-        elif (headers[header_id]['name'] == 'udp'):
-            temp = input(
-                "\nUDP header detected, would you like the standard UDP header to be used(y/n) : ").strip()
-            if (temp == 'y'):
-                config.UDP_DETECT = True
-    return
+    return header_ports, header_types 
 
 
 def nibble(size):

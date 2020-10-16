@@ -30,33 +30,6 @@ def remove_duplicates(li):
     return res
 
 
-# finds headers that are not part of metadata and return a pair of
-# a. List of headers in the order in which they are defined
-# b. dictionary of header names and their types
-def find_data_headers(headers, header_types):
-    header_ports = []
-    header_dict = {}
-
-    for header_id in range(len(headers)):
-        if (headers[header_id]['metadata']) == False:
-            name = headers[header_id]['name']
-            if (name.find('[') != (-1)):
-                name = name[:name.find('[')]
-            header_ports.append(name)
-            header_dict[name] = search_header_type(
-                header_types, headers[header_id]["header_type"])
-
-    header_types = []
-    for i in header_ports:
-        header_types.append(header_dict[i])
-
-    if (config.DEBUG):
-        print("\nHeaders \n")
-        for i in range(len(header_ports)):
-            print (header_ports[i], header_types[i]["name"])
-    return (header_ports, header_types)
-
-
 def possible_paths(init, control_graph, length_till_now):
     '''find all possible header orderings that are valid'''
     if (init == 'final'):
@@ -203,8 +176,8 @@ def make_template(control_graph, header, header_type, destination, header_ports)
 
 
 control_graph = make_control_graph(data["parsers"])
-header_ports, header_types = find_data_headers(
-    data["headers"], data["header_types"])
+header_ports, header_types = sanitize_headers(
+    data["headers"], data["header_types"], False)
 header_ports, header_types = topo_sort_headers(
     control_graph, header_ports, header_types)
 fout = open(os.path.join(DESTINATION,"init.lua"), 'w')

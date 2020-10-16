@@ -19,62 +19,11 @@ if (len(sys.argv) > 3):
 start_with_eth = sys.argv[-1]
 
 
-def find_data_headers(headers, header_types):
+def check_correction(header_ports, header_types):
     '''find headers and their types which appear within a packet i.e. are not metadata'''
-    header_ports = []
-    header_dict = {}
-
-    for header_id in range(len(headers)):
-        if (headers[header_id]['metadata']) == False:
-            name = headers[header_id]['name']
-            if (name.find('[') != (-1)):
-                name = name[:name.find('[')]
-            header_ports.append(name)
-            header_dict[name] = search_header_type(
-                header_types, headers[header_id]["header_type"])
-
-            # functionality to use common headers to be added
-            if (name == 'ethernet'):
-                temp = input(
-                    "\nEthernet header detected, would you like the standard ethernet header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    config.ETHER_DETECT = True
-            elif (name == 'ipv4'):
-                temp = input(
-                    "\nIPv4 header detected, would you like the standard IPv4 header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    config.IPv4_DETECT = True
-            elif (name == 'ipv6'):
-                temp = input(
-                    "\nIPv6 header detected, would you like the standard IPv6 header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    config.IPv6_DETECT = True
-            elif (name == 'tcp'):
-                temp = input(
-                    "\nTCP header detected, would you like the standard TCP header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    config.TCP_DETECT = True
-            elif (name == 'udp'):
-                temp = input(
-                    "\nUDP header detected, would you like the standard UDP header to be used(y/n) : ").strip()
-                if (temp == 'y'):
-                    config.UDP_DETECT = True
-    header_ports = list(set(header_ports))
-
-    header_types = []
-    for i in header_ports:
-        header_types.append(header_dict[i])
-
-    if (config.DEBUG):
-        print("\nHeaders \n")
-        for i in range(len(header_ports)):
-            print (header_ports[i], header_types[i]["name"])
-
     require_correction = []
     for i in range(len(header_types)):
-        if is_builtin_header(header_ports[i]):
-            continue
-        else:
+        if not is_builtin_header(header_ports[i]):
             header_type = header_types[i]
             corrected_data = {"name": header_type["name"], "fields": []}
             for field in header_type["fields"]:
@@ -85,6 +34,7 @@ def find_data_headers(headers, header_types):
                     pass
             if len(corrected_data["fields"]) > 0:
                 require_correction.append(corrected_data)
+    
     if len(require_correction) > 0:
         for incorrect_header in require_correction:
             print("ERROR : Non byte-aligned fields found in %s" %
@@ -92,7 +42,6 @@ def find_data_headers(headers, header_types):
             print("Correct the following fields to make them byte-aligned:")
             print(map(str, incorrect_header["fields"]))
         exit(1)
-    return (header_ports, header_types)
 
 
 # copies template file contents
@@ -369,8 +318,10 @@ def make_template(control_graph, header, header_type, destination, header_ports,
 
 
 control_graph = make_control_graph_multi(data["parsers"])
-header_ports, header_types = find_data_headers(
+header_ports, header_types = sanitize_headers(
     data["headers"], data["header_types"])
+check_correction(header_ports, header_types)
+
 try:
     local_name = data["program"]
 except KeyError:
