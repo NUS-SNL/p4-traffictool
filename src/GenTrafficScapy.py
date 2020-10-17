@@ -95,48 +95,43 @@ def detect_field_type(field):
         return ("XBitField('"+field[0]+"', 0, " + str(field[1])+")")
 
 
-def make_header(headers, header_ports, header_types, header_id, checksums, calculations, control_graph, fout):
+def make_header(header, header_port, checksums, calculations, control_graph, fout):
     fout.write("class %s(Packet):\n" %
-               (capitalise(headers[header_id]['name'])))
-    fout.write(spaces(4) + "name = '%s'\n" % (headers[header_id]['name']))
+               (capitalise(header['name'])))
+    fout.write(spaces(4) + "name = '%s'\n" % (header['name']))
     fout.write(spaces(4) + "fields_desc = [\n")
-    header_type = headers[header_id]
-    for field in header_type['fields'][:-1]:
+
+    for field in header['fields'][:-1]:
         if field[1] != "*":
             fout.write(spaces(8) + "%s,\n" % (detect_field_type(field)))
         else:
             field[1] = int(input('Variable length field "' + field[0] +
-                                 '" detected in "' + header_type['name'] + '". Enter its length\n'))
+                                 '" detected in "' + header['name'] + '". Enter its length\n'))
             fout.write(spaces(8) + "%s,\n" % (detect_field_type(field)))
 
-    if (len(header_type['fields']) > 0):
-        if header_type['fields'][-1][1] != "*":
+    if (len(header['fields']) > 0):
+        if header['fields'][-1][1] != "*":
             fout.write(spaces(8) + "%s,\n" %
-                       (detect_field_type(header_type['fields'][-1])))
+                       (detect_field_type(header['fields'][-1])))
         else:
-            header_type['fields'][-1][1] = int(input('Variable length field "' + header_type['fields']
-                                                     [-1][0] + '" detected in "' + header_type['name'] + '". Enter its length\n'))
+            header['fields'][-1][1] = int(input('Variable length field "' + header['fields']
+                                                     [-1][0] + '" detected in "' + header['name'] + '". Enter its length\n'))
             fout.write(spaces(8) + "%s,\n" %
-                       (detect_field_type(header_type['fields'][-1])))
+                       (detect_field_type(header['fields'][-1])))
 
     fout.write(spaces(4) + "]\n")
 
     # bind layers
-    header = header_ports[header_id]
-    make_parsers(control_graph, header_type, header, fout)
+    make_parsers(control_graph, header, header_port, fout)
 
     chksum, target, fields, algo = check_checksum_fields(
-        checksums, calculations, data["headers"][header_id]['name'])
+        checksums, calculations, header['name'])
     if (chksum):
         fout.write(spaces(
             4) + "#update %s over %s using %s in post_build method\n\n" % (target, fields, algo))
 
 
 def make_classes(data, control_graph, header_ports, headers, rmv_headers, fout):
-    header_types = data["header_types"]
-    checksums = data["checksums"]
-    calculations = data["calculations"]
-
     for header_id in range(len(headers)):
         if start_with_eth == 'true' and headers[header_id]['name'] in rmv_headers:
             continue
@@ -144,9 +139,8 @@ def make_classes(data, control_graph, header_ports, headers, rmv_headers, fout):
         if is_builtin_header(headers[header_id]['name']):
             continue
 
-        make_header(headers, header_ports, header_types, header_id,
-            checksums, calculations, control_graph, fout)
-    return
+        make_header(headers[header_id], header_ports[header_id],
+            data["checksums"], data["calculations"], control_graph, fout)
 
 
 def correct_graph(graph):
