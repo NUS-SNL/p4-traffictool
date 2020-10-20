@@ -5,23 +5,17 @@ filename: readme
 --- 
 
 # P4TrafficTool
-P4TrafficTool is a tool designed to aid P4 developers with the process of packet generation, parsing and dissection. It automatically generates code for several traffic generation and parsing tools such that they can readily support the custom packet format(s) defined by your P4 program. p4-traffictool currently supports code generation for [Scapy](https://scapy.net), [PcapPlusPlus](https://github.com/seladb/PcapPlusPlus), [MoonGen](https://github.com/emmericp/MoonGen/) and [Lua dissector for Wireshark (Tshark)](https://wiki.wireshark.org/Lua/Dissectors).
+P4TrafficTool aids P4 developers with the process of packet generation, parsing and dissection. It automatically generates code for several traffic generation and parsing tools such that they can readily support the custom packet format(s) defined by your P4 program. p4-traffictool currently supports code generation for [Scapy](https://scapy.net), [PcapPlusPlus](https://github.com/seladb/PcapPlusPlus), [MoonGen](https://github.com/emmericp/MoonGen/) and [Lua dissector for Wireshark (Tshark)](https://wiki.wireshark.org/Lua/Dissectors).
 
 So whether behavioral (qualitative) testing on software targets (e.g. [bmv2](https://github.com/p4lang/behavioral-model)) or production (quantitative) testing on hardware targets (e.g. [Barefoot Tofino](https://barefootnetworks.com/products/brief-tofino/)), p4-traffictool has you covered :)
 
 ## Getting Started
 ### Dependencies
 * **p4c compiler:** The input to p4-traffictool is the json file produced by the open-source [p4c](https://github.com/p4lang/p4c) compiler, specifically the `p4c-bm2-ss` backend. You can use the scripts [here](https://github.com/jafingerhut/p4-guide) to install `p4c` and the `p4c-bm2-ss` backend. For the `p4c-bm2-ss` backend to compile correctly, you may need to install [behavioral model](https://github.com/p4lang/behavioral-model) first. Post installation, `p4c-bm2-ss` should be available in your _PATH_. 
-* **Python interpreter:** p4-traffictool is written in Python and can work with both Python2 and Python3. Most Linux distributions come preinstalled with either Python2 or Python3. Required python packages: `json`, `sys`, `os`, `re` and `tabulate`. The first four are included in the standard python installation, you can install `tabulate` with `pip install tabulate`.
 * **Traffic Tools:** Since you are trying to install and use p4-traffictool, we assume you have the appropriate traffic generation/parsing tools for which you would be auto-generating the code. p4-traffictool currently supports code generation for [Scapy](https://scapy.net), [PcapPlusPlus](https://github.com/seladb/PcapPlusPlus), [MoonGen](https://github.com/emmericp/MoonGen/) and [Wireshark Dissector](https://wiki.wireshark.org/Lua/Dissectors).
 
 ### Installation
-* Clone this repository. 
-```
-git clone https://github.com/djin31/p4-traffictool.git
-```
-* Run `configure.sh` to check for dependencies.
-* (Optional) Run `install.sh` to add the alias `p4-traffictool` to your bash configuration in order to avoid specifying the full path to `p4-traffictool.sh` script.
+Clone this repository and run, `./install.sh`.
 
 ### Installation checks and tests (optional)
 To perform a sanity check that the code produced by the tool is compatible with the tools available on your system you can use `./runtests.sh`. It runs the tool with a sample p4 program and its corresponding json file to produce scapy codes and checks that they are equivalent.
@@ -52,9 +46,7 @@ Use the top-level script _p4-traffictool.sh_ as following:
 
 
 [TARGET TOOL(S)]
-If no target tools are specified, user is prompted for each target tool.
-Otherwise, user can specify one or more of the following:
---scapy --wireshark --moongen --pcpp
+--scapy --wireshark --moongen --pcpp --all
 ```
 The above command will generate output files for specified target tool(s). The output files for each target tool will be placed in a subdirectory inside the _output directory_.
 
