@@ -6,7 +6,7 @@
 #   3 p4 compilation error
 
 usage(){
-    echo "Usage: p4-traffictool.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [--only-headers] [-o <path to destination dir>] [--scapy] [--wireshark] [--moongen] [--pcpp] [--debug]"
+    echo "Usage: p4-traffictool.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [--only-headers] [-o <path to destination dir>] [--scapy] [--wireshark] [--moongen] [--pcpp] [--debug] [--all]"
     exit $1
 }
 
@@ -113,6 +113,13 @@ while test $# -gt 0; do
             shift
             PCAPPLUSPLUS=true
             ;;
+        --all)
+            shift
+            SCAPY=true
+            WIRESHARK=true
+            MOONGEN=true
+            PCAPPLUSPLUS=true
+            ;;
         --debug)
             shift
             DEBUG_MODE=true
@@ -131,71 +138,31 @@ else
     OUTPUT=/dev/null
 fi
 
-if [[ "$JSON_DETECT" = false && "$P4_DETECT" = false ]]; then
+if ! ("$JSON_DETECT" || "$P4_DETECT") ; then
     echo "No source specified"
     usage 2
 fi
 
-if [[ "$SCAPY" = false  &&  "$MOONGEN" = false &&  "$PCAPPLUSPLUS" = false &&  "$WIRESHARK" = false ]] ; then
-    echo "No Target specified"
-    while true; do
-        read -p "Do you wish to generate Scapy code? [y/n] " yn
-        case $yn in
-            [Yy]* ) SCAPY=true; break;;
-            [Nn]* ) break;;
-            * ) echo "Please answer yes or no.";;
-        esac
-    done
-
-    while true; do
-        read -p "Do you wish to generate MoonGen code? [y/n] " yn
-        case $yn in
-            [Yy]* ) MOONGEN=true; break;;
-            [Nn]* ) break;;
-            * ) echo "Please answer yes or no.";;
-        esac
-    done
-
-    while true; do
-        read -p "Do you wish to generate WireShark code? [y/n] " yn
-        case $yn in
-            [Yy]* ) WIRESHARK=true; break;;
-            [Nn]* ) break;;
-            * ) echo "Please answer yes or no.";;
-        esac
-    done
-
-    while true; do
-        read -p "Do you wish to generate PcapPlusPlus code? [y/n] " yn
-        case $yn in
-            [Yy]* ) PCAPPLUSPLUS=true; break;;
-            [Nn]* ) break;;
-            * ) echo "Please answer yes or no.";;
-        esac
-    done
-fi
-
-if [[ "$SCAPY" = false  &&  "$MOONGEN" = false &&  "$PCAPPLUSPLUS" = false &&  "$WIRESHARK" = false ]] ; then
-    exit 0
+if ! ("$SCAPY" || "$MOONGEN" || "$PCAPPLUSPLUS" || "$WIRESHARK") ; then
+    echo "No target specified"
+    exit 1
 fi
 
 if [ "$JSON_DETECT" = false ]; then
-
-
     # creates a temp folder with timestamp to hold json script and compiled binaries
     foldername="`date +%Y%m%d%H%M%S`";
-    foldername="tempfolder_$foldername"
+    foldername="/tmp/p4-traffictool/tempfolder_$foldername"
     jsonname=$(basename -- "$P4_SOURCE")
     jsonname="${jsonname%.*}.json"
-    mkdir $foldername
+    mkdir -p $foldername
     cd $foldername
 
     # creates a tempfile which adds the headers along with stub functions for v1 model 
     if [ "$ONLY_HEADERS" = true ]; then
 	echo "Adding p4 source file to template to create p4 source file."
 	p4filename=$(basename -- "$P4_SOURCE")
-	tempcommand="awk 'FNR==8{system(\"cat $P4_SOURCE\")} 1' ../templates/template.p4 > $p4filename"
-	#echo $tempcommand
+	tempcommand="awk 'FNR==8{system(\"cat $P4_SOURCE\")} 1' /usr/share/p4-traffictool/templates/template.p4 > $p4filename"
+
 	eval $tempcommand
 	tempp4source=$P4_SOURCE
 	P4_SOURCE=$p4filename
@@ -203,21 +170,14 @@ if [ "$JSON_DETECT" = false ]; then
 
     # p4 source compilation
     echo -e "----------------------------------\nCompiling p4 source ..."
-    p4c-bm2-ss --std $STANDARD -o $jsonname $P4_SOURCE > $OUTPUT
+    p4c -S --std $STANDARD $P4_SOURCE > $OUTPUT
     if [ $? != "0" ]; then
-        echo "Compilation with p4c-bm2-ss failed...trying with p4c"
-        p4c -S --std $STANDARD $P4_SOURCE > $OUTPUT
-        if [ $? != "0" ]; then
-            echo "Compilation with p4c failed.. exiting"
-            cd ..
-            rm -r $foldername
-            exit 3
-        else
-            echo "Compilation successful with p4c"
-        fi
-
+        echo "Compilation with p4c failed.. exiting"
+        cd ..
+        rm -r $foldername
+        exit 3
     else
-        echo "Compilation successful with p4c-bm2-ss"
+        echo "Compilation successful with p4c"
     fi
     echo -e "------------------------------------\n"
    
@@ -239,7 +199,6 @@ else
         OUTPUT=$(dirname "$JSONSOURCE")
         echo -e "Using the directory of source as default destination directory\n"
     fi
-
 fi
 
 # DIR stores the path to p4-traffictool script, this is required for calling backend scripts
@@ -256,32 +215,28 @@ if [[ "$SCAPY" = true ]];then
     temp="$OUTPUT/scapy"
     echo "Running Scapy backend script"
     mkdir -p $temp
-    python3 $DIR/src/GenTrafficScapy.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
+    python3 /usr/share/p4-traffictool/src/GenTrafficScapy.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
     echo -e "------------------------------------\n"
 fi
 if [[ "$WIRESHARK" = true ]];then
     temp="$OUTPUT/wireshark"
     echo "Running Lua dissector backend script"
     mkdir -p $temp
-    python3 $DIR/src/DissectTrafficLua.py $JSONSOURCE $temp $DEBUG_MODE
+    python3 /usr/share/p4-traffictool/src/DissectTrafficLua.py $JSONSOURCE $temp $DEBUG_MODE
     echo -e "------------------------------------\n"
 fi
 if [[ "$MOONGEN" = true ]];then
     temp="$OUTPUT/moongen"
     echo "Running MoonGen backend script"
     mkdir -p $temp
-    python3 $DIR/src/GenTrafficMoonGen.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
+    python3 /usr/share/p4-traffictool/src/GenTrafficMoonGen.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
     echo -e "------------------------------------\n"
 fi
 if [[ "$PCAPPLUSPLUS" = true ]];then
     temp="$OUTPUT/pcapplusplus"
     echo "Running PcapPlusPlus backend script"
     mkdir -p $temp
-    python3 $DIR/src/DissectTrafficPcap.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
+    python3 /usr/share/p4-traffictool/src/DissectTrafficPcap.py $JSONSOURCE $temp $DEBUG_MODE $START_WITH_ETH
     echo -e "------------------------------------\n"
 fi
 
-# remove tempfolder created
-if [[ "$JSON_DETECT" = false ]]; then
-    rm -rf $foldername
-fi
