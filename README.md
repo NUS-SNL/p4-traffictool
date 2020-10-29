@@ -3,14 +3,22 @@ p4-traffictool helps in packet generation, parsing and dissection for popular ba
 
 p4-traffictool converts your p4 code to `bmv2` JSON file using the [p4c](https://github.com/p4lang/p4c) compiler and processes it to generate output code. This adds a limitation that your code should compile with p4c. As a hack to support other targets / architectures, you can try to extract the headers and parser logic from your code and modify it to fit in a p4 template available at `/usr/share/p4-traffictool/templates/template.p4`.
 
+p4-traffictool was presented as a poster in SOSR 2019 - https://dl.acm.org/doi/10.1145/3314148.3318047.
+
 ## Installation
-You need to have [p4c](https://github.com/p4lang/p4c) compiler installed and added to `PATH`.
+p4-traffictool requires [p4c](https://github.com/p4lang/p4c) compiler installed and accessible by running the `p4c` command in bash.
 
 ### Building from source
 Clone this repository and run, `./install.sh`.
 
 ### PPAs
-PPAs are available for Ubuntu 16.04 and 18.04.
+PPAs are available for Ubuntu 16.04 and 18.04,
+
+```shell
+sudo add-apt-repository ppa:pro-panda/p4-traffictool
+sudo apt-get update
+sudo apt install p4-traffictool
+```
 
 ## Usage
 
@@ -57,27 +65,15 @@ Use the top-level script _p4-traffictool.sh_ as following:
     ```
     will generate the required packet.
 
-3. Also you can access a list of possible packet combinations using the variable `possible_packets_`. 
-
-4. To send packets on the wire, use the `send()` or `sendp()` methods:
-    ```
-    sendp(p, iface=<netdev interface>)
-    ```
-    `p` is the packet intended to be sent.
-
-5. For receiving or parsing packets, simply use the standard Scapy methods and it should now be able to recognize and show the custom P4-defined layers.
-
 #### What it offers
 * Creates Scapy classes for the headers defined in the p4 program.
 * Provides functionality for using Scapy's built-in standard headers.
 * Detects variable length fields and points user to fill them suitably in class definition.
-* Lastly, it produces a list of all possible packet combinations possible using the defined headers.
-
+* Produces a list of all possible packet combinations possible using the defined headers.
 
 #### What it doesn't
 * Post build fields like length and checksums need to be defined by the user himself/herself in the post build method.
 * All fields are treated as bitfields, user can modify them to support types such as int, short or any other suitable fields.
-
 
 ### PcapPlusPlus
 [PcapPlusPlus](http://seladb.github.io/PcapPlusPlus-Doc) is a multiplatform C++ network sniffing and packet parsing/crafting framework. It provides a very fast and efficient method for crafting and parsing network packets.
@@ -153,27 +149,24 @@ sudo make install
 
 ### Wireshark (Tshark) Lua Dissector
 
-#### Usage
-
-##### Quick short term usage
-While running wireshark (or tshark) through command line just pass `-X lua_script:<path to the generated init.lua>` and you would be able to dissect the packets with your custom headers rightaway. e.g.:
+#### Instant Usage
+To opening wireshark with your custom plugins imported into it,
 ```shell
 wireshark -X lua_script:init.lua 
+```
+
+To extract field values from the packets captured in a pcap file using tshark with your custom plugins enabled.
+```
 tshark -X lua_script:init.lua -r captured_packets.pcap -Tfields -e <field_name>
 ```
-The first examples shows how to open wireshark with your custom plugins imported into it.
-The second example demonstrates extraction of a field values from the packets captured in a pcap file using tshark with your custom plugins enabled.
 
-##### Long term usage
+#### Long term usage
 1. To register the protocol with Wireshark or Tshark you need access to the personal plugins folder of your Wireshark installation.
    To get a path to personal plugins folder open Wireshark, go to Help->About->Folders. 
    (If the given path doesn;t exist then create a plugins folder at the given path so that you can add personal plugins in the future).
 
-2. (Recommended method) Append the contents of the init.lua file created to the init.lua file just outside your personal plugins folder 
+2. Append the contents of the init.lua file created to the init.lua file just outside your personal plugins folder 
    (if it doesn't exist then copy the init.lua file at the path of your plugins folder)
-   If you no longer need these plugins then simply delete this part from the init file of your wireshark
-
-3. Another method is to simply copy these scripts in your wireshark personal plugins folder.
 
 #### What it offers
 * Creates files correponding to each protocol defining the header struct.
