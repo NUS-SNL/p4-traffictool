@@ -177,3 +177,7 @@ tshark -X lua_script:init.lua -r captured_packets.pcap -Tfields -e <field_name>
 * For parsing the packet correctly, user may need to disable the standard parsers of Wireshark.
 * The tool expects that the user will be using Ethernet as the base layer and any modifications to the internet stack shall be present on top of it
 * The tool does not provide support for using standard headers as of now
+
+
+## License
+[MIT License](LICENSE)
