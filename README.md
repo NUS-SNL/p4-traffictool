@@ -1,7 +1,8 @@
 # p4-traffictool
-p4-traffictool helps in packet generation, parsing and dissection for popular backends. It supports code generation for [Scapy](https://scapy.net), [PcapPlusPlus](https://github.com/seladb/PcapPlusPlus), [MoonGen](https://github.com/emmericp/MoonGen/) and [Lua dissector for Wireshark (Tshark)](https://wiki.wireshark.org/Lua/Dissectors).
+p4-traffictool helps in packet generation, parsing and dissection for popular backends. It supports code generation for [Scapy](https://scapy.net), [PcapPlusPlus](https://github.com/seladb/PcapPlusPlus), [MoonGen](https://github.com/emmericp/MoonGen/) and [Wireshark (Tshark)](https://wiki.wireshark.org/Lua/Dissectors).
 
-p4-traffictool converts your p4 code to `bmv2` JSON file using the [p4c](https://github.com/p4lang/p4c) compiler and processes it to generate output code. This adds a limitation that your code should compile with p4c. As a hack to support other targets / architectures, you can try to extract the headers and parser logic from your code and modify it to fit in a p4 template available at `/usr/share/p4-traffictool/templates/template.p4`.
+p4-traffictool converts your p4 code to `bmv2` JSON file using the [p4c](https://github.com/p4lang/p4c) compiler and processes it to generate output code. This adds a limitation that your code should compile with p4c.<br>
+As a hack to support other targets / architectures, you need to extract your headers and parser logic and modify it to fit in a template available at `/usr/share/p4-traffictool/templates/template.p4`.
 
 p4-traffictool was presented as a poster in SOSR 2019 - https://dl.acm.org/doi/10.1145/3314148.3318047.
 
@@ -9,7 +10,7 @@ p4-traffictool was presented as a poster in SOSR 2019 - https://dl.acm.org/doi/1
 p4-traffictool requires [p4c](https://github.com/p4lang/p4c) compiler installed and accessible by running the `p4c` command in bash.
 
 ### Building from source
-Clone this repository and run, `./install.sh`.
+Clone this repository and run `./install.sh`.
 
 ### PPAs
 PPAs are available for Ubuntu 16.04 and 18.04,
@@ -21,17 +22,15 @@ sudo apt install p4-traffictool
 ```
 
 ## Usage
-
-Use the top-level script _p4-traffictool.sh_ as following:
 ```
 # With P4 program as the input
-./p4-traffictool.sh -p4 <path to p4 source> [OPTIONS] [TARGET TOOL(S)]
+./p4-traffictool -p4 <path to p4 source> [OPTIONS] [TARGET TOOL(S)]
 
 # With json HLIR as the input
-./p4-traffictool.sh -json <path to json HLIR description> [OPTIONS] [TARGET TOOL(S)]
+./p4-traffictool -json <path to json HLIR description> [OPTIONS] [TARGET TOOL(S)]
 
 # For help
-./p4-traffictool.sh --help
+./p4-traffictool --help
 
 
 [OPTIONS]
@@ -44,16 +43,16 @@ Use the top-level script _p4-traffictool.sh_ as following:
 --scapy --wireshark --moongen --pcpp --all
 ```
 
-* **Standard headers:** If standard headers for common protocols such as Ethernet, IPv4, IPv6, TCP, and UDP are detected by p4-traffictool, it will prompt the user if s/he wishes to use the original header/protocol implementations provided by the tool(s) instead of generating new implementations for them. An exception for this is the code generated for the Wireshark Lua dissector.
-* **Variable Length Fields:** Since there is limited support  available (and/or inconvenience of use) for variable length fields with Scapy, PcapPlusPlus and Wireshark Lua dissector, the tool prompts the user to enter the length of a variable length field when it detects one. This length should be a multiple of 8 to ensure that the header is byte aligned.
-  * A fixed length field would be produced for the current run of p4-traffictool for Scapy, PcapPlusPlus and Wireshark Lua dissector. In order to modify this length, the user needs to rerun p4-traffictool. Note that this is a limitation of the target tools and p4-traffictool merely provides an option to choose the fixed length.
+### Standard headers
+If standard headers for Ethernet, IPv4, IPv6, TCP, and UDP are detected, the user will be prompted to choose between using the protocol implementations provided by the tools (except Wireshark) or generating new implementations for them.
+### Variable Length Fields
+There is limited support for variable length fields with Scapy, PcapPlusPlus and Wireshark. p4-traffictool prompts the user to enter the length of a variable length field when it detects one. This length should be a multiple of 8 to ensure that the header is byte aligned.<br>
+A fixed length field would be produced for the current run of p4-traffictool for Scapy, PcapPlusPlus and Wireshark Lua dissector. In order to modify this length, the user needs to rerun p4-traffictool.
 
-## Supported backends
-
-### Scapy
+## Scapy
 [Scapy](https://scapy.net) is a powerful Python-based interactive packet manipulation program and library.
 
-#### Usage
+### Usage
 1. In your Python code that uses Scapy, import the generated Python file using
     ```
     from <filename> import *
@@ -65,20 +64,20 @@ Use the top-level script _p4-traffictool.sh_ as following:
     ```
     will generate the required packet.
 
-#### What it offers
+### What it offers
 * Creates Scapy classes for the headers defined in the p4 program.
 * Provides functionality for using Scapy's built-in standard headers.
 * Detects variable length fields and points user to fill them suitably in class definition.
 * Produces a list of all possible packet combinations possible using the defined headers.
 
-#### What it doesn't
+### What it doesn't
 * Post build fields like length and checksums need to be defined by the user himself/herself in the post build method.
 * All fields are treated as bitfields, user can modify them to support types such as int, short or any other suitable fields.
 
-### PcapPlusPlus
+## PcapPlusPlus
 [PcapPlusPlus](http://seladb.github.io/PcapPlusPlus-Doc) is a multiplatform C++ network sniffing and packet parsing/crafting framework. It provides a very fast and efficient method for crafting and parsing network packets.
 
-#### Usage
+### Usage
 1. Copy the files `uint24_t.h`,`uint40_t.h` and `uint48_t.h` from `/usr/share/p4-traffictool/templates/` to `Packet++/header` inside your PcapPlusPlus source tree. These files contain definitions for 24, 40 and 48 bit datatypes.
 
 2. Copy the header (.h) files of custom P4-defined protocol(s) to `Packet++/header` directory and the C++ (.cpp) files to `Packet++/source` directory inside your PcapPlusPlus source tree.
@@ -97,21 +96,21 @@ sudo make install
 
 6. For using the new P4-defined layers in your PcapPlusPlus application", simply include the header (.h) files of the required layer(s) in your C++ program and call the constructor, getters, setters, etc. in the usual way of using PcapPlusPlus.
 
-#### What it offers
+### What it offers
 * Creates files correponding to each protocol defining the header struct and the getter/setter functions.
 * Provides functionality for using PcapPlusPlus' built-in standard headers.
 * Detects variable length fields and prompts user to mention the size required for the current testbench.
 
-#### What it doesn't
+### What it doesn't
 * Post build fields like length and checksums need to be calculated in the setter function by the user.
 * Field lengths which are not amongst {8, 16, 32, 64} shall be promoted to the next higher power of 2. If the user needs a field to be strictly of a particular size other than these, then a proper struct needs to be defined and corresponding _ntoh_ and _hton_ functions need to be defined.
 * If using built-in headers (layers), then user needs to modify the `parseNextLayer()` function of the built-in header layer to include custom next layer(s).
 * User needs to modify the ProtocolType.h file to include the new layers.
 
-### MoonGen
+## MoonGen
 [MoonGen](https://github.com/emmericp/MoonGen) is a Lua-based high-speed packet generator.
 
-#### Usage
+### Usage
 0. Copy the file `templates/bitfields_def.lua` to the directory `MoonGen/libmoon/lua/`. This is just a one-time requirement. This file contains struct definitions for 24, 40 and 48 bits fields.
 1. Copy the newly generated protocol files (Lua files) to MoonGen/libmoon/lua/proto/    
 
@@ -138,19 +137,19 @@ sudo make install
 6. Now you can run any of the examples (or otherwise scripts) in MoonGen by using the function `get<ProtoName>Packet()` instead of the usual `getUdpPacket()`.
    * For example, to get a packet of the protocol _foo_, use `getFooPacket()` which was defined in step #3 above.
 
-#### What it offers
+### What it offers
 * Creates files correponding to each protocol defining the header struct, and getter and setter functions.
 * Provides functionality for using MoonGen's built-in standard headers.
 
-#### What it doesn't
+### What it doesn't
 * Post build fields like length and checksums need to be calculated in the setter function by the user.
 * Field lengths which are not amongst {8, 16, 24, 32, 40, 48, 64} shall be promoted to the next higher power of 2. If the user needs a field to be strictly of a particular size other than these then a proper struct needs to be defined and corresponding _ntoh_ and _hton_ functions need to be defined.
 * If using built-in headers, then user need to modify the `resolveNextHeader()` function of the built-in header layer to include custom next layer(s).
 
-### Wireshark (Tshark) Lua Dissector
+## Wireshark (Tshark) Lua Dissector
 
-#### Instant Usage
-To opening wireshark with your custom plugins imported into it,
+### Instant Usage
+To open wireshark with your custom plugins imported into it,
 ```shell
 wireshark -X lua_script:init.lua 
 ```
@@ -160,7 +159,7 @@ To extract field values from the packets captured in a pcap file using tshark wi
 tshark -X lua_script:init.lua -r captured_packets.pcap -Tfields -e <field_name>
 ```
 
-#### Long term usage
+### Long term usage
 1. To register the protocol with Wireshark or Tshark you need access to the personal plugins folder of your Wireshark installation.
    To get a path to personal plugins folder open Wireshark, go to Help->About->Folders. 
    (If the given path doesn;t exist then create a plugins folder at the given path so that you can add personal plugins in the future).
@@ -168,12 +167,12 @@ tshark -X lua_script:init.lua -r captured_packets.pcap -Tfields -e <field_name>
 2. Append the contents of the init.lua file created to the init.lua file just outside your personal plugins folder 
    (if it doesn't exist then copy the init.lua file at the path of your plugins folder)
 
-#### What it offers
+### What it offers
 * Creates files correponding to each protocol defining the header struct.
 * Detects variable length fields and prompts user to mention the size required for the current testbench.
 * Generates an init file specifying the order in which to load the scripts.
 
-#### What it doesn't
+### What it doesn't
 * For parsing the packet correctly, user may need to disable the standard parsers of Wireshark.
 * The tool expects that the user will be using Ethernet as the base layer and any modifications to the internet stack shall be present on top of it
 * The tool does not provide support for using standard headers as of now
