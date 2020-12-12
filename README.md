@@ -70,7 +70,7 @@ A fixed length field would be produced for the current run of p4-traffictool for
 
 ## Wireshark (Tshark) Lua Dissector
 
-### Instant Usage
+### Usage
 To open wireshark with your custom plugins imported into it,
 ```shell
 wireshark -X lua_script:init.lua 
