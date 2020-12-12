@@ -32,7 +32,6 @@ sudo apt install p4-traffictool
 # For help
 ./p4-traffictool --help
 
-
 [OPTIONS]
 --std {p4-14|p4-16} : The P4 standard to use. Default is p4-16.
 -o <output dir>     : Output directory path. Default is the same as the P4/json input file.
@@ -64,15 +63,27 @@ A fixed length field would be produced for the current run of p4-traffictool for
     ```
     will generate the required packet.
 
-### What it offers
-* Creates Scapy classes for the headers defined in the p4 program.
-* Provides functionality for using Scapy's built-in standard headers.
-* Detects variable length fields and points user to fill them suitably in class definition.
-* Produces a list of all possible packet combinations possible using the defined headers.
 
-### What it doesn't
+### What it doesn't offer
 * Post build fields like length and checksums need to be defined by the user himself/herself in the post build method.
 * All fields are treated as bitfields, user can modify them to support types such as int, short or any other suitable fields.
+
+## Wireshark (Tshark) Lua Dissector
+
+### Instant Usage
+To open wireshark with your custom plugins imported into it,
+```shell
+wireshark -X lua_script:init.lua 
+```
+
+To extract field values from the packets captured in a pcap file using tshark with your custom plugins enabled.
+```
+tshark -X lua_script:init.lua -r captured_packets.pcap -Tfields -e <field_name>
+```
+
+### What it doesn't offer
+* The tool expects that the user will be using Ethernet as the base layer and any modifications to the internet stack shall be present on top of it
+* The tool does not provide support for using standard headers as of now
 
 ## PcapPlusPlus
 [PcapPlusPlus](http://seladb.github.io/PcapPlusPlus-Doc) is a multiplatform C++ network sniffing and packet parsing/crafting framework. It provides a very fast and efficient method for crafting and parsing network packets.
@@ -96,12 +107,7 @@ sudo make install
 
 6. For using the new P4-defined layers in your PcapPlusPlus application", simply include the header (.h) files of the required layer(s) in your C++ program and call the constructor, getters, setters, etc. in the usual way of using PcapPlusPlus.
 
-### What it offers
-* Creates files correponding to each protocol defining the header struct and the getter/setter functions.
-* Provides functionality for using PcapPlusPlus' built-in standard headers.
-* Detects variable length fields and prompts user to mention the size required for the current testbench.
-
-### What it doesn't
+### What it doesn't offer
 * Post build fields like length and checksums need to be calculated in the setter function by the user.
 * Field lengths which are not amongst {8, 16, 32, 64} shall be promoted to the next higher power of 2. If the user needs a field to be strictly of a particular size other than these, then a proper struct needs to be defined and corresponding _ntoh_ and _hton_ functions need to be defined.
 * If using built-in headers (layers), then user needs to modify the `parseNextLayer()` function of the built-in header layer to include custom next layer(s).
@@ -137,45 +143,10 @@ sudo make install
 6. Now you can run any of the examples (or otherwise scripts) in MoonGen by using the function `get<ProtoName>Packet()` instead of the usual `getUdpPacket()`.
    * For example, to get a packet of the protocol _foo_, use `getFooPacket()` which was defined in step #3 above.
 
-### What it offers
-* Creates files correponding to each protocol defining the header struct, and getter and setter functions.
-* Provides functionality for using MoonGen's built-in standard headers.
-
-### What it doesn't
+### What it doesn't offer
 * Post build fields like length and checksums need to be calculated in the setter function by the user.
 * Field lengths which are not amongst {8, 16, 24, 32, 40, 48, 64} shall be promoted to the next higher power of 2. If the user needs a field to be strictly of a particular size other than these then a proper struct needs to be defined and corresponding _ntoh_ and _hton_ functions need to be defined.
 * If using built-in headers, then user need to modify the `resolveNextHeader()` function of the built-in header layer to include custom next layer(s).
-
-## Wireshark (Tshark) Lua Dissector
-
-### Instant Usage
-To open wireshark with your custom plugins imported into it,
-```shell
-wireshark -X lua_script:init.lua 
-```
-
-To extract field values from the packets captured in a pcap file using tshark with your custom plugins enabled.
-```
-tshark -X lua_script:init.lua -r captured_packets.pcap -Tfields -e <field_name>
-```
-
-### Long term usage
-1. To register the protocol with Wireshark or Tshark you need access to the personal plugins folder of your Wireshark installation.
-   To get a path to personal plugins folder open Wireshark, go to Help->About->Folders. 
-   (If the given path doesn;t exist then create a plugins folder at the given path so that you can add personal plugins in the future).
-
-2. Append the contents of the init.lua file created to the init.lua file just outside your personal plugins folder 
-   (if it doesn't exist then copy the init.lua file at the path of your plugins folder)
-
-### What it offers
-* Creates files correponding to each protocol defining the header struct.
-* Detects variable length fields and prompts user to mention the size required for the current testbench.
-* Generates an init file specifying the order in which to load the scripts.
-
-### What it doesn't
-* For parsing the packet correctly, user may need to disable the standard parsers of Wireshark.
-* The tool expects that the user will be using Ethernet as the base layer and any modifications to the internet stack shall be present on top of it
-* The tool does not provide support for using standard headers as of now
 
 
 ## License
