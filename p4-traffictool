@@ -227,7 +227,7 @@ if [[ "$SCAPY" = true ]];then
 fi
 if [[ "$WIRESHARK" = true ]];then
     temp="$OUTPUT/wireshark"
-    echo "Running Lua dissector backend script"
+    echo "Running Wireshark (Tshark) Lua Dissector backend script"
     mkdir -p $temp
     python3 /usr/share/p4-traffictool/src/DissectTrafficLua.py $JSONSOURCE $temp $DEBUG_MODE
     echo -e "------------------------------------\n"
