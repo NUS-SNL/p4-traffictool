@@ -1,0 +1,6 @@
+@inproceedings{jindal2019p4traffictool,
+  title={P4TrafficTool: Automated Code Generation for P4 Traffic Generators and Analyzers},
+  author={Jindal, Deepanshu and Joshi, Raj and Leong, Ben},
+  booktitle={Proceedings of ACM Symposium on SDN Research},
+  year={2019}
+}
