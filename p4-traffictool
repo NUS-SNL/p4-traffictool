@@ -7,7 +7,7 @@
 #   4 missing dependencies
 
 usage(){
-    echo "Usage: p4-traffictool.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--scapy] [--wireshark] [--moongen] [--pcpp] [--debug] [--all]"
+    echo "Usage: p4-traffictool.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--scapy] [--wireshark] [--moongen] [--pcpp] [--debug]"
     exit $1
 }
 
@@ -134,13 +134,6 @@ while test $# -gt 0; do
             shift
             PCAPPLUSPLUS=true
             ;;
-        --all)
-            shift
-            SCAPY=true
-            WIRESHARK=true
-            MOONGEN=true
-            PCAPPLUSPLUS=true
-            ;;
         --debug)
             shift
             DEBUG_MODE=true
@@ -155,18 +148,20 @@ done
 
 check_dependencies  # exits if missing dependencies
 
-if [[ "$DEBUG_MODE" = true ]]; then
-    print_arguments
-fi
-
 if ! ("$JSON_DETECT" || "$P4_DETECT") ; then
     echo "No source specified"
     usage 2
 fi
 
 if ! ("$SCAPY" || "$MOONGEN" || "$PCAPPLUSPLUS" || "$WIRESHARK") ; then
-    echo "No target specified"
-    exit 1
+    SCAPY=true
+    WIRESHARK=true
+    MOONGEN=true
+    PCAPPLUSPLUS=true
+fi
+
+if [[ "$DEBUG_MODE" = true ]]; then
+    print_arguments
 fi
 
 if [ "$JSON_DETECT" = false ]; then
