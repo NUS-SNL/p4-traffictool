@@ -157,9 +157,6 @@ check_dependencies  # exits if missing dependencies
 
 if [[ "$DEBUG_MODE" = true ]]; then
     print_arguments
-    OUTPUT=/dev/tty
-else
-    OUTPUT=/dev/null
 fi
 
 if ! ("$JSON_DETECT" || "$P4_DETECT") ; then
@@ -183,7 +180,7 @@ if [ "$JSON_DETECT" = false ]; then
 
     # p4 source compilation
     echo -e "----------------------------------\nCompiling p4 source ..."
-    p4c -S --std $STANDARD $P4_SOURCE > $OUTPUT
+    p4c -S --std $STANDARD $P4_SOURCE
     if [ $? != "0" ]; then
         echo "Compilation with p4c failed.. exiting"
         cd ..
