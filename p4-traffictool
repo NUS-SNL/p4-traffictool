@@ -4,6 +4,7 @@
 #   1 incorrect file specification
 #   2 incorrect argument specification
 #   3 p4 compilation error
+#   4 missing dependencies
 
 usage(){
     echo "Usage: p4-traffictool.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--scapy] [--wireshark] [--moongen] [--pcpp] [--debug] [--all]"
@@ -26,6 +27,32 @@ print_arguments(){
 
 }
 
+check_dependencies(){
+    dep_p4c=false
+    dep_python3=false
+    dep_python3_tabulate=false
+
+    # Check for p4c and python3
+    command -v p4c >/dev/null 2>&1 && dep_p4c=true
+    command -v python3 >/dev/null 2>&1 && dep_python3=true
+
+    if [ "$dep_python3" = true ]; then
+        # Check for python3-tabulate library
+        if python3 -c "import tabulate" &> /dev/null; then
+            dep_python3_tabulate=true
+        fi
+    fi
+
+    if [ "$dep_p4c" = false ] || [ "$dep_python3" = false ] || [ "$dep_python3_tabulate" = false ]; then
+        echo -e "\nThe following dependencies are either missing or not available in appropriate path(s):"
+        [[ "$dep_p4c" = false ]] && echo "* p4c"
+        [[ "$dep_python3" = false ]] && echo "* python3"
+        [[ "$dep_python3_tabulate" = false ]] && echo "* python3_tabulate"
+
+        echo -e "\nPlease install the dependencies to continue ..."
+        exit 4
+    fi
+}
 
 # if no arguments are specified then show usage
 if ([[ "$#" == "0" ]]); then
@@ -124,6 +151,9 @@ while test $# -gt 0; do
             ;;  
     esac
 done
+
+
+check_dependencies  # exits if missing dependencies
 
 if [[ "$DEBUG_MODE" = true ]]; then
     print_arguments
