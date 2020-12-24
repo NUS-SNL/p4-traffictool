@@ -33,18 +33,18 @@ sudo apt install p4-traffictool
 ## Usage
 ```
 # With P4 program as the input.
-p4-traffictool -p4 <path to p4 source> [OPTIONS] [TARGET TOOL(S)]
+p4-traffictool -p4 <path to p4 source> [OPTIONS] <target tool(s)>
 
 # With bmv2 json as the input.
-p4-traffictool -json <path to json HLIR description> [OPTIONS] [TARGET TOOL(S)]
+p4-traffictool -json <path to json HLIR description> [OPTIONS] <target tool(s)>
+
+<target tool(s)>
+--scapy --wireshark --moongen --pcpp --all
 
 [OPTIONS]
 --std {p4-14|p4-16} : The P4 standard to use. Default is p4-16.
 -o <output dir>     : Output directory path. Default is the same as the P4/json input file.
 --debug             : Shows debugging information.
-
-[TARGET TOOL(S)]
---scapy --wireshark --moongen --pcpp --all
 
 # For help
 p4-traffictool --help
