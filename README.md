@@ -177,6 +177,12 @@ sudo make install
 * Post build fields like length and checksums need to be calculated in the setter function by the user.
 * Field lengths which are not amongst {8, 16, 32, 64} shall be promoted to the next higher power of 2. If the user needs a field to be strictly of a particular size other than these, then a proper struct needs to be defined and corresponding _ntoh_ and _hton_ functions need to be provided.
 
+## Similar Tools
+
+[p4pktgen](https://github.com/p4pktgen/p4pktgen) is closely related to p4-traffictool. However, p4pktgen is focused on testing all possible packet header combinations, whereas p4-traffictool provides auto-generated plugin code for popular traffic generation and parsing tools.
+
+[P4 Wireshark Dissector](https://github.com/gnikol/P4-Wireshark-Dissector) also generates a Wireshark (Tshark) Lua dissector plugin for a given P4 program. However, a custom P4-defined layer can only be the last layer in the protocol stack. For example, if "foo" and "bar" are custom layers, then using P4 Wireshark Dissector, you would be able to parse a packet of format `Ethernet/IP/UDP/foo` or `Ethernet/IP/bar`, but not of the format `Ethernet/IP/UDP/foo/bar` or `Ethernet/bar/foo`.
 
 ## License
+
 [MIT License](LICENSE)
