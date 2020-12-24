@@ -90,7 +90,7 @@ def find_data_headers(headers, header_types):
             print("ERROR : Non byte-aligned fields found in %s" %
                   (str(incorrect_header["name"])))
             print("Correct the following fields to make them byte-aligned:")
-            print(map(str, incorrect_header["fields"]))
+            print(list(map(str, incorrect_header["fields"])))
         exit(1)
     return (header_ports, header_types)
 
