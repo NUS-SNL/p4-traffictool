@@ -7,7 +7,18 @@
 #   4 missing dependencies
 
 usage(){
-    echo "Usage: p4-traffictool.sh [-h|--help] [-p4 <path to p4 source>] [-json <path to json description>] [--std {p4-14|p4-16}] [-o <path to destination dir>] [--scapy] [--wireshark] [--moongen] [--pcpp] [--debug] [--all]"
+    echo "Usage:"
+    echo "      p4-traffictool -p4 <path to p4 source> [OPTIONS] <target tool(s)>"
+    echo "      p4-traffictool -json <path to bmv2 json> [OPTIONS] <target tool(s)>"
+    echo "      p4-traffictool -h|--help"
+    echo ""
+    echo "      <target tool(s)>"
+    echo "      --scapy --wireshark --moongen --pcpp --all"
+    echo ""
+    echo "      [OPTIONS]"
+    echo "      --std {p4-14|p4-16} : The P4 standard to use. Default is p4-16."
+    echo "      -o <output dir>     : Output directory path. Default is the same as the P4/json input file."
+    echo "      --debug             : Shows debugging information."
     exit $1
 }
 
