@@ -15,41 +15,41 @@
 #endif
 
 namespace pcpp{
-	#pragma pack(push,1)
-	struct nc_hdrhdr{
-		uint8_t 	 op;
-		uint64_t 	 key;
-	};
+    #pragma pack(push,1)
+    struct nc_hdrhdr{
+        uint8_t      op;
+        uint64_t      key;
+    };
 
-	#pragma pack(pop)
-	class Nc_hdrLayer: public Layer{
-		public:
-		Nc_hdrLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_NC_HDR;}
-		Nc_hdrLayer(){
-			m_DataLen = sizeof(nc_hdrhdr);
-			m_Data = new uint8_t[m_DataLen];
-			memset(m_Data, 0, m_DataLen);
-			m_Protocol = P4_NC_HDR;
-		}
+    #pragma pack(pop)
+    class Nc_hdrLayer: public Layer{
+        public:
+        Nc_hdrLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_NC_HDR;}
+        Nc_hdrLayer(){
+            m_DataLen = sizeof(nc_hdrhdr);
+            m_Data = new uint8_t[m_DataLen];
+            memset(m_Data, 0, m_DataLen);
+            m_Protocol = P4_NC_HDR;
+        }
 
-		 // Getters and Setters for fields
-		 uint8_t getOp();
-		 void setOp(uint8_t value);
-		 uint64_t getKey();
-		 void setKey(uint64_t value);
+         // Getters and Setters for fields
+         uint8_t getOp();
+         void setOp(uint8_t value);
+         uint64_t getKey();
+         void setKey(uint64_t value);
 
-		 inline nc_hdrhdr* getNc_hdrHeader() { return (nc_hdrhdr*)m_Data; }
+         inline nc_hdrhdr* getNc_hdrHeader() { return (nc_hdrhdr*)m_Data; }
 
-		 void parseNextLayer();
+         void parseNextLayer();
 
-		 inline size_t getHeaderLen() { return sizeof(nc_hdrhdr); }
+         inline size_t getHeaderLen() { return sizeof(nc_hdrhdr); }
 
-		 void computeCalculateFields() {}
+         void computeCalculateFields() {}
 
-		 std::string toString();
+         std::string toString();
 
-		 OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
+         OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
 
-	};
+    };
 }
 #endif

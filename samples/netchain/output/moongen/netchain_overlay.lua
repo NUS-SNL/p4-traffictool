@@ -43,7 +43,7 @@ local ntoh64, hton64 = ntoh64, hton64
 local netchain_overlay = {}
 
 netchain_overlay.headerFormat = [[
-	uint32_t 	 swip;
+    uint32_t      swip;
 ]]
 
 
@@ -59,16 +59,16 @@ netchain_overlayHeader.__index = netchain_overlayHeader
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function netchain_overlayHeader:getSWIP()
-	return hton(self.swip)
+    return hton(self.swip)
 end
 
 function netchain_overlayHeader:getSWIPstring()
-	return self:getSWIP()
+    return self:getSWIP()
 end
 
 function netchain_overlayHeader:setSWIP(int)
-	int = int or 0
-	self.swip = hton(int)
+    int = int or 0
+    self.swip = hton(int)
 end
 
 
@@ -78,52 +78,48 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function netchain_overlayHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'netchain_overlay'
+    args = args or {}
+    pre = pre or 'netchain_overlay'
 
-	self:setSWIP(args[pre .. 'SWIP'])
+    self:setSWIP(args[pre .. 'SWIP'])
 end
 
 -- Retrieve the values of all members
 function netchain_overlayHeader:get(pre)
-	pre = pre or 'netchain_overlay'
+    pre = pre or 'netchain_overlay'
 
-	local args = {}
-	args[pre .. 'SWIP'] = self:getSWIP()
+    local args = {}
+    args[pre .. 'SWIP'] = self:getSWIP()
 
-	return args
+    return args
 end
 
 function netchain_overlayHeader:getString()
-	return 'netchain_overlay \n'
-		.. 'SWIP' .. self:getSWIPString() .. '\n'
+    return 'netchain_overlay \n'
+        .. 'SWIP' .. self:getSWIPString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	netchain_nc_hdr = 0x00000000,
-	netchain_overlay = default,
+    netchain_nc_hdr = 0x00000000,
+    netchain_overlay = default,
 }
 function netchain_overlayHeader:resolveNextHeader()
-	local key = self:getSWIP()
-	for name, value in pairs(nextHeaderResolve) do
-		if key == value then
-			return name
-		end
-	end
-	return nil
+    local key = self:getSWIP()
+    for name, value in pairs(nextHeaderResolve) do
+        if key == value then
+            return name
+        end
+    end
+    return nil
 end
 
 function netchain_overlayHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	if not namedArgs[pre .. 'SWIP'] then
-		for name, _port in pairs(nextHeaderResolve) do
-			if nextHeader == name then
-				namedArgs[pre .. 'SWIP'] = _port
-				break
-			end
-		end
-	end
-	return namedArgs
+    if not namedArgs[pre .. 'SWIP'] then
+        for name, _port in pairs(nextHeaderResolve) do
+            if nextHeader == name then
+                namedArgs[pre .. 'SWIP'] = _port
+    return namedArgs
 end
 
 -----------------------------------------------------

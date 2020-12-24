@@ -43,10 +43,10 @@ local ntoh64, hton64 = ntoh64, hton64
 local netcache_nc_value_8 = {}
 
 netcache_nc_value_8.headerFormat = [[
-	uint32_t 	 value_8_1;
-	uint32_t 	 value_8_2;
-	uint32_t 	 value_8_3;
-	uint32_t 	 value_8_4;
+    uint32_t      value_8_1;
+    uint32_t      value_8_2;
+    uint32_t      value_8_3;
+    uint32_t      value_8_4;
 ]]
 
 
@@ -62,58 +62,58 @@ netcache_nc_value_8Header.__index = netcache_nc_value_8Header
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function netcache_nc_value_8Header:getVALUE_8_1()
-	return hton(self.value_8_1)
+    return hton(self.value_8_1)
 end
 
 function netcache_nc_value_8Header:getVALUE_8_1string()
-	return self:getVALUE_8_1()
+    return self:getVALUE_8_1()
 end
 
 function netcache_nc_value_8Header:setVALUE_8_1(int)
-	int = int or 0
-	self.value_8_1 = hton(int)
+    int = int or 0
+    self.value_8_1 = hton(int)
 end
 
 
 function netcache_nc_value_8Header:getVALUE_8_2()
-	return hton(self.value_8_2)
+    return hton(self.value_8_2)
 end
 
 function netcache_nc_value_8Header:getVALUE_8_2string()
-	return self:getVALUE_8_2()
+    return self:getVALUE_8_2()
 end
 
 function netcache_nc_value_8Header:setVALUE_8_2(int)
-	int = int or 0
-	self.value_8_2 = hton(int)
+    int = int or 0
+    self.value_8_2 = hton(int)
 end
 
 
 function netcache_nc_value_8Header:getVALUE_8_3()
-	return hton(self.value_8_3)
+    return hton(self.value_8_3)
 end
 
 function netcache_nc_value_8Header:getVALUE_8_3string()
-	return self:getVALUE_8_3()
+    return self:getVALUE_8_3()
 end
 
 function netcache_nc_value_8Header:setVALUE_8_3(int)
-	int = int or 0
-	self.value_8_3 = hton(int)
+    int = int or 0
+    self.value_8_3 = hton(int)
 end
 
 
 function netcache_nc_value_8Header:getVALUE_8_4()
-	return hton(self.value_8_4)
+    return hton(self.value_8_4)
 end
 
 function netcache_nc_value_8Header:getVALUE_8_4string()
-	return self:getVALUE_8_4()
+    return self:getVALUE_8_4()
 end
 
 function netcache_nc_value_8Header:setVALUE_8_4(int)
-	int = int or 0
-	self.value_8_4 = hton(int)
+    int = int or 0
+    self.value_8_4 = hton(int)
 end
 
 
@@ -123,45 +123,45 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function netcache_nc_value_8Header:fill(args,pre)
-	args = args or {}
-	pre = pre or 'netcache_nc_value_8'
+    args = args or {}
+    pre = pre or 'netcache_nc_value_8'
 
-	self:setVALUE_8_1(args[pre .. 'VALUE_8_1'])
-	self:setVALUE_8_2(args[pre .. 'VALUE_8_2'])
-	self:setVALUE_8_3(args[pre .. 'VALUE_8_3'])
-	self:setVALUE_8_4(args[pre .. 'VALUE_8_4'])
+    self:setVALUE_8_1(args[pre .. 'VALUE_8_1'])
+    self:setVALUE_8_2(args[pre .. 'VALUE_8_2'])
+    self:setVALUE_8_3(args[pre .. 'VALUE_8_3'])
+    self:setVALUE_8_4(args[pre .. 'VALUE_8_4'])
 end
 
 -- Retrieve the values of all members
 function netcache_nc_value_8Header:get(pre)
-	pre = pre or 'netcache_nc_value_8'
+    pre = pre or 'netcache_nc_value_8'
 
-	local args = {}
-	args[pre .. 'VALUE_8_1'] = self:getVALUE_8_1()
-	args[pre .. 'VALUE_8_2'] = self:getVALUE_8_2()
-	args[pre .. 'VALUE_8_3'] = self:getVALUE_8_3()
-	args[pre .. 'VALUE_8_4'] = self:getVALUE_8_4()
+    local args = {}
+    args[pre .. 'VALUE_8_1'] = self:getVALUE_8_1()
+    args[pre .. 'VALUE_8_2'] = self:getVALUE_8_2()
+    args[pre .. 'VALUE_8_3'] = self:getVALUE_8_3()
+    args[pre .. 'VALUE_8_4'] = self:getVALUE_8_4()
 
-	return args
+    return args
 end
 
 function netcache_nc_value_8Header:getString()
-	return 'netcache_nc_value_8 \n'
-		.. 'VALUE_8_1' .. self:getVALUE_8_1String() .. '\n'
-		.. 'VALUE_8_2' .. self:getVALUE_8_2String() .. '\n'
-		.. 'VALUE_8_3' .. self:getVALUE_8_3String() .. '\n'
-		.. 'VALUE_8_4' .. self:getVALUE_8_4String() .. '\n'
+    return 'netcache_nc_value_8 \n'
+        .. 'VALUE_8_1' .. self:getVALUE_8_1String() .. '\n'
+        .. 'VALUE_8_2' .. self:getVALUE_8_2String() .. '\n'
+        .. 'VALUE_8_3' .. self:getVALUE_8_3String() .. '\n'
+        .. 'VALUE_8_4' .. self:getVALUE_8_4String() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
 }
 function netcache_nc_value_8Header:resolveNextHeader()
-	return parse_nc_value_9
+    return parse_nc_value_9
 end
 
 function netcache_nc_value_8Header:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	return namedArgs
+    return namedArgs
 end
 
 -----------------------------------------------------

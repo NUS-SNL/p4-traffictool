@@ -11,14 +11,14 @@ p4_udp.fields = {p4_udp_srcPort, p4_udp_dstPort, p4_udp_length_, p4_udp_checksum
 
 -- protocol dissector function
 function p4_udp.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_UDP'
-	local subtree = tree:add(p4_udp,buffer(),'P4_UDP Protocol Data')
-		subtree:add(p4_udp_srcPort,tostring(buffer(0,2):bitfield(0,16)))
-		subtree:add(p4_udp_dstPort,tostring(buffer(2,2):bitfield(0,16)))
-		subtree:add(p4_udp_length_,tostring(buffer(4,2):bitfield(0,16)))
-		subtree:add(p4_udp_checksum,tostring(buffer(6,2):bitfield(0,16)))
-	local mydissectortable = DissectorTable.get('p4_udp.dstPort')
-	mydissectortable:try(buffer(2,2):bitfield(0,16), buffer:range(8):tvb(),pinfo,tree)
+    pinfo.cols.protocol = 'P4_UDP'
+    local subtree = tree:add(p4_udp,buffer(),'P4_UDP Protocol Data')
+        subtree:add(p4_udp_srcPort,tostring(buffer(0,2):bitfield(0,16)))
+        subtree:add(p4_udp_dstPort,tostring(buffer(2,2):bitfield(0,16)))
+        subtree:add(p4_udp_length_,tostring(buffer(4,2):bitfield(0,16)))
+        subtree:add(p4_udp_checksum,tostring(buffer(6,2):bitfield(0,16)))
+    local mydissectortable = DissectorTable.get('p4_udp.dstPort')
+    mydissectortable:try(buffer(2,2):bitfield(0,16), buffer:range(8):tvb(),pinfo,tree)
 
 end
 

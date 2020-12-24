@@ -15,50 +15,50 @@
 #endif
 
 namespace pcpp{
-	#pragma pack(push,1)
-	struct hdr_metahdr{
-		uint48_t 	 mac_dstAddr;
-		uint48_t 	 mac_srcAddr;
-		uint32_t 	 ip_srcAddr;
-		uint32_t 	 ip_dstAddr;
-		uint8_t 	 ip_protocol;
-	};
+    #pragma pack(push,1)
+    struct hdr_metahdr{
+        uint48_t      mac_dstAddr;
+        uint48_t      mac_srcAddr;
+        uint32_t      ip_srcAddr;
+        uint32_t      ip_dstAddr;
+        uint8_t      ip_protocol;
+    };
 
-	#pragma pack(pop)
-	class Hdr_metaLayer: public Layer{
-		public:
-		Hdr_metaLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_HDR_META;}
-		Hdr_metaLayer(){
-			m_DataLen = sizeof(hdr_metahdr);
-			m_Data = new uint8_t[m_DataLen];
-			memset(m_Data, 0, m_DataLen);
-			m_Protocol = P4_HDR_META;
-		}
+    #pragma pack(pop)
+    class Hdr_metaLayer: public Layer{
+        public:
+        Hdr_metaLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_HDR_META;}
+        Hdr_metaLayer(){
+            m_DataLen = sizeof(hdr_metahdr);
+            m_Data = new uint8_t[m_DataLen];
+            memset(m_Data, 0, m_DataLen);
+            m_Protocol = P4_HDR_META;
+        }
 
-		 // Getters and Setters for fields
-		 uint64_t getMac_dstaddr();
-		 void setMac_dstaddr(uint64_t value);
-		 uint64_t getMac_srcaddr();
-		 void setMac_srcaddr(uint64_t value);
-		 uint32_t getIp_srcaddr();
-		 void setIp_srcaddr(uint32_t value);
-		 uint32_t getIp_dstaddr();
-		 void setIp_dstaddr(uint32_t value);
-		 uint8_t getIp_protocol();
-		 void setIp_protocol(uint8_t value);
+         // Getters and Setters for fields
+         uint64_t getMac_dstaddr();
+         void setMac_dstaddr(uint64_t value);
+         uint64_t getMac_srcaddr();
+         void setMac_srcaddr(uint64_t value);
+         uint32_t getIp_srcaddr();
+         void setIp_srcaddr(uint32_t value);
+         uint32_t getIp_dstaddr();
+         void setIp_dstaddr(uint32_t value);
+         uint8_t getIp_protocol();
+         void setIp_protocol(uint8_t value);
 
-		 inline hdr_metahdr* getHdr_metaHeader() { return (hdr_metahdr*)m_Data; }
+         inline hdr_metahdr* getHdr_metaHeader() { return (hdr_metahdr*)m_Data; }
 
-		 void parseNextLayer();
+         void parseNextLayer();
 
-		 inline size_t getHeaderLen() { return sizeof(hdr_metahdr); }
+         inline size_t getHeaderLen() { return sizeof(hdr_metahdr); }
 
-		 void computeCalculateFields() {}
+         void computeCalculateFields() {}
 
-		 std::string toString();
+         std::string toString();
 
-		 OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
+         OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
 
-	};
+    };
 }
 #endif

@@ -8,11 +8,11 @@ p4_overlay.fields = {p4_overlay_swip}
 
 -- protocol dissector function
 function p4_overlay.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_OVERLAY'
-	local subtree = tree:add(p4_overlay,buffer(),'P4_OVERLAY Protocol Data')
-		subtree:add(p4_overlay_swip,tostring(buffer(0,4):bitfield(0,32)))
-	local mydissectortable = DissectorTable.get('p4_overlay.swip')
-	mydissectortable:try(buffer(0,4):bitfield(0,32), buffer:range(4):tvb(),pinfo,tree)
+    pinfo.cols.protocol = 'P4_OVERLAY'
+    local subtree = tree:add(p4_overlay,buffer(),'P4_OVERLAY Protocol Data')
+        subtree:add(p4_overlay_swip,tostring(buffer(0,4):bitfield(0,32)))
+    local mydissectortable = DissectorTable.get('p4_overlay.swip')
+    mydissectortable:try(buffer(0,4):bitfield(0,32), buffer:range(4):tvb(),pinfo,tree)
 
 end
 

@@ -43,8 +43,8 @@ local ntoh64, hton64 = ntoh64, hton64
 local netcache_nc_hdr = {}
 
 netcache_nc_hdr.headerFormat = [[
-	uint8_t 	 op;
-	uint64_t 	 key;
+    uint8_t      op;
+    uint64_t      key;
 ]]
 
 
@@ -60,30 +60,30 @@ netcache_nc_hdrHeader.__index = netcache_nc_hdrHeader
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function netcache_nc_hdrHeader:getOP()
-	return (self.op)
+    return (self.op)
 end
 
 function netcache_nc_hdrHeader:getOPstring()
-	return self:getOP()
+    return self:getOP()
 end
 
 function netcache_nc_hdrHeader:setOP(int)
-	int = int or 0
-	self.op = (int)
+    int = int or 0
+    self.op = (int)
 end
 
 
 function netcache_nc_hdrHeader:getKEY()
-	return hton64(self.key)
+    return hton64(self.key)
 end
 
 function netcache_nc_hdrHeader:getKEYstring()
-	return self:getKEY()
+    return self:getKEY()
 end
 
 function netcache_nc_hdrHeader:setKEY(int)
-	int = int or 0
-	self.key = hton64(int)
+    int = int or 0
+    self.key = hton64(int)
 end
 
 
@@ -93,56 +93,52 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function netcache_nc_hdrHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'netcache_nc_hdr'
+    args = args or {}
+    pre = pre or 'netcache_nc_hdr'
 
-	self:setOP(args[pre .. 'OP'])
-	self:setKEY(args[pre .. 'KEY'])
+    self:setOP(args[pre .. 'OP'])
+    self:setKEY(args[pre .. 'KEY'])
 end
 
 -- Retrieve the values of all members
 function netcache_nc_hdrHeader:get(pre)
-	pre = pre or 'netcache_nc_hdr'
+    pre = pre or 'netcache_nc_hdr'
 
-	local args = {}
-	args[pre .. 'OP'] = self:getOP()
-	args[pre .. 'KEY'] = self:getKEY()
+    local args = {}
+    args[pre .. 'OP'] = self:getOP()
+    args[pre .. 'KEY'] = self:getKEY()
 
-	return args
+    return args
 end
 
 function netcache_nc_hdrHeader:getString()
-	return 'netcache_nc_hdr \n'
-		.. 'OP' .. self:getOPString() .. '\n'
-		.. 'KEY' .. self:getKEYString() .. '\n'
+    return 'netcache_nc_hdr \n'
+        .. 'OP' .. self:getOPString() .. '\n'
+        .. 'KEY' .. self:getKEYString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	netcache_parse_value = 0x01,
-	netcache_nc_load = 0x02,
-	netcache_parse_value = 0x09,
+    netcache_parse_value = 0x01,
+    netcache_nc_load = 0x02,
+    netcache_parse_value = 0x09,
 }
 function netcache_nc_hdrHeader:resolveNextHeader()
-	local key = self:getOP()
-	for name, value in pairs(nextHeaderResolve) do
-		if key == value then
-			return name
-		end
-	end
-	return nil
+    local key = self:getOP()
+    for name, value in pairs(nextHeaderResolve) do
+        if key == value then
+            return name
+        end
+    end
+    return nil
 end
 
 function netcache_nc_hdrHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	if not namedArgs[pre .. 'OP'] then
-		for name, _port in pairs(nextHeaderResolve) do
-			if nextHeader == name then
-				namedArgs[pre .. 'OP'] = _port
-				break
-			end
-		end
-	end
-	return namedArgs
+    if not namedArgs[pre .. 'OP'] then
+        for name, _port in pairs(nextHeaderResolve) do
+            if nextHeader == name then
+                namedArgs[pre .. 'OP'] = _port
+    return namedArgs
 end
 
 -----------------------------------------------------

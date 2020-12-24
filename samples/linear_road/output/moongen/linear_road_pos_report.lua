@@ -43,13 +43,13 @@ local ntoh64, hton64 = ntoh64, hton64
 local linear_road_pos_report = {}
 
 linear_road_pos_report.headerFormat = [[
-	uint16_t 	 time;
-	uint32_t 	 vid;
-	uint8_t 	 spd;
-	uint8_t 	 xway;
-	uint8_t 	 lane;
-	uint8_t 	 dir;
-	uint8_t 	 seg;
+    uint16_t      time;
+    uint32_t      vid;
+    uint8_t      spd;
+    uint8_t      xway;
+    uint8_t      lane;
+    uint8_t      dir;
+    uint8_t      seg;
 ]]
 
 
@@ -65,100 +65,100 @@ linear_road_pos_reportHeader.__index = linear_road_pos_reportHeader
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function linear_road_pos_reportHeader:getTIME()
-	return hton16(self.time)
+    return hton16(self.time)
 end
 
 function linear_road_pos_reportHeader:getTIMEstring()
-	return self:getTIME()
+    return self:getTIME()
 end
 
 function linear_road_pos_reportHeader:setTIME(int)
-	int = int or 0
-	self.time = hton16(int)
+    int = int or 0
+    self.time = hton16(int)
 end
 
 
 function linear_road_pos_reportHeader:getVID()
-	return hton(self.vid)
+    return hton(self.vid)
 end
 
 function linear_road_pos_reportHeader:getVIDstring()
-	return self:getVID()
+    return self:getVID()
 end
 
 function linear_road_pos_reportHeader:setVID(int)
-	int = int or 0
-	self.vid = hton(int)
+    int = int or 0
+    self.vid = hton(int)
 end
 
 
 function linear_road_pos_reportHeader:getSPD()
-	return (self.spd)
+    return (self.spd)
 end
 
 function linear_road_pos_reportHeader:getSPDstring()
-	return self:getSPD()
+    return self:getSPD()
 end
 
 function linear_road_pos_reportHeader:setSPD(int)
-	int = int or 0
-	self.spd = (int)
+    int = int or 0
+    self.spd = (int)
 end
 
 
 function linear_road_pos_reportHeader:getXWAY()
-	return (self.xway)
+    return (self.xway)
 end
 
 function linear_road_pos_reportHeader:getXWAYstring()
-	return self:getXWAY()
+    return self:getXWAY()
 end
 
 function linear_road_pos_reportHeader:setXWAY(int)
-	int = int or 0
-	self.xway = (int)
+    int = int or 0
+    self.xway = (int)
 end
 
 
 function linear_road_pos_reportHeader:getLANE()
-	return (self.lane)
+    return (self.lane)
 end
 
 function linear_road_pos_reportHeader:getLANEstring()
-	return self:getLANE()
+    return self:getLANE()
 end
 
 function linear_road_pos_reportHeader:setLANE(int)
-	int = int or 0
-	self.lane = (int)
+    int = int or 0
+    self.lane = (int)
 end
 
 
 function linear_road_pos_reportHeader:getDIR()
-	return (self.dir)
+    return (self.dir)
 end
 
 function linear_road_pos_reportHeader:getDIRstring()
-	return self:getDIR()
+    return self:getDIR()
 end
 
 function linear_road_pos_reportHeader:setDIR(int)
-	int = int or 0
-	self.dir = (int)
+    int = int or 0
+    self.dir = (int)
 end
 
 
 function linear_road_pos_reportHeader:getSEG()
-	return (self.seg)
+    return (self.seg)
 end
 
 function linear_road_pos_reportHeader:getSEGstring()
-	return self:getSEG()
+    return self:getSEG()
 end
 
 function linear_road_pos_reportHeader:setSEG(int)
-	int = int or 0
-	self.seg = (int)
+    int = int or 0
+    self.seg = (int)
 end
 
 
@@ -168,54 +168,54 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function linear_road_pos_reportHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'linear_road_pos_report'
+    args = args or {}
+    pre = pre or 'linear_road_pos_report'
 
-	self:setTIME(args[pre .. 'TIME'])
-	self:setVID(args[pre .. 'VID'])
-	self:setSPD(args[pre .. 'SPD'])
-	self:setXWAY(args[pre .. 'XWAY'])
-	self:setLANE(args[pre .. 'LANE'])
-	self:setDIR(args[pre .. 'DIR'])
-	self:setSEG(args[pre .. 'SEG'])
+    self:setTIME(args[pre .. 'TIME'])
+    self:setVID(args[pre .. 'VID'])
+    self:setSPD(args[pre .. 'SPD'])
+    self:setXWAY(args[pre .. 'XWAY'])
+    self:setLANE(args[pre .. 'LANE'])
+    self:setDIR(args[pre .. 'DIR'])
+    self:setSEG(args[pre .. 'SEG'])
 end
 
 -- Retrieve the values of all members
 function linear_road_pos_reportHeader:get(pre)
-	pre = pre or 'linear_road_pos_report'
+    pre = pre or 'linear_road_pos_report'
 
-	local args = {}
-	args[pre .. 'TIME'] = self:getTIME()
-	args[pre .. 'VID'] = self:getVID()
-	args[pre .. 'SPD'] = self:getSPD()
-	args[pre .. 'XWAY'] = self:getXWAY()
-	args[pre .. 'LANE'] = self:getLANE()
-	args[pre .. 'DIR'] = self:getDIR()
-	args[pre .. 'SEG'] = self:getSEG()
+    local args = {}
+    args[pre .. 'TIME'] = self:getTIME()
+    args[pre .. 'VID'] = self:getVID()
+    args[pre .. 'SPD'] = self:getSPD()
+    args[pre .. 'XWAY'] = self:getXWAY()
+    args[pre .. 'LANE'] = self:getLANE()
+    args[pre .. 'DIR'] = self:getDIR()
+    args[pre .. 'SEG'] = self:getSEG()
 
-	return args
+    return args
 end
 
 function linear_road_pos_reportHeader:getString()
-	return 'linear_road_pos_report \n'
-		.. 'TIME' .. self:getTIMEString() .. '\n'
-		.. 'VID' .. self:getVIDString() .. '\n'
-		.. 'SPD' .. self:getSPDString() .. '\n'
-		.. 'XWAY' .. self:getXWAYString() .. '\n'
-		.. 'LANE' .. self:getLANEString() .. '\n'
-		.. 'DIR' .. self:getDIRString() .. '\n'
-		.. 'SEG' .. self:getSEGString() .. '\n'
+    return 'linear_road_pos_report \n'
+        .. 'TIME' .. self:getTIMEString() .. '\n'
+        .. 'VID' .. self:getVIDString() .. '\n'
+        .. 'SPD' .. self:getSPDString() .. '\n'
+        .. 'XWAY' .. self:getXWAYString() .. '\n'
+        .. 'LANE' .. self:getLANEString() .. '\n'
+        .. 'DIR' .. self:getDIRString() .. '\n'
+        .. 'SEG' .. self:getSEGString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
 }
 function linear_road_pos_reportHeader:resolveNextHeader()
-	return nil
+    return nil
 end
 
 function linear_road_pos_reportHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	return namedArgs
+    return namedArgs
 end
 
 -----------------------------------------------------

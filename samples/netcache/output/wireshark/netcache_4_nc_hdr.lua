@@ -9,12 +9,12 @@ p4_nc_hdr.fields = {p4_nc_hdr_op, p4_nc_hdr_key}
 
 -- protocol dissector function
 function p4_nc_hdr.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_NC_HDR'
-	local subtree = tree:add(p4_nc_hdr,buffer(),'P4_NC_HDR Protocol Data')
-		subtree:add(p4_nc_hdr_op,tostring(buffer(0,1):bitfield(0,8)))
-		subtree:add(p4_nc_hdr_key,tostring(buffer(1,8):bitfield(0,64)))
-	local mydissectortable = DissectorTable.get('p4_nc_hdr.op')
-	mydissectortable:try(buffer(0,1):bitfield(0,8), buffer:range(9):tvb(),pinfo,tree)
+    pinfo.cols.protocol = 'P4_NC_HDR'
+    local subtree = tree:add(p4_nc_hdr,buffer(),'P4_NC_HDR Protocol Data')
+        subtree:add(p4_nc_hdr_op,tostring(buffer(0,1):bitfield(0,8)))
+        subtree:add(p4_nc_hdr_key,tostring(buffer(1,8):bitfield(0,64)))
+    local mydissectortable = DissectorTable.get('p4_nc_hdr.op')
+    mydissectortable:try(buffer(0,1):bitfield(0,8), buffer:range(9):tvb(),pinfo,tree)
 
 end
 

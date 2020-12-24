@@ -12,13 +12,13 @@ p4_hdr_meta.fields = {p4_hdr_meta_mac_dstAddr, p4_hdr_meta_mac_srcAddr, p4_hdr_m
 
 -- protocol dissector function
 function p4_hdr_meta.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_HDR_META'
-	local subtree = tree:add(p4_hdr_meta,buffer(),'P4_HDR_META Protocol Data')
-		subtree:add(p4_hdr_meta_mac_dstAddr,tostring(buffer(0,6):bitfield(0,48)))
-		subtree:add(p4_hdr_meta_mac_srcAddr,tostring(buffer(6,6):bitfield(0,48)))
-		subtree:add(p4_hdr_meta_ip_srcAddr,tostring(buffer(12,4):bitfield(0,32)))
-		subtree:add(p4_hdr_meta_ip_dstAddr,tostring(buffer(16,4):bitfield(0,32)))
-		subtree:add(p4_hdr_meta_ip_protocol,tostring(buffer(20,1):bitfield(0,8)))
+    pinfo.cols.protocol = 'P4_HDR_META'
+    local subtree = tree:add(p4_hdr_meta,buffer(),'P4_HDR_META Protocol Data')
+        subtree:add(p4_hdr_meta_mac_dstAddr,tostring(buffer(0,6):bitfield(0,48)))
+        subtree:add(p4_hdr_meta_mac_srcAddr,tostring(buffer(6,6):bitfield(0,48)))
+        subtree:add(p4_hdr_meta_ip_srcAddr,tostring(buffer(12,4):bitfield(0,32)))
+        subtree:add(p4_hdr_meta_ip_dstAddr,tostring(buffer(16,4):bitfield(0,32)))
+        subtree:add(p4_hdr_meta_ip_protocol,tostring(buffer(20,1):bitfield(0,8)))
 
 end
 

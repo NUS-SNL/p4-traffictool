@@ -8,11 +8,11 @@ p4_lr_msg_type.fields = {p4_lr_msg_type_msg_type}
 
 -- protocol dissector function
 function p4_lr_msg_type.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_LR_MSG_TYPE'
-	local subtree = tree:add(p4_lr_msg_type,buffer(),'P4_LR_MSG_TYPE Protocol Data')
-		subtree:add(p4_lr_msg_type_msg_type,tostring(buffer(0,1):bitfield(0,8)))
-	local mydissectortable = DissectorTable.get('p4_lr_msg_type.msg_type')
-	mydissectortable:try(buffer(0,1):bitfield(0,8), buffer:range(1):tvb(),pinfo,tree)
+    pinfo.cols.protocol = 'P4_LR_MSG_TYPE'
+    local subtree = tree:add(p4_lr_msg_type,buffer(),'P4_LR_MSG_TYPE Protocol Data')
+        subtree:add(p4_lr_msg_type_msg_type,tostring(buffer(0,1):bitfield(0,8)))
+    local mydissectortable = DissectorTable.get('p4_lr_msg_type.msg_type')
+    mydissectortable:try(buffer(0,1):bitfield(0,8), buffer:range(1):tvb(),pinfo,tree)
 
 end
 

@@ -10,11 +10,11 @@ p4_travel_estimate.fields = {p4_travel_estimate_qid, p4_travel_estimate_travel_t
 
 -- protocol dissector function
 function p4_travel_estimate.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_TRAVEL_ESTIMATE'
-	local subtree = tree:add(p4_travel_estimate,buffer(),'P4_TRAVEL_ESTIMATE Protocol Data')
-		subtree:add(p4_travel_estimate_qid,tostring(buffer(0,4):bitfield(0,32)))
-		subtree:add(p4_travel_estimate_travel_time,tostring(buffer(4,2):bitfield(0,16)))
-		subtree:add(p4_travel_estimate_toll,tostring(buffer(6,2):bitfield(0,16)))
+    pinfo.cols.protocol = 'P4_TRAVEL_ESTIMATE'
+    local subtree = tree:add(p4_travel_estimate,buffer(),'P4_TRAVEL_ESTIMATE Protocol Data')
+        subtree:add(p4_travel_estimate_qid,tostring(buffer(0,4):bitfield(0,32)))
+        subtree:add(p4_travel_estimate_travel_time,tostring(buffer(4,2):bitfield(0,16)))
+        subtree:add(p4_travel_estimate_toll,tostring(buffer(6,2):bitfield(0,16)))
 
 end
 

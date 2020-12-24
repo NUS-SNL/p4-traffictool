@@ -15,38 +15,38 @@
 #endif
 
 namespace pcpp{
-	#pragma pack(push,1)
-	struct overlayhdr{
-		uint32_t 	 swip;
-	};
+    #pragma pack(push,1)
+    struct overlayhdr{
+        uint32_t      swip;
+    };
 
-	#pragma pack(pop)
-	class OverlayLayer: public Layer{
-		public:
-		OverlayLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_OVERLAY;}
-		OverlayLayer(){
-			m_DataLen = sizeof(overlayhdr);
-			m_Data = new uint8_t[m_DataLen];
-			memset(m_Data, 0, m_DataLen);
-			m_Protocol = P4_OVERLAY;
-		}
+    #pragma pack(pop)
+    class OverlayLayer: public Layer{
+        public:
+        OverlayLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_OVERLAY;}
+        OverlayLayer(){
+            m_DataLen = sizeof(overlayhdr);
+            m_Data = new uint8_t[m_DataLen];
+            memset(m_Data, 0, m_DataLen);
+            m_Protocol = P4_OVERLAY;
+        }
 
-		 // Getters and Setters for fields
-		 uint32_t getSwip();
-		 void setSwip(uint32_t value);
+         // Getters and Setters for fields
+         uint32_t getSwip();
+         void setSwip(uint32_t value);
 
-		 inline overlayhdr* getOverlayHeader() { return (overlayhdr*)m_Data; }
+         inline overlayhdr* getOverlayHeader() { return (overlayhdr*)m_Data; }
 
-		 void parseNextLayer();
+         void parseNextLayer();
 
-		 inline size_t getHeaderLen() { return sizeof(overlayhdr); }
+         inline size_t getHeaderLen() { return sizeof(overlayhdr); }
 
-		 void computeCalculateFields() {}
+         void computeCalculateFields() {}
 
-		 std::string toString();
+         std::string toString();
 
-		 OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
+         OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
 
-	};
+    };
 }
 #endif

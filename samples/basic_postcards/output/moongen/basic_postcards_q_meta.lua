@@ -43,10 +43,10 @@ local ntoh64, hton64 = ntoh64, hton64
 local basic_postcards_q_meta = {}
 
 basic_postcards_q_meta.headerFormat = [[
-	union bitfield_24 	 enq_qdepth;
-	union bitfield_24 	 deq_qdepth;
-	uint32_t 	 deq_timedelta;
-	uint32_t 	 enq_timestamp;
+    union bitfield_24      enq_qdepth;
+    union bitfield_24      deq_qdepth;
+    uint32_t      deq_timedelta;
+    uint32_t      enq_timestamp;
 ]]
 
 
@@ -62,58 +62,58 @@ basic_postcards_q_metaHeader.__index = basic_postcards_q_metaHeader
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function basic_postcards_q_metaHeader:getENQ_QDEPTH()
-	return (self.enq_qdepth:get())
+    return (self.enq_qdepth:get())
 end
 
 function basic_postcards_q_metaHeader:getENQ_QDEPTHstring()
-	return self:getENQ_QDEPTH()
+    return self:getENQ_QDEPTH()
 end
 
 function basic_postcards_q_metaHeader:setENQ_QDEPTH(int)
-	int = int or 0
-	self.enq_qdepth:set(int)
+    int = int or 0
+    self.enq_qdepth:set(int)
 end
 
 
 function basic_postcards_q_metaHeader:getDEQ_QDEPTH()
-	return (self.deq_qdepth:get())
+    return (self.deq_qdepth:get())
 end
 
 function basic_postcards_q_metaHeader:getDEQ_QDEPTHstring()
-	return self:getDEQ_QDEPTH()
+    return self:getDEQ_QDEPTH()
 end
 
 function basic_postcards_q_metaHeader:setDEQ_QDEPTH(int)
-	int = int or 0
-	self.deq_qdepth:set(int)
+    int = int or 0
+    self.deq_qdepth:set(int)
 end
 
 
 function basic_postcards_q_metaHeader:getDEQ_TIMEDELTA()
-	return hton(self.deq_timedelta)
+    return hton(self.deq_timedelta)
 end
 
 function basic_postcards_q_metaHeader:getDEQ_TIMEDELTAstring()
-	return self:getDEQ_TIMEDELTA()
+    return self:getDEQ_TIMEDELTA()
 end
 
 function basic_postcards_q_metaHeader:setDEQ_TIMEDELTA(int)
-	int = int or 0
-	self.deq_timedelta = hton(int)
+    int = int or 0
+    self.deq_timedelta = hton(int)
 end
 
 
 function basic_postcards_q_metaHeader:getENQ_TIMESTAMP()
-	return hton(self.enq_timestamp)
+    return hton(self.enq_timestamp)
 end
 
 function basic_postcards_q_metaHeader:getENQ_TIMESTAMPstring()
-	return self:getENQ_TIMESTAMP()
+    return self:getENQ_TIMESTAMP()
 end
 
 function basic_postcards_q_metaHeader:setENQ_TIMESTAMP(int)
-	int = int or 0
-	self.enq_timestamp = hton(int)
+    int = int or 0
+    self.enq_timestamp = hton(int)
 end
 
 
@@ -123,45 +123,45 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function basic_postcards_q_metaHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'basic_postcards_q_meta'
+    args = args or {}
+    pre = pre or 'basic_postcards_q_meta'
 
-	self:setENQ_QDEPTH(args[pre .. 'ENQ_QDEPTH'])
-	self:setDEQ_QDEPTH(args[pre .. 'DEQ_QDEPTH'])
-	self:setDEQ_TIMEDELTA(args[pre .. 'DEQ_TIMEDELTA'])
-	self:setENQ_TIMESTAMP(args[pre .. 'ENQ_TIMESTAMP'])
+    self:setENQ_QDEPTH(args[pre .. 'ENQ_QDEPTH'])
+    self:setDEQ_QDEPTH(args[pre .. 'DEQ_QDEPTH'])
+    self:setDEQ_TIMEDELTA(args[pre .. 'DEQ_TIMEDELTA'])
+    self:setENQ_TIMESTAMP(args[pre .. 'ENQ_TIMESTAMP'])
 end
 
 -- Retrieve the values of all members
 function basic_postcards_q_metaHeader:get(pre)
-	pre = pre or 'basic_postcards_q_meta'
+    pre = pre or 'basic_postcards_q_meta'
 
-	local args = {}
-	args[pre .. 'ENQ_QDEPTH'] = self:getENQ_QDEPTH()
-	args[pre .. 'DEQ_QDEPTH'] = self:getDEQ_QDEPTH()
-	args[pre .. 'DEQ_TIMEDELTA'] = self:getDEQ_TIMEDELTA()
-	args[pre .. 'ENQ_TIMESTAMP'] = self:getENQ_TIMESTAMP()
+    local args = {}
+    args[pre .. 'ENQ_QDEPTH'] = self:getENQ_QDEPTH()
+    args[pre .. 'DEQ_QDEPTH'] = self:getDEQ_QDEPTH()
+    args[pre .. 'DEQ_TIMEDELTA'] = self:getDEQ_TIMEDELTA()
+    args[pre .. 'ENQ_TIMESTAMP'] = self:getENQ_TIMESTAMP()
 
-	return args
+    return args
 end
 
 function basic_postcards_q_metaHeader:getString()
-	return 'basic_postcards_q_meta \n'
-		.. 'ENQ_QDEPTH' .. self:getENQ_QDEPTHString() .. '\n'
-		.. 'DEQ_QDEPTH' .. self:getDEQ_QDEPTHString() .. '\n'
-		.. 'DEQ_TIMEDELTA' .. self:getDEQ_TIMEDELTAString() .. '\n'
-		.. 'ENQ_TIMESTAMP' .. self:getENQ_TIMESTAMPString() .. '\n'
+    return 'basic_postcards_q_meta \n'
+        .. 'ENQ_QDEPTH' .. self:getENQ_QDEPTHString() .. '\n'
+        .. 'DEQ_QDEPTH' .. self:getDEQ_QDEPTHString() .. '\n'
+        .. 'DEQ_TIMEDELTA' .. self:getDEQ_TIMEDELTAString() .. '\n'
+        .. 'ENQ_TIMESTAMP' .. self:getENQ_TIMESTAMPString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
 }
 function basic_postcards_q_metaHeader:resolveNextHeader()
-	return nil
+    return nil
 end
 
 function basic_postcards_q_metaHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	return namedArgs
+    return namedArgs
 end
 
 -----------------------------------------------------

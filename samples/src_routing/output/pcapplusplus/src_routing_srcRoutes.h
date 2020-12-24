@@ -15,41 +15,41 @@
 #endif
 
 namespace pcpp{
-	#pragma pack(push,1)
-	struct srcrouteshdr{
-		uint8_t 	 bos;
-		uint16_t 	 port;
-	};
+    #pragma pack(push,1)
+    struct srcrouteshdr{
+        uint8_t      bos;
+        uint16_t      port;
+    };
 
-	#pragma pack(pop)
-	class SrcroutesLayer: public Layer{
-		public:
-		SrcroutesLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_SRCROUTES;}
-		SrcroutesLayer(){
-			m_DataLen = sizeof(srcrouteshdr);
-			m_Data = new uint8_t[m_DataLen];
-			memset(m_Data, 0, m_DataLen);
-			m_Protocol = P4_SRCROUTES;
-		}
+    #pragma pack(pop)
+    class SrcroutesLayer: public Layer{
+        public:
+        SrcroutesLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_SRCROUTES;}
+        SrcroutesLayer(){
+            m_DataLen = sizeof(srcrouteshdr);
+            m_Data = new uint8_t[m_DataLen];
+            memset(m_Data, 0, m_DataLen);
+            m_Protocol = P4_SRCROUTES;
+        }
 
-		 // Getters and Setters for fields
-		 uint8_t getBos();
-		 void setBos(uint8_t value);
-		 uint16_t getPort();
-		 void setPort(uint16_t value);
+         // Getters and Setters for fields
+         uint8_t getBos();
+         void setBos(uint8_t value);
+         uint16_t getPort();
+         void setPort(uint16_t value);
 
-		 inline srcrouteshdr* getSrcroutesHeader() { return (srcrouteshdr*)m_Data; }
+         inline srcrouteshdr* getSrcroutesHeader() { return (srcrouteshdr*)m_Data; }
 
-		 void parseNextLayer();
+         void parseNextLayer();
 
-		 inline size_t getHeaderLen() { return sizeof(srcrouteshdr); }
+         inline size_t getHeaderLen() { return sizeof(srcrouteshdr); }
 
-		 void computeCalculateFields() {}
+         void computeCalculateFields() {}
 
-		 std::string toString();
+         std::string toString();
 
-		 OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
+         OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
 
-	};
+    };
 }
 #endif

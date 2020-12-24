@@ -43,11 +43,11 @@ local ntoh64, hton64 = ntoh64, hton64
 local linear_road_toll_notification = {}
 
 linear_road_toll_notification.headerFormat = [[
-	uint16_t 	 time;
-	uint32_t 	 vid;
-	uint16_t 	 emit;
-	uint8_t 	 spd;
-	uint16_t 	 toll;
+    uint16_t      time;
+    uint32_t      vid;
+    uint16_t      emit;
+    uint8_t      spd;
+    uint16_t      toll;
 ]]
 
 
@@ -63,72 +63,72 @@ linear_road_toll_notificationHeader.__index = linear_road_toll_notificationHeade
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function linear_road_toll_notificationHeader:getTIME()
-	return hton16(self.time)
+    return hton16(self.time)
 end
 
 function linear_road_toll_notificationHeader:getTIMEstring()
-	return self:getTIME()
+    return self:getTIME()
 end
 
 function linear_road_toll_notificationHeader:setTIME(int)
-	int = int or 0
-	self.time = hton16(int)
+    int = int or 0
+    self.time = hton16(int)
 end
 
 
 function linear_road_toll_notificationHeader:getVID()
-	return hton(self.vid)
+    return hton(self.vid)
 end
 
 function linear_road_toll_notificationHeader:getVIDstring()
-	return self:getVID()
+    return self:getVID()
 end
 
 function linear_road_toll_notificationHeader:setVID(int)
-	int = int or 0
-	self.vid = hton(int)
+    int = int or 0
+    self.vid = hton(int)
 end
 
 
 function linear_road_toll_notificationHeader:getEMIT()
-	return hton16(self.emit)
+    return hton16(self.emit)
 end
 
 function linear_road_toll_notificationHeader:getEMITstring()
-	return self:getEMIT()
+    return self:getEMIT()
 end
 
 function linear_road_toll_notificationHeader:setEMIT(int)
-	int = int or 0
-	self.emit = hton16(int)
+    int = int or 0
+    self.emit = hton16(int)
 end
 
 
 function linear_road_toll_notificationHeader:getSPD()
-	return (self.spd)
+    return (self.spd)
 end
 
 function linear_road_toll_notificationHeader:getSPDstring()
-	return self:getSPD()
+    return self:getSPD()
 end
 
 function linear_road_toll_notificationHeader:setSPD(int)
-	int = int or 0
-	self.spd = (int)
+    int = int or 0
+    self.spd = (int)
 end
 
 
 function linear_road_toll_notificationHeader:getTOLL()
-	return hton16(self.toll)
+    return hton16(self.toll)
 end
 
 function linear_road_toll_notificationHeader:getTOLLstring()
-	return self:getTOLL()
+    return self:getTOLL()
 end
 
 function linear_road_toll_notificationHeader:setTOLL(int)
-	int = int or 0
-	self.toll = hton16(int)
+    int = int or 0
+    self.toll = hton16(int)
 end
 
 
@@ -138,48 +138,48 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function linear_road_toll_notificationHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'linear_road_toll_notification'
+    args = args or {}
+    pre = pre or 'linear_road_toll_notification'
 
-	self:setTIME(args[pre .. 'TIME'])
-	self:setVID(args[pre .. 'VID'])
-	self:setEMIT(args[pre .. 'EMIT'])
-	self:setSPD(args[pre .. 'SPD'])
-	self:setTOLL(args[pre .. 'TOLL'])
+    self:setTIME(args[pre .. 'TIME'])
+    self:setVID(args[pre .. 'VID'])
+    self:setEMIT(args[pre .. 'EMIT'])
+    self:setSPD(args[pre .. 'SPD'])
+    self:setTOLL(args[pre .. 'TOLL'])
 end
 
 -- Retrieve the values of all members
 function linear_road_toll_notificationHeader:get(pre)
-	pre = pre or 'linear_road_toll_notification'
+    pre = pre or 'linear_road_toll_notification'
 
-	local args = {}
-	args[pre .. 'TIME'] = self:getTIME()
-	args[pre .. 'VID'] = self:getVID()
-	args[pre .. 'EMIT'] = self:getEMIT()
-	args[pre .. 'SPD'] = self:getSPD()
-	args[pre .. 'TOLL'] = self:getTOLL()
+    local args = {}
+    args[pre .. 'TIME'] = self:getTIME()
+    args[pre .. 'VID'] = self:getVID()
+    args[pre .. 'EMIT'] = self:getEMIT()
+    args[pre .. 'SPD'] = self:getSPD()
+    args[pre .. 'TOLL'] = self:getTOLL()
 
-	return args
+    return args
 end
 
 function linear_road_toll_notificationHeader:getString()
-	return 'linear_road_toll_notification \n'
-		.. 'TIME' .. self:getTIMEString() .. '\n'
-		.. 'VID' .. self:getVIDString() .. '\n'
-		.. 'EMIT' .. self:getEMITString() .. '\n'
-		.. 'SPD' .. self:getSPDString() .. '\n'
-		.. 'TOLL' .. self:getTOLLString() .. '\n'
+    return 'linear_road_toll_notification \n'
+        .. 'TIME' .. self:getTIMEString() .. '\n'
+        .. 'VID' .. self:getVIDString() .. '\n'
+        .. 'EMIT' .. self:getEMITString() .. '\n'
+        .. 'SPD' .. self:getSPDString() .. '\n'
+        .. 'TOLL' .. self:getTOLLString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
 }
 function linear_road_toll_notificationHeader:resolveNextHeader()
-	return nil
+    return nil
 end
 
 function linear_road_toll_notificationHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	return namedArgs
+    return namedArgs
 end
 
 -----------------------------------------------------

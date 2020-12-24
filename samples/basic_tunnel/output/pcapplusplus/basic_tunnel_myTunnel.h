@@ -15,41 +15,41 @@
 #endif
 
 namespace pcpp{
-	#pragma pack(push,1)
-	struct mytunnelhdr{
-		uint16_t 	 proto_id;
-		uint16_t 	 dst_id;
-	};
+    #pragma pack(push,1)
+    struct mytunnelhdr{
+        uint16_t      proto_id;
+        uint16_t      dst_id;
+    };
 
-	#pragma pack(pop)
-	class MytunnelLayer: public Layer{
-		public:
-		MytunnelLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_MYTUNNEL;}
-		MytunnelLayer(){
-			m_DataLen = sizeof(mytunnelhdr);
-			m_Data = new uint8_t[m_DataLen];
-			memset(m_Data, 0, m_DataLen);
-			m_Protocol = P4_MYTUNNEL;
-		}
+    #pragma pack(pop)
+    class MytunnelLayer: public Layer{
+        public:
+        MytunnelLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_MYTUNNEL;}
+        MytunnelLayer(){
+            m_DataLen = sizeof(mytunnelhdr);
+            m_Data = new uint8_t[m_DataLen];
+            memset(m_Data, 0, m_DataLen);
+            m_Protocol = P4_MYTUNNEL;
+        }
 
-		 // Getters and Setters for fields
-		 uint16_t getProto_id();
-		 void setProto_id(uint16_t value);
-		 uint16_t getDst_id();
-		 void setDst_id(uint16_t value);
+         // Getters and Setters for fields
+         uint16_t getProto_id();
+         void setProto_id(uint16_t value);
+         uint16_t getDst_id();
+         void setDst_id(uint16_t value);
 
-		 inline mytunnelhdr* getMytunnelHeader() { return (mytunnelhdr*)m_Data; }
+         inline mytunnelhdr* getMytunnelHeader() { return (mytunnelhdr*)m_Data; }
 
-		 void parseNextLayer();
+         void parseNextLayer();
 
-		 inline size_t getHeaderLen() { return sizeof(mytunnelhdr); }
+         inline size_t getHeaderLen() { return sizeof(mytunnelhdr); }
 
-		 void computeCalculateFields() {}
+         void computeCalculateFields() {}
 
-		 std::string toString();
+         std::string toString();
 
-		 OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
+         OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
 
-	};
+    };
 }
 #endif

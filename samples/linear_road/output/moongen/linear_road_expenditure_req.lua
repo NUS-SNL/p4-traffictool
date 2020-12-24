@@ -43,11 +43,11 @@ local ntoh64, hton64 = ntoh64, hton64
 local linear_road_expenditure_req = {}
 
 linear_road_expenditure_req.headerFormat = [[
-	uint16_t 	 time;
-	uint32_t 	 vid;
-	uint32_t 	 qid;
-	uint8_t 	 xway;
-	uint8_t 	 day;
+    uint16_t      time;
+    uint32_t      vid;
+    uint32_t      qid;
+    uint8_t      xway;
+    uint8_t      day;
 ]]
 
 
@@ -63,72 +63,72 @@ linear_road_expenditure_reqHeader.__index = linear_road_expenditure_reqHeader
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function linear_road_expenditure_reqHeader:getTIME()
-	return hton16(self.time)
+    return hton16(self.time)
 end
 
 function linear_road_expenditure_reqHeader:getTIMEstring()
-	return self:getTIME()
+    return self:getTIME()
 end
 
 function linear_road_expenditure_reqHeader:setTIME(int)
-	int = int or 0
-	self.time = hton16(int)
+    int = int or 0
+    self.time = hton16(int)
 end
 
 
 function linear_road_expenditure_reqHeader:getVID()
-	return hton(self.vid)
+    return hton(self.vid)
 end
 
 function linear_road_expenditure_reqHeader:getVIDstring()
-	return self:getVID()
+    return self:getVID()
 end
 
 function linear_road_expenditure_reqHeader:setVID(int)
-	int = int or 0
-	self.vid = hton(int)
+    int = int or 0
+    self.vid = hton(int)
 end
 
 
 function linear_road_expenditure_reqHeader:getQID()
-	return hton(self.qid)
+    return hton(self.qid)
 end
 
 function linear_road_expenditure_reqHeader:getQIDstring()
-	return self:getQID()
+    return self:getQID()
 end
 
 function linear_road_expenditure_reqHeader:setQID(int)
-	int = int or 0
-	self.qid = hton(int)
+    int = int or 0
+    self.qid = hton(int)
 end
 
 
 function linear_road_expenditure_reqHeader:getXWAY()
-	return (self.xway)
+    return (self.xway)
 end
 
 function linear_road_expenditure_reqHeader:getXWAYstring()
-	return self:getXWAY()
+    return self:getXWAY()
 end
 
 function linear_road_expenditure_reqHeader:setXWAY(int)
-	int = int or 0
-	self.xway = (int)
+    int = int or 0
+    self.xway = (int)
 end
 
 
 function linear_road_expenditure_reqHeader:getDAY()
-	return (self.day)
+    return (self.day)
 end
 
 function linear_road_expenditure_reqHeader:getDAYstring()
-	return self:getDAY()
+    return self:getDAY()
 end
 
 function linear_road_expenditure_reqHeader:setDAY(int)
-	int = int or 0
-	self.day = (int)
+    int = int or 0
+    self.day = (int)
 end
 
 
@@ -138,48 +138,48 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function linear_road_expenditure_reqHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'linear_road_expenditure_req'
+    args = args or {}
+    pre = pre or 'linear_road_expenditure_req'
 
-	self:setTIME(args[pre .. 'TIME'])
-	self:setVID(args[pre .. 'VID'])
-	self:setQID(args[pre .. 'QID'])
-	self:setXWAY(args[pre .. 'XWAY'])
-	self:setDAY(args[pre .. 'DAY'])
+    self:setTIME(args[pre .. 'TIME'])
+    self:setVID(args[pre .. 'VID'])
+    self:setQID(args[pre .. 'QID'])
+    self:setXWAY(args[pre .. 'XWAY'])
+    self:setDAY(args[pre .. 'DAY'])
 end
 
 -- Retrieve the values of all members
 function linear_road_expenditure_reqHeader:get(pre)
-	pre = pre or 'linear_road_expenditure_req'
+    pre = pre or 'linear_road_expenditure_req'
 
-	local args = {}
-	args[pre .. 'TIME'] = self:getTIME()
-	args[pre .. 'VID'] = self:getVID()
-	args[pre .. 'QID'] = self:getQID()
-	args[pre .. 'XWAY'] = self:getXWAY()
-	args[pre .. 'DAY'] = self:getDAY()
+    local args = {}
+    args[pre .. 'TIME'] = self:getTIME()
+    args[pre .. 'VID'] = self:getVID()
+    args[pre .. 'QID'] = self:getQID()
+    args[pre .. 'XWAY'] = self:getXWAY()
+    args[pre .. 'DAY'] = self:getDAY()
 
-	return args
+    return args
 end
 
 function linear_road_expenditure_reqHeader:getString()
-	return 'linear_road_expenditure_req \n'
-		.. 'TIME' .. self:getTIMEString() .. '\n'
-		.. 'VID' .. self:getVIDString() .. '\n'
-		.. 'QID' .. self:getQIDString() .. '\n'
-		.. 'XWAY' .. self:getXWAYString() .. '\n'
-		.. 'DAY' .. self:getDAYString() .. '\n'
+    return 'linear_road_expenditure_req \n'
+        .. 'TIME' .. self:getTIMEString() .. '\n'
+        .. 'VID' .. self:getVIDString() .. '\n'
+        .. 'QID' .. self:getQIDString() .. '\n'
+        .. 'XWAY' .. self:getXWAYString() .. '\n'
+        .. 'DAY' .. self:getDAYString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
 }
 function linear_road_expenditure_reqHeader:resolveNextHeader()
-	return nil
+    return nil
 end
 
 function linear_road_expenditure_reqHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	return namedArgs
+    return namedArgs
 end
 
 -----------------------------------------------------

@@ -15,44 +15,44 @@
 #endif
 
 namespace pcpp{
-	#pragma pack(push,1)
-	struct hulahdr{
-		uint8_t 	 dir;
-		uint16_t 	 qdepth;
-		uint32_t 	 digest;
-	};
+    #pragma pack(push,1)
+    struct hulahdr{
+        uint8_t      dir;
+        uint16_t      qdepth;
+        uint32_t      digest;
+    };
 
-	#pragma pack(pop)
-	class HulaLayer: public Layer{
-		public:
-		HulaLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_HULA;}
-		HulaLayer(){
-			m_DataLen = sizeof(hulahdr);
-			m_Data = new uint8_t[m_DataLen];
-			memset(m_Data, 0, m_DataLen);
-			m_Protocol = P4_HULA;
-		}
+    #pragma pack(pop)
+    class HulaLayer: public Layer{
+        public:
+        HulaLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_HULA;}
+        HulaLayer(){
+            m_DataLen = sizeof(hulahdr);
+            m_Data = new uint8_t[m_DataLen];
+            memset(m_Data, 0, m_DataLen);
+            m_Protocol = P4_HULA;
+        }
 
-		 // Getters and Setters for fields
-		 uint8_t getDir();
-		 void setDir(uint8_t value);
-		 uint16_t getQdepth();
-		 void setQdepth(uint16_t value);
-		 uint32_t getDigest();
-		 void setDigest(uint32_t value);
+         // Getters and Setters for fields
+         uint8_t getDir();
+         void setDir(uint8_t value);
+         uint16_t getQdepth();
+         void setQdepth(uint16_t value);
+         uint32_t getDigest();
+         void setDigest(uint32_t value);
 
-		 inline hulahdr* getHulaHeader() { return (hulahdr*)m_Data; }
+         inline hulahdr* getHulaHeader() { return (hulahdr*)m_Data; }
 
-		 void parseNextLayer();
+         void parseNextLayer();
 
-		 inline size_t getHeaderLen() { return sizeof(hulahdr); }
+         inline size_t getHeaderLen() { return sizeof(hulahdr); }
 
-		 void computeCalculateFields() {}
+         void computeCalculateFields() {}
 
-		 std::string toString();
+         std::string toString();
 
-		 OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
+         OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
 
-	};
+    };
 }
 #endif

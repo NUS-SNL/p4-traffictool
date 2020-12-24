@@ -43,10 +43,10 @@ local ntoh64, hton64 = ntoh64, hton64
 local mri_ipv4_option = {}
 
 mri_ipv4_option.headerFormat = [[
-	uint8_t 	 copyFlag;
-	uint8_t 	 optClass;
-	uint8_t 	 option;
-	uint8_t 	 optionLength;
+    uint8_t      copyFlag;
+    uint8_t      optClass;
+    uint8_t      option;
+    uint8_t      optionLength;
 ]]
 
 
@@ -62,58 +62,58 @@ mri_ipv4_optionHeader.__index = mri_ipv4_optionHeader
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function mri_ipv4_optionHeader:getCOPYFLAG()
-	return (self.copyFlag)
+    return (self.copyFlag)
 end
 
 function mri_ipv4_optionHeader:getCOPYFLAGstring()
-	return self:getCOPYFLAG()
+    return self:getCOPYFLAG()
 end
 
 function mri_ipv4_optionHeader:setCOPYFLAG(int)
-	int = int or 0
-	self.copyFlag = (int)
+    int = int or 0
+    self.copyFlag = (int)
 end
 
 
 function mri_ipv4_optionHeader:getOPTCLASS()
-	return (self.optClass)
+    return (self.optClass)
 end
 
 function mri_ipv4_optionHeader:getOPTCLASSstring()
-	return self:getOPTCLASS()
+    return self:getOPTCLASS()
 end
 
 function mri_ipv4_optionHeader:setOPTCLASS(int)
-	int = int or 0
-	self.optClass = (int)
+    int = int or 0
+    self.optClass = (int)
 end
 
 
 function mri_ipv4_optionHeader:getOPTION()
-	return (self.option)
+    return (self.option)
 end
 
 function mri_ipv4_optionHeader:getOPTIONstring()
-	return self:getOPTION()
+    return self:getOPTION()
 end
 
 function mri_ipv4_optionHeader:setOPTION(int)
-	int = int or 0
-	self.option = (int)
+    int = int or 0
+    self.option = (int)
 end
 
 
 function mri_ipv4_optionHeader:getOPTIONLENGTH()
-	return (self.optionLength)
+    return (self.optionLength)
 end
 
 function mri_ipv4_optionHeader:getOPTIONLENGTHstring()
-	return self:getOPTIONLENGTH()
+    return self:getOPTIONLENGTH()
 end
 
 function mri_ipv4_optionHeader:setOPTIONLENGTH(int)
-	int = int or 0
-	self.optionLength = (int)
+    int = int or 0
+    self.optionLength = (int)
 end
 
 
@@ -123,60 +123,56 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function mri_ipv4_optionHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'mri_ipv4_option'
+    args = args or {}
+    pre = pre or 'mri_ipv4_option'
 
-	self:setCOPYFLAG(args[pre .. 'COPYFLAG'])
-	self:setOPTCLASS(args[pre .. 'OPTCLASS'])
-	self:setOPTION(args[pre .. 'OPTION'])
-	self:setOPTIONLENGTH(args[pre .. 'OPTIONLENGTH'])
+    self:setCOPYFLAG(args[pre .. 'COPYFLAG'])
+    self:setOPTCLASS(args[pre .. 'OPTCLASS'])
+    self:setOPTION(args[pre .. 'OPTION'])
+    self:setOPTIONLENGTH(args[pre .. 'OPTIONLENGTH'])
 end
 
 -- Retrieve the values of all members
 function mri_ipv4_optionHeader:get(pre)
-	pre = pre or 'mri_ipv4_option'
+    pre = pre or 'mri_ipv4_option'
 
-	local args = {}
-	args[pre .. 'COPYFLAG'] = self:getCOPYFLAG()
-	args[pre .. 'OPTCLASS'] = self:getOPTCLASS()
-	args[pre .. 'OPTION'] = self:getOPTION()
-	args[pre .. 'OPTIONLENGTH'] = self:getOPTIONLENGTH()
+    local args = {}
+    args[pre .. 'COPYFLAG'] = self:getCOPYFLAG()
+    args[pre .. 'OPTCLASS'] = self:getOPTCLASS()
+    args[pre .. 'OPTION'] = self:getOPTION()
+    args[pre .. 'OPTIONLENGTH'] = self:getOPTIONLENGTH()
 
-	return args
+    return args
 end
 
 function mri_ipv4_optionHeader:getString()
-	return 'mri_ipv4_option \n'
-		.. 'COPYFLAG' .. self:getCOPYFLAGString() .. '\n'
-		.. 'OPTCLASS' .. self:getOPTCLASSString() .. '\n'
-		.. 'OPTION' .. self:getOPTIONString() .. '\n'
-		.. 'OPTIONLENGTH' .. self:getOPTIONLENGTHString() .. '\n'
+    return 'mri_ipv4_option \n'
+        .. 'COPYFLAG' .. self:getCOPYFLAGString() .. '\n'
+        .. 'OPTCLASS' .. self:getOPTCLASSString() .. '\n'
+        .. 'OPTION' .. self:getOPTIONString() .. '\n'
+        .. 'OPTIONLENGTH' .. self:getOPTIONLENGTHString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	mri_mri = 0x1f,
+    mri_mri = 0x1f,
 }
 function mri_ipv4_optionHeader:resolveNextHeader()
-	local key = self:getOPTION()
-	for name, value in pairs(nextHeaderResolve) do
-		if key == value then
-			return name
-		end
-	end
-	return nil
+    local key = self:getOPTION()
+    for name, value in pairs(nextHeaderResolve) do
+        if key == value then
+            return name
+        end
+    end
+    return nil
 end
 
 function mri_ipv4_optionHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	if not namedArgs[pre .. 'OPTION'] then
-		for name, _port in pairs(nextHeaderResolve) do
-			if nextHeader == name then
-				namedArgs[pre .. 'OPTION'] = _port
-				break
-			end
-		end
-	end
-	return namedArgs
+    if not namedArgs[pre .. 'OPTION'] then
+        for name, _port in pairs(nextHeaderResolve) do
+            if nextHeader == name then
+                namedArgs[pre .. 'OPTION'] = _port
+    return namedArgs
 end
 
 -----------------------------------------------------

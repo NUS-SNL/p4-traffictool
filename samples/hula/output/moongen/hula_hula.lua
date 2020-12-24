@@ -43,9 +43,9 @@ local ntoh64, hton64 = ntoh64, hton64
 local hula_hula = {}
 
 hula_hula.headerFormat = [[
-	uint8_t 	 dir;
-	uint16_t 	 qdepth;
-	uint32_t 	 digest;
+    uint8_t      dir;
+    uint16_t      qdepth;
+    uint32_t      digest;
 ]]
 
 
@@ -61,44 +61,44 @@ hula_hulaHeader.__index = hula_hulaHeader
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function hula_hulaHeader:getDIR()
-	return (self.dir)
+    return (self.dir)
 end
 
 function hula_hulaHeader:getDIRstring()
-	return self:getDIR()
+    return self:getDIR()
 end
 
 function hula_hulaHeader:setDIR(int)
-	int = int or 0
-	self.dir = (int)
+    int = int or 0
+    self.dir = (int)
 end
 
 
 function hula_hulaHeader:getQDEPTH()
-	return hton16(self.qdepth)
+    return hton16(self.qdepth)
 end
 
 function hula_hulaHeader:getQDEPTHstring()
-	return self:getQDEPTH()
+    return self:getQDEPTH()
 end
 
 function hula_hulaHeader:setQDEPTH(int)
-	int = int or 0
-	self.qdepth = hton16(int)
+    int = int or 0
+    self.qdepth = hton16(int)
 end
 
 
 function hula_hulaHeader:getDIGEST()
-	return hton(self.digest)
+    return hton(self.digest)
 end
 
 function hula_hulaHeader:getDIGESTstring()
-	return self:getDIGEST()
+    return self:getDIGEST()
 end
 
 function hula_hulaHeader:setDIGEST(int)
-	int = int or 0
-	self.digest = hton(int)
+    int = int or 0
+    self.digest = hton(int)
 end
 
 
@@ -108,42 +108,42 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function hula_hulaHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'hula_hula'
+    args = args or {}
+    pre = pre or 'hula_hula'
 
-	self:setDIR(args[pre .. 'DIR'])
-	self:setQDEPTH(args[pre .. 'QDEPTH'])
-	self:setDIGEST(args[pre .. 'DIGEST'])
+    self:setDIR(args[pre .. 'DIR'])
+    self:setQDEPTH(args[pre .. 'QDEPTH'])
+    self:setDIGEST(args[pre .. 'DIGEST'])
 end
 
 -- Retrieve the values of all members
 function hula_hulaHeader:get(pre)
-	pre = pre or 'hula_hula'
+    pre = pre or 'hula_hula'
 
-	local args = {}
-	args[pre .. 'DIR'] = self:getDIR()
-	args[pre .. 'QDEPTH'] = self:getQDEPTH()
-	args[pre .. 'DIGEST'] = self:getDIGEST()
+    local args = {}
+    args[pre .. 'DIR'] = self:getDIR()
+    args[pre .. 'QDEPTH'] = self:getQDEPTH()
+    args[pre .. 'DIGEST'] = self:getDIGEST()
 
-	return args
+    return args
 end
 
 function hula_hulaHeader:getString()
-	return 'hula_hula \n'
-		.. 'DIR' .. self:getDIRString() .. '\n'
-		.. 'QDEPTH' .. self:getQDEPTHString() .. '\n'
-		.. 'DIGEST' .. self:getDIGESTString() .. '\n'
+    return 'hula_hula \n'
+        .. 'DIR' .. self:getDIRString() .. '\n'
+        .. 'QDEPTH' .. self:getQDEPTHString() .. '\n'
+        .. 'DIGEST' .. self:getDIGESTString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
 }
 function hula_hulaHeader:resolveNextHeader()
-	return srcRoutes
+    return srcRoutes
 end
 
 function hula_hulaHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	return namedArgs
+    return namedArgs
 end
 
 -----------------------------------------------------

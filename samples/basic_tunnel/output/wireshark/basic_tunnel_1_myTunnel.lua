@@ -9,12 +9,12 @@ p4_mytunnel.fields = {p4_mytunnel_proto_id, p4_mytunnel_dst_id}
 
 -- protocol dissector function
 function p4_mytunnel.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_MYTUNNEL'
-	local subtree = tree:add(p4_mytunnel,buffer(),'P4_MYTUNNEL Protocol Data')
-		subtree:add(p4_mytunnel_proto_id,tostring(buffer(0,2):bitfield(0,16)))
-		subtree:add(p4_mytunnel_dst_id,tostring(buffer(2,2):bitfield(0,16)))
-	local mydissectortable = DissectorTable.get('p4_myTunnel.proto_id')
-	mydissectortable:try(buffer(0,2):bitfield(0,16), buffer:range(4):tvb(),pinfo,tree)
+    pinfo.cols.protocol = 'P4_MYTUNNEL'
+    local subtree = tree:add(p4_mytunnel,buffer(),'P4_MYTUNNEL Protocol Data')
+        subtree:add(p4_mytunnel_proto_id,tostring(buffer(0,2):bitfield(0,16)))
+        subtree:add(p4_mytunnel_dst_id,tostring(buffer(2,2):bitfield(0,16)))
+    local mydissectortable = DissectorTable.get('p4_myTunnel.proto_id')
+    mydissectortable:try(buffer(0,2):bitfield(0,16), buffer:range(4):tvb(),pinfo,tree)
 
 end
 

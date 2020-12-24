@@ -14,17 +14,17 @@ p4_ipv4_option.fields = {p4_ipv4_option__pad0, p4_ipv4_option_copyFlag, p4_ipv4_
 
 -- protocol dissector function
 function p4_ipv4_option.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_IPV4_OPTION'
-	local subtree = tree:add(p4_ipv4_option,buffer(),'P4_IPV4_OPTION Protocol Data')
-		subtree:add(p4_ipv4_option__pad0,tostring(buffer(0,1):bitfield(0,7)))
-		subtree:add(p4_ipv4_option_copyFlag,tostring(buffer(0,1):bitfield(7,1)))
-		subtree:add(p4_ipv4_option__pad1,tostring(buffer(1,1):bitfield(0,6)))
-		subtree:add(p4_ipv4_option_optClass,tostring(buffer(1,1):bitfield(6,2)))
-		subtree:add(p4_ipv4_option__pad2,tostring(buffer(2,1):bitfield(0,3)))
-		subtree:add(p4_ipv4_option_option,tostring(buffer(2,1):bitfield(3,5)))
-		subtree:add(p4_ipv4_option_optionLength,tostring(buffer(3,1):bitfield(0,8)))
-	local mydissectortable = DissectorTable.get('p4_ipv4_option.option')
-	mydissectortable:try(buffer(2,1):bitfield(3,5), buffer:range(4):tvb(),pinfo,tree)
+    pinfo.cols.protocol = 'P4_IPV4_OPTION'
+    local subtree = tree:add(p4_ipv4_option,buffer(),'P4_IPV4_OPTION Protocol Data')
+        subtree:add(p4_ipv4_option__pad0,tostring(buffer(0,1):bitfield(0,7)))
+        subtree:add(p4_ipv4_option_copyFlag,tostring(buffer(0,1):bitfield(7,1)))
+        subtree:add(p4_ipv4_option__pad1,tostring(buffer(1,1):bitfield(0,6)))
+        subtree:add(p4_ipv4_option_optClass,tostring(buffer(1,1):bitfield(6,2)))
+        subtree:add(p4_ipv4_option__pad2,tostring(buffer(2,1):bitfield(0,3)))
+        subtree:add(p4_ipv4_option_option,tostring(buffer(2,1):bitfield(3,5)))
+        subtree:add(p4_ipv4_option_optionLength,tostring(buffer(3,1):bitfield(0,8)))
+    local mydissectortable = DissectorTable.get('p4_ipv4_option.option')
+    mydissectortable:try(buffer(2,1):bitfield(3,5), buffer:range(4):tvb(),pinfo,tree)
 
 end
 

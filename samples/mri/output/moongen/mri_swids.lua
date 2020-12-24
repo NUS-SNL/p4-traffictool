@@ -43,7 +43,7 @@ local ntoh64, hton64 = ntoh64, hton64
 local mri_swids = {}
 
 mri_swids.headerFormat = [[
-	uint32_t 	 swid;
+    uint32_t      swid;
 ]]
 
 
@@ -59,16 +59,16 @@ mri_swidsHeader.__index = mri_swidsHeader
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function mri_swidsHeader:getSWID()
-	return hton(self.swid)
+    return hton(self.swid)
 end
 
 function mri_swidsHeader:getSWIDstring()
-	return self:getSWID()
+    return self:getSWID()
 end
 
 function mri_swidsHeader:setSWID(int)
-	int = int or 0
-	self.swid = hton(int)
+    int = int or 0
+    self.swid = hton(int)
 end
 
 
@@ -78,51 +78,46 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function mri_swidsHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'mri_swids'
+    args = args or {}
+    pre = pre or 'mri_swids'
 
-	self:setSWID(args[pre .. 'SWID'])
+    self:setSWID(args[pre .. 'SWID'])
 end
 
 -- Retrieve the values of all members
 function mri_swidsHeader:get(pre)
-	pre = pre or 'mri_swids'
+    pre = pre or 'mri_swids'
 
-	local args = {}
-	args[pre .. 'SWID'] = self:getSWID()
+    local args = {}
+    args[pre .. 'SWID'] = self:getSWID()
 
-	return args
+    return args
 end
 
 function mri_swidsHeader:getString()
-	return 'mri_swids \n'
-		.. 'SWID' .. self:getSWIDString() .. '\n'
+    return 'mri_swids \n'
+        .. 'SWID' .. self:getSWIDString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	mri_swids = default,
+    mri_swids = default,
 }
 function mri_swidsHeader:resolveNextHeader()
-	local key = self:getMETADATA._PARSER_METADATA_REMAINING1()
-	for name, value in pairs(nextHeaderResolve) do
-		if key == value then
-			return name
-		end
-	end
-	return nil
+    for name, value in pairs(nextHeaderResolve) do
+        if key == value then
+            return name
+        end
+    end
+    return nil
 end
 
 function mri_swidsHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	if not namedArgs[pre .. 'METADATA._PARSER_METADATA_REMAINING1'] then
-		for name, _port in pairs(nextHeaderResolve) do
-			if nextHeader == name then
-				namedArgs[pre .. 'METADATA._PARSER_METADATA_REMAINING1'] = _port
-				break
-			end
-		end
-	end
-	return namedArgs
+    if not namedArgs[pre .. 'METADATA._PARSER_METADATA_REMAINING1'] then
+        for name, _port in pairs(nextHeaderResolve) do
+            if nextHeader == name then
+                namedArgs[pre .. 'METADATA._PARSER_METADATA_REMAINING1'] = _port
+    return namedArgs
 end
 
 -----------------------------------------------------

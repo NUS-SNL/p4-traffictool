@@ -12,13 +12,13 @@ p4_expenditure_req.fields = {p4_expenditure_req_time, p4_expenditure_req_vid, p4
 
 -- protocol dissector function
 function p4_expenditure_req.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_EXPENDITURE_REQ'
-	local subtree = tree:add(p4_expenditure_req,buffer(),'P4_EXPENDITURE_REQ Protocol Data')
-		subtree:add(p4_expenditure_req_time,tostring(buffer(0,2):bitfield(0,16)))
-		subtree:add(p4_expenditure_req_vid,tostring(buffer(2,4):bitfield(0,32)))
-		subtree:add(p4_expenditure_req_qid,tostring(buffer(6,4):bitfield(0,32)))
-		subtree:add(p4_expenditure_req_xway,tostring(buffer(10,1):bitfield(0,8)))
-		subtree:add(p4_expenditure_req_day,tostring(buffer(11,1):bitfield(0,8)))
+    pinfo.cols.protocol = 'P4_EXPENDITURE_REQ'
+    local subtree = tree:add(p4_expenditure_req,buffer(),'P4_EXPENDITURE_REQ Protocol Data')
+        subtree:add(p4_expenditure_req_time,tostring(buffer(0,2):bitfield(0,16)))
+        subtree:add(p4_expenditure_req_vid,tostring(buffer(2,4):bitfield(0,32)))
+        subtree:add(p4_expenditure_req_qid,tostring(buffer(6,4):bitfield(0,32)))
+        subtree:add(p4_expenditure_req_xway,tostring(buffer(10,1):bitfield(0,8)))
+        subtree:add(p4_expenditure_req_day,tostring(buffer(11,1):bitfield(0,8)))
 
 end
 

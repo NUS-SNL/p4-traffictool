@@ -43,8 +43,8 @@ local ntoh64, hton64 = ntoh64, hton64
 local src_routing_srcroutes = {}
 
 src_routing_srcroutes.headerFormat = [[
-	uint8_t 	 bos;
-	uint16_t 	 port;
+    uint8_t      bos;
+    uint16_t      port;
 ]]
 
 
@@ -60,30 +60,30 @@ src_routing_srcroutesHeader.__index = src_routing_srcroutesHeader
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function src_routing_srcroutesHeader:getBOS()
-	return (self.bos)
+    return (self.bos)
 end
 
 function src_routing_srcroutesHeader:getBOSstring()
-	return self:getBOS()
+    return self:getBOS()
 end
 
 function src_routing_srcroutesHeader:setBOS(int)
-	int = int or 0
-	self.bos = (int)
+    int = int or 0
+    self.bos = (int)
 end
 
 
 function src_routing_srcroutesHeader:getPORT()
-	return hton16(self.port)
+    return hton16(self.port)
 end
 
 function src_routing_srcroutesHeader:getPORTstring()
-	return self:getPORT()
+    return self:getPORT()
 end
 
 function src_routing_srcroutesHeader:setPORT(int)
-	int = int or 0
-	self.port = hton16(int)
+    int = int or 0
+    self.port = hton16(int)
 end
 
 
@@ -93,55 +93,51 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function src_routing_srcroutesHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'src_routing_srcroutes'
+    args = args or {}
+    pre = pre or 'src_routing_srcroutes'
 
-	self:setBOS(args[pre .. 'BOS'])
-	self:setPORT(args[pre .. 'PORT'])
+    self:setBOS(args[pre .. 'BOS'])
+    self:setPORT(args[pre .. 'PORT'])
 end
 
 -- Retrieve the values of all members
 function src_routing_srcroutesHeader:get(pre)
-	pre = pre or 'src_routing_srcroutes'
+    pre = pre or 'src_routing_srcroutes'
 
-	local args = {}
-	args[pre .. 'BOS'] = self:getBOS()
-	args[pre .. 'PORT'] = self:getPORT()
+    local args = {}
+    args[pre .. 'BOS'] = self:getBOS()
+    args[pre .. 'PORT'] = self:getPORT()
 
-	return args
+    return args
 end
 
 function src_routing_srcroutesHeader:getString()
-	return 'src_routing_srcroutes \n'
-		.. 'BOS' .. self:getBOSString() .. '\n'
-		.. 'PORT' .. self:getPORTString() .. '\n'
+    return 'src_routing_srcroutes \n'
+        .. 'BOS' .. self:getBOSString() .. '\n'
+        .. 'PORT' .. self:getPORTString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	src_routing_ipv4 = 0x01,
-	src_routing_srcroutes = default,
+    src_routing_ipv4 = 0x01,
+    src_routing_srcroutes = default,
 }
 function src_routing_srcroutesHeader:resolveNextHeader()
-	local key = self:getBOS()
-	for name, value in pairs(nextHeaderResolve) do
-		if key == value then
-			return name
-		end
-	end
-	return nil
+    local key = self:getBOS()
+    for name, value in pairs(nextHeaderResolve) do
+        if key == value then
+            return name
+        end
+    end
+    return nil
 end
 
 function src_routing_srcroutesHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	if not namedArgs[pre .. 'BOS'] then
-		for name, _port in pairs(nextHeaderResolve) do
-			if nextHeader == name then
-				namedArgs[pre .. 'BOS'] = _port
-				break
-			end
-		end
-	end
-	return namedArgs
+    if not namedArgs[pre .. 'BOS'] then
+        for name, _port in pairs(nextHeaderResolve) do
+            if nextHeader == name then
+                namedArgs[pre .. 'BOS'] = _port
+    return namedArgs
 end
 
 -----------------------------------------------------

@@ -43,7 +43,7 @@ local ntoh64, hton64 = ntoh64, hton64
 local mri_mri = {}
 
 mri_mri.headerFormat = [[
-	uint16_t 	 count;
+    uint16_t      count;
 ]]
 
 
@@ -59,16 +59,16 @@ mri_mriHeader.__index = mri_mriHeader
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function mri_mriHeader:getCOUNT()
-	return hton16(self.count)
+    return hton16(self.count)
 end
 
 function mri_mriHeader:getCOUNTstring()
-	return self:getCOUNT()
+    return self:getCOUNT()
 end
 
 function mri_mriHeader:setCOUNT(int)
-	int = int or 0
-	self.count = hton16(int)
+    int = int or 0
+    self.count = hton16(int)
 end
 
 
@@ -78,51 +78,47 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function mri_mriHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'mri_mri'
+    args = args or {}
+    pre = pre or 'mri_mri'
 
-	self:setCOUNT(args[pre .. 'COUNT'])
+    self:setCOUNT(args[pre .. 'COUNT'])
 end
 
 -- Retrieve the values of all members
 function mri_mriHeader:get(pre)
-	pre = pre or 'mri_mri'
+    pre = pre or 'mri_mri'
 
-	local args = {}
-	args[pre .. 'COUNT'] = self:getCOUNT()
+    local args = {}
+    args[pre .. 'COUNT'] = self:getCOUNT()
 
-	return args
+    return args
 end
 
 function mri_mriHeader:getString()
-	return 'mri_mri \n'
-		.. 'COUNT' .. self:getCOUNTString() .. '\n'
+    return 'mri_mri \n'
+        .. 'COUNT' .. self:getCOUNTString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	mri_swids = default,
+    mri_swids = default,
 }
 function mri_mriHeader:resolveNextHeader()
-	local key = self:getCOUNT()
-	for name, value in pairs(nextHeaderResolve) do
-		if key == value then
-			return name
-		end
-	end
-	return nil
+    local key = self:getCOUNT()
+    for name, value in pairs(nextHeaderResolve) do
+        if key == value then
+            return name
+        end
+    end
+    return nil
 end
 
 function mri_mriHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	if not namedArgs[pre .. 'COUNT'] then
-		for name, _port in pairs(nextHeaderResolve) do
-			if nextHeader == name then
-				namedArgs[pre .. 'COUNT'] = _port
-				break
-			end
-		end
-	end
-	return namedArgs
+    if not namedArgs[pre .. 'COUNT'] then
+        for name, _port in pairs(nextHeaderResolve) do
+            if nextHeader == name then
+                namedArgs[pre .. 'COUNT'] = _port
+    return namedArgs
 end
 
 -----------------------------------------------------

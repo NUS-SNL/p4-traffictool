@@ -18,19 +18,19 @@ p4_tcp.fields = {p4_tcp_srcPort, p4_tcp_dstPort, p4_tcp_seqNo, p4_tcp_ackNo, p4_
 
 -- protocol dissector function
 function p4_tcp.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_TCP'
-	local subtree = tree:add(p4_tcp,buffer(),'P4_TCP Protocol Data')
-		subtree:add(p4_tcp_srcPort,tostring(buffer(0,2):bitfield(0,16)))
-		subtree:add(p4_tcp_dstPort,tostring(buffer(2,2):bitfield(0,16)))
-		subtree:add(p4_tcp_seqNo,tostring(buffer(4,4):bitfield(0,32)))
-		subtree:add(p4_tcp_ackNo,tostring(buffer(8,4):bitfield(0,32)))
-		subtree:add(p4_tcp_dataOffset,tostring(buffer(12,1):bitfield(0,4)))
-		subtree:add(p4_tcp_res,tostring(buffer(12,1):bitfield(4,3)))
-		subtree:add(p4_tcp_ecn,tostring(buffer(12,2):bitfield(7,3)))
-		subtree:add(p4_tcp_ctrl,tostring(buffer(13,1):bitfield(2,6)))
-		subtree:add(p4_tcp_window,tostring(buffer(14,2):bitfield(0,16)))
-		subtree:add(p4_tcp_checksum,tostring(buffer(16,2):bitfield(0,16)))
-		subtree:add(p4_tcp_urgentPtr,tostring(buffer(18,2):bitfield(0,16)))
+    pinfo.cols.protocol = 'P4_TCP'
+    local subtree = tree:add(p4_tcp,buffer(),'P4_TCP Protocol Data')
+        subtree:add(p4_tcp_srcPort,tostring(buffer(0,2):bitfield(0,16)))
+        subtree:add(p4_tcp_dstPort,tostring(buffer(2,2):bitfield(0,16)))
+        subtree:add(p4_tcp_seqNo,tostring(buffer(4,4):bitfield(0,32)))
+        subtree:add(p4_tcp_ackNo,tostring(buffer(8,4):bitfield(0,32)))
+        subtree:add(p4_tcp_dataOffset,tostring(buffer(12,1):bitfield(0,4)))
+        subtree:add(p4_tcp_res,tostring(buffer(12,1):bitfield(4,3)))
+        subtree:add(p4_tcp_ecn,tostring(buffer(12,2):bitfield(7,3)))
+        subtree:add(p4_tcp_ctrl,tostring(buffer(13,1):bitfield(2,6)))
+        subtree:add(p4_tcp_window,tostring(buffer(14,2):bitfield(0,16)))
+        subtree:add(p4_tcp_checksum,tostring(buffer(16,2):bitfield(0,16)))
+        subtree:add(p4_tcp_urgentPtr,tostring(buffer(18,2):bitfield(0,16)))
 
 end
 

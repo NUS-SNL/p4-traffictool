@@ -43,7 +43,7 @@ local ntoh64, hton64 = ntoh64, hton64
 local linear_road_lr_msg_type = {}
 
 linear_road_lr_msg_type.headerFormat = [[
-	uint8_t 	 msg_type;
+    uint8_t      msg_type;
 ]]
 
 
@@ -59,16 +59,16 @@ linear_road_lr_msg_typeHeader.__index = linear_road_lr_msg_typeHeader
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function linear_road_lr_msg_typeHeader:getMSG_TYPE()
-	return (self.msg_type)
+    return (self.msg_type)
 end
 
 function linear_road_lr_msg_typeHeader:getMSG_TYPEstring()
-	return self:getMSG_TYPE()
+    return self:getMSG_TYPE()
 end
 
 function linear_road_lr_msg_typeHeader:setMSG_TYPE(int)
-	int = int or 0
-	self.msg_type = (int)
+    int = int or 0
+    self.msg_type = (int)
 end
 
 
@@ -78,59 +78,55 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function linear_road_lr_msg_typeHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'linear_road_lr_msg_type'
+    args = args or {}
+    pre = pre or 'linear_road_lr_msg_type'
 
-	self:setMSG_TYPE(args[pre .. 'MSG_TYPE'])
+    self:setMSG_TYPE(args[pre .. 'MSG_TYPE'])
 end
 
 -- Retrieve the values of all members
 function linear_road_lr_msg_typeHeader:get(pre)
-	pre = pre or 'linear_road_lr_msg_type'
+    pre = pre or 'linear_road_lr_msg_type'
 
-	local args = {}
-	args[pre .. 'MSG_TYPE'] = self:getMSG_TYPE()
+    local args = {}
+    args[pre .. 'MSG_TYPE'] = self:getMSG_TYPE()
 
-	return args
+    return args
 end
 
 function linear_road_lr_msg_typeHeader:getString()
-	return 'linear_road_lr_msg_type \n'
-		.. 'MSG_TYPE' .. self:getMSG_TYPEString() .. '\n'
+    return 'linear_road_lr_msg_type \n'
+        .. 'MSG_TYPE' .. self:getMSG_TYPEString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
-	linear_road_pos_report = 0x00,
-	linear_road_accnt_bal_req = 0x02,
-	linear_road_toll_notification = 0x0a,
-	linear_road_accident_alert = 0x0b,
-	linear_road_accnt_bal = 0x0c,
-	linear_road_expenditure_req = 0x03,
-	linear_road_expenditure_report = 0x0d,
-	linear_road_travel_estimate_req = 0x04,
-	linear_road_travel_estimate = 0x0e,
+    linear_road_pos_report = 0x00,
+    linear_road_accnt_bal_req = 0x02,
+    linear_road_toll_notification = 0x0a,
+    linear_road_accident_alert = 0x0b,
+    linear_road_accnt_bal = 0x0c,
+    linear_road_expenditure_req = 0x03,
+    linear_road_expenditure_report = 0x0d,
+    linear_road_travel_estimate_req = 0x04,
+    linear_road_travel_estimate = 0x0e,
 }
 function linear_road_lr_msg_typeHeader:resolveNextHeader()
-	local key = self:getMSG_TYPE()
-	for name, value in pairs(nextHeaderResolve) do
-		if key == value then
-			return name
-		end
-	end
-	return nil
+    local key = self:getMSG_TYPE()
+    for name, value in pairs(nextHeaderResolve) do
+        if key == value then
+            return name
+        end
+    end
+    return nil
 end
 
 function linear_road_lr_msg_typeHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	if not namedArgs[pre .. 'MSG_TYPE'] then
-		for name, _port in pairs(nextHeaderResolve) do
-			if nextHeader == name then
-				namedArgs[pre .. 'MSG_TYPE'] = _port
-				break
-			end
-		end
-	end
-	return namedArgs
+    if not namedArgs[pre .. 'MSG_TYPE'] then
+        for name, _port in pairs(nextHeaderResolve) do
+            if nextHeader == name then
+                namedArgs[pre .. 'MSG_TYPE'] = _port
+    return namedArgs
 end
 
 -----------------------------------------------------

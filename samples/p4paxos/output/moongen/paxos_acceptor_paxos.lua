@@ -43,12 +43,12 @@ local ntoh64, hton64 = ntoh64, hton64
 local paxos_acceptor_paxos = {}
 
 paxos_acceptor_paxos.headerFormat = [[
-	uint8_t 	 msgtype;
-	uint16_t 	 instance;
-	uint8_t 	 round;
-	uint8_t 	 vround;
-	uint64_t 	 acceptor;
-	-- fill blank here 512 	 value;
+    uint8_t      msgtype;
+    uint16_t      instance;
+    uint8_t      round;
+    uint8_t      vround;
+    uint64_t      acceptor;
+    -- fill blank here 512      value;
 ]]
 
 
@@ -64,86 +64,86 @@ paxos_acceptor_paxosHeader.__index = paxos_acceptor_paxosHeader
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function paxos_acceptor_paxosHeader:getMSGTYPE()
-	return (self.msgtype)
+    return (self.msgtype)
 end
 
 function paxos_acceptor_paxosHeader:getMSGTYPEstring()
-	return self:getMSGTYPE()
+    return self:getMSGTYPE()
 end
 
 function paxos_acceptor_paxosHeader:setMSGTYPE(int)
-	int = int or 0
-	self.msgtype = (int)
+    int = int or 0
+    self.msgtype = (int)
 end
 
 
 function paxos_acceptor_paxosHeader:getINSTANCE()
-	return hton16(self.instance)
+    return hton16(self.instance)
 end
 
 function paxos_acceptor_paxosHeader:getINSTANCEstring()
-	return self:getINSTANCE()
+    return self:getINSTANCE()
 end
 
 function paxos_acceptor_paxosHeader:setINSTANCE(int)
-	int = int or 0
-	self.instance = hton16(int)
+    int = int or 0
+    self.instance = hton16(int)
 end
 
 
 function paxos_acceptor_paxosHeader:getROUND()
-	return (self.round)
+    return (self.round)
 end
 
 function paxos_acceptor_paxosHeader:getROUNDstring()
-	return self:getROUND()
+    return self:getROUND()
 end
 
 function paxos_acceptor_paxosHeader:setROUND(int)
-	int = int or 0
-	self.round = (int)
+    int = int or 0
+    self.round = (int)
 end
 
 
 function paxos_acceptor_paxosHeader:getVROUND()
-	return (self.vround)
+    return (self.vround)
 end
 
 function paxos_acceptor_paxosHeader:getVROUNDstring()
-	return self:getVROUND()
+    return self:getVROUND()
 end
 
 function paxos_acceptor_paxosHeader:setVROUND(int)
-	int = int or 0
-	self.vround = (int)
+    int = int or 0
+    self.vround = (int)
 end
 
 
 function paxos_acceptor_paxosHeader:getACCEPTOR()
-	return hton64(self.acceptor)
+    return hton64(self.acceptor)
 end
 
 function paxos_acceptor_paxosHeader:getACCEPTORstring()
-	return self:getACCEPTOR()
+    return self:getACCEPTOR()
 end
 
 function paxos_acceptor_paxosHeader:setACCEPTOR(int)
-	int = int or 0
-	self.acceptor = hton64(int)
+    int = int or 0
+    self.acceptor = hton64(int)
 end
 
 
 function paxos_acceptor_paxosHeader:getVALUE()
-	return (self.value:get())
+    return (self.value:get())
 end
 
 function paxos_acceptor_paxosHeader:getVALUEstring()
-	return self:getVALUE()
+    return self:getVALUE()
 end
 
 function paxos_acceptor_paxosHeader:setVALUE(int)
-	int = int or 0
-	self.value:set(int)
+    int = int or 0
+    self.value:set(int)
 end
 
 
@@ -153,51 +153,51 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function paxos_acceptor_paxosHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'paxos_acceptor_paxos'
+    args = args or {}
+    pre = pre or 'paxos_acceptor_paxos'
 
-	self:setMSGTYPE(args[pre .. 'MSGTYPE'])
-	self:setINSTANCE(args[pre .. 'INSTANCE'])
-	self:setROUND(args[pre .. 'ROUND'])
-	self:setVROUND(args[pre .. 'VROUND'])
-	self:setACCEPTOR(args[pre .. 'ACCEPTOR'])
-	self:setVALUE(args[pre .. 'VALUE'])
+    self:setMSGTYPE(args[pre .. 'MSGTYPE'])
+    self:setINSTANCE(args[pre .. 'INSTANCE'])
+    self:setROUND(args[pre .. 'ROUND'])
+    self:setVROUND(args[pre .. 'VROUND'])
+    self:setACCEPTOR(args[pre .. 'ACCEPTOR'])
+    self:setVALUE(args[pre .. 'VALUE'])
 end
 
 -- Retrieve the values of all members
 function paxos_acceptor_paxosHeader:get(pre)
-	pre = pre or 'paxos_acceptor_paxos'
+    pre = pre or 'paxos_acceptor_paxos'
 
-	local args = {}
-	args[pre .. 'MSGTYPE'] = self:getMSGTYPE()
-	args[pre .. 'INSTANCE'] = self:getINSTANCE()
-	args[pre .. 'ROUND'] = self:getROUND()
-	args[pre .. 'VROUND'] = self:getVROUND()
-	args[pre .. 'ACCEPTOR'] = self:getACCEPTOR()
-	args[pre .. 'VALUE'] = self:getVALUE()
+    local args = {}
+    args[pre .. 'MSGTYPE'] = self:getMSGTYPE()
+    args[pre .. 'INSTANCE'] = self:getINSTANCE()
+    args[pre .. 'ROUND'] = self:getROUND()
+    args[pre .. 'VROUND'] = self:getVROUND()
+    args[pre .. 'ACCEPTOR'] = self:getACCEPTOR()
+    args[pre .. 'VALUE'] = self:getVALUE()
 
-	return args
+    return args
 end
 
 function paxos_acceptor_paxosHeader:getString()
-	return 'paxos_acceptor_paxos \n'
-		.. 'MSGTYPE' .. self:getMSGTYPEString() .. '\n'
-		.. 'INSTANCE' .. self:getINSTANCEString() .. '\n'
-		.. 'ROUND' .. self:getROUNDString() .. '\n'
-		.. 'VROUND' .. self:getVROUNDString() .. '\n'
-		.. 'ACCEPTOR' .. self:getACCEPTORString() .. '\n'
-		.. 'VALUE' .. self:getVALUEString() .. '\n'
+    return 'paxos_acceptor_paxos \n'
+        .. 'MSGTYPE' .. self:getMSGTYPEString() .. '\n'
+        .. 'INSTANCE' .. self:getINSTANCEString() .. '\n'
+        .. 'ROUND' .. self:getROUNDString() .. '\n'
+        .. 'VROUND' .. self:getVROUNDString() .. '\n'
+        .. 'ACCEPTOR' .. self:getACCEPTORString() .. '\n'
+        .. 'VALUE' .. self:getVALUEString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
 }
 function paxos_acceptor_paxosHeader:resolveNextHeader()
-	return nil
+    return nil
 end
 
 function paxos_acceptor_paxosHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	return namedArgs
+    return namedArgs
 end
 
 -----------------------------------------------------

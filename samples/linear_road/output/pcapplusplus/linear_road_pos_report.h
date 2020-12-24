@@ -15,56 +15,56 @@
 #endif
 
 namespace pcpp{
-	#pragma pack(push,1)
-	struct pos_reporthdr{
-		uint16_t 	 time;
-		uint32_t 	 vid;
-		uint8_t 	 spd;
-		uint8_t 	 xway;
-		uint8_t 	 lane;
-		uint8_t 	 dir;
-		uint8_t 	 seg;
-	};
+    #pragma pack(push,1)
+    struct pos_reporthdr{
+        uint16_t      time;
+        uint32_t      vid;
+        uint8_t      spd;
+        uint8_t      xway;
+        uint8_t      lane;
+        uint8_t      dir;
+        uint8_t      seg;
+    };
 
-	#pragma pack(pop)
-	class Pos_reportLayer: public Layer{
-		public:
-		Pos_reportLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_POS_REPORT;}
-		Pos_reportLayer(){
-			m_DataLen = sizeof(pos_reporthdr);
-			m_Data = new uint8_t[m_DataLen];
-			memset(m_Data, 0, m_DataLen);
-			m_Protocol = P4_POS_REPORT;
-		}
+    #pragma pack(pop)
+    class Pos_reportLayer: public Layer{
+        public:
+        Pos_reportLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_POS_REPORT;}
+        Pos_reportLayer(){
+            m_DataLen = sizeof(pos_reporthdr);
+            m_Data = new uint8_t[m_DataLen];
+            memset(m_Data, 0, m_DataLen);
+            m_Protocol = P4_POS_REPORT;
+        }
 
-		 // Getters and Setters for fields
-		 uint16_t getTime();
-		 void setTime(uint16_t value);
-		 uint32_t getVid();
-		 void setVid(uint32_t value);
-		 uint8_t getSpd();
-		 void setSpd(uint8_t value);
-		 uint8_t getXway();
-		 void setXway(uint8_t value);
-		 uint8_t getLane();
-		 void setLane(uint8_t value);
-		 uint8_t getDir();
-		 void setDir(uint8_t value);
-		 uint8_t getSeg();
-		 void setSeg(uint8_t value);
+         // Getters and Setters for fields
+         uint16_t getTime();
+         void setTime(uint16_t value);
+         uint32_t getVid();
+         void setVid(uint32_t value);
+         uint8_t getSpd();
+         void setSpd(uint8_t value);
+         uint8_t getXway();
+         void setXway(uint8_t value);
+         uint8_t getLane();
+         void setLane(uint8_t value);
+         uint8_t getDir();
+         void setDir(uint8_t value);
+         uint8_t getSeg();
+         void setSeg(uint8_t value);
 
-		 inline pos_reporthdr* getPos_reportHeader() { return (pos_reporthdr*)m_Data; }
+         inline pos_reporthdr* getPos_reportHeader() { return (pos_reporthdr*)m_Data; }
 
-		 void parseNextLayer();
+         void parseNextLayer();
 
-		 inline size_t getHeaderLen() { return sizeof(pos_reporthdr); }
+         inline size_t getHeaderLen() { return sizeof(pos_reporthdr); }
 
-		 void computeCalculateFields() {}
+         void computeCalculateFields() {}
 
-		 std::string toString();
+         std::string toString();
 
-		 OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
+         OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
 
-	};
+    };
 }
 #endif

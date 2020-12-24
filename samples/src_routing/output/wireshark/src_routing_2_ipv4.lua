@@ -19,20 +19,20 @@ p4_ipv4.fields = {p4_ipv4_version, p4_ipv4_ihl, p4_ipv4_diffserv, p4_ipv4_totalL
 
 -- protocol dissector function
 function p4_ipv4.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_IPV4'
-	local subtree = tree:add(p4_ipv4,buffer(),'P4_IPV4 Protocol Data')
-		subtree:add(p4_ipv4_version,tostring(buffer(0,1):bitfield(0,4)))
-		subtree:add(p4_ipv4_ihl,tostring(buffer(0,1):bitfield(4,4)))
-		subtree:add(p4_ipv4_diffserv,tostring(buffer(1,1):bitfield(0,8)))
-		subtree:add(p4_ipv4_totalLen,tostring(buffer(2,2):bitfield(0,16)))
-		subtree:add(p4_ipv4_identification,tostring(buffer(4,2):bitfield(0,16)))
-		subtree:add(p4_ipv4_flags,tostring(buffer(6,1):bitfield(0,3)))
-		subtree:add(p4_ipv4_fragOffset,tostring(buffer(6,2):bitfield(3,13)))
-		subtree:add(p4_ipv4_ttl,tostring(buffer(8,1):bitfield(0,8)))
-		subtree:add(p4_ipv4_protocol,tostring(buffer(9,1):bitfield(0,8)))
-		subtree:add(p4_ipv4_hdrChecksum,tostring(buffer(10,2):bitfield(0,16)))
-		subtree:add(p4_ipv4_srcAddr,tostring(buffer(12,4):bitfield(0,32)))
-		subtree:add(p4_ipv4_dstAddr,tostring(buffer(16,4):bitfield(0,32)))
+    pinfo.cols.protocol = 'P4_IPV4'
+    local subtree = tree:add(p4_ipv4,buffer(),'P4_IPV4 Protocol Data')
+        subtree:add(p4_ipv4_version,tostring(buffer(0,1):bitfield(0,4)))
+        subtree:add(p4_ipv4_ihl,tostring(buffer(0,1):bitfield(4,4)))
+        subtree:add(p4_ipv4_diffserv,tostring(buffer(1,1):bitfield(0,8)))
+        subtree:add(p4_ipv4_totalLen,tostring(buffer(2,2):bitfield(0,16)))
+        subtree:add(p4_ipv4_identification,tostring(buffer(4,2):bitfield(0,16)))
+        subtree:add(p4_ipv4_flags,tostring(buffer(6,1):bitfield(0,3)))
+        subtree:add(p4_ipv4_fragOffset,tostring(buffer(6,2):bitfield(3,13)))
+        subtree:add(p4_ipv4_ttl,tostring(buffer(8,1):bitfield(0,8)))
+        subtree:add(p4_ipv4_protocol,tostring(buffer(9,1):bitfield(0,8)))
+        subtree:add(p4_ipv4_hdrChecksum,tostring(buffer(10,2):bitfield(0,16)))
+        subtree:add(p4_ipv4_srcAddr,tostring(buffer(12,4):bitfield(0,32)))
+        subtree:add(p4_ipv4_dstAddr,tostring(buffer(16,4):bitfield(0,32)))
 
 end
 

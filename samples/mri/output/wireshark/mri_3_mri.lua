@@ -8,11 +8,11 @@ p4_mri.fields = {p4_mri_count}
 
 -- protocol dissector function
 function p4_mri.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_MRI'
-	local subtree = tree:add(p4_mri,buffer(),'P4_MRI Protocol Data')
-		subtree:add(p4_mri_count,tostring(buffer(0,2):bitfield(0,16)))
-	local mydissectortable = DissectorTable.get('p4_mri.count')
-	mydissectortable:try(buffer(0,2):bitfield(0,16), buffer:range(2):tvb(),pinfo,tree)
+    pinfo.cols.protocol = 'P4_MRI'
+    local subtree = tree:add(p4_mri,buffer(),'P4_MRI Protocol Data')
+        subtree:add(p4_mri_count,tostring(buffer(0,2):bitfield(0,16)))
+    local mydissectortable = DissectorTable.get('p4_mri.count')
+    mydissectortable:try(buffer(0,2):bitfield(0,16), buffer:range(2):tvb(),pinfo,tree)
 
 end
 

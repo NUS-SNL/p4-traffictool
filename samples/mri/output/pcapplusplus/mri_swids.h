@@ -15,38 +15,38 @@
 #endif
 
 namespace pcpp{
-	#pragma pack(push,1)
-	struct swidshdr{
-		uint32_t 	 swid;
-	};
+    #pragma pack(push,1)
+    struct swidshdr{
+        uint32_t      swid;
+    };
 
-	#pragma pack(pop)
-	class SwidsLayer: public Layer{
-		public:
-		SwidsLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_SWIDS;}
-		SwidsLayer(){
-			m_DataLen = sizeof(swidshdr);
-			m_Data = new uint8_t[m_DataLen];
-			memset(m_Data, 0, m_DataLen);
-			m_Protocol = P4_SWIDS;
-		}
+    #pragma pack(pop)
+    class SwidsLayer: public Layer{
+        public:
+        SwidsLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_SWIDS;}
+        SwidsLayer(){
+            m_DataLen = sizeof(swidshdr);
+            m_Data = new uint8_t[m_DataLen];
+            memset(m_Data, 0, m_DataLen);
+            m_Protocol = P4_SWIDS;
+        }
 
-		 // Getters and Setters for fields
-		 uint32_t getSwid();
-		 void setSwid(uint32_t value);
+         // Getters and Setters for fields
+         uint32_t getSwid();
+         void setSwid(uint32_t value);
 
-		 inline swidshdr* getSwidsHeader() { return (swidshdr*)m_Data; }
+         inline swidshdr* getSwidsHeader() { return (swidshdr*)m_Data; }
 
-		 void parseNextLayer();
+         void parseNextLayer();
 
-		 inline size_t getHeaderLen() { return sizeof(swidshdr); }
+         inline size_t getHeaderLen() { return sizeof(swidshdr); }
 
-		 void computeCalculateFields() {}
+         void computeCalculateFields() {}
 
-		 std::string toString();
+         std::string toString();
 
-		 OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
+         OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
 
-	};
+    };
 }
 #endif

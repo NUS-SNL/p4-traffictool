@@ -43,12 +43,12 @@ local ntoh64, hton64 = ntoh64, hton64
 local netchain_nc_hdr = {}
 
 netchain_nc_hdr.headerFormat = [[
-	uint8_t 	 op;
-	uint8_t 	 sc;
-	uint16_t 	 seq;
-	uint64_t 	 key;
-	uint64_t 	 value;
-	uint16_t 	 vgroup;
+    uint8_t      op;
+    uint8_t      sc;
+    uint16_t      seq;
+    uint64_t      key;
+    uint64_t      value;
+    uint16_t      vgroup;
 ]]
 
 
@@ -64,86 +64,86 @@ netchain_nc_hdrHeader.__index = netchain_nc_hdrHeader
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function netchain_nc_hdrHeader:getOP()
-	return (self.op)
+    return (self.op)
 end
 
 function netchain_nc_hdrHeader:getOPstring()
-	return self:getOP()
+    return self:getOP()
 end
 
 function netchain_nc_hdrHeader:setOP(int)
-	int = int or 0
-	self.op = (int)
+    int = int or 0
+    self.op = (int)
 end
 
 
 function netchain_nc_hdrHeader:getSC()
-	return (self.sc)
+    return (self.sc)
 end
 
 function netchain_nc_hdrHeader:getSCstring()
-	return self:getSC()
+    return self:getSC()
 end
 
 function netchain_nc_hdrHeader:setSC(int)
-	int = int or 0
-	self.sc = (int)
+    int = int or 0
+    self.sc = (int)
 end
 
 
 function netchain_nc_hdrHeader:getSEQ()
-	return hton16(self.seq)
+    return hton16(self.seq)
 end
 
 function netchain_nc_hdrHeader:getSEQstring()
-	return self:getSEQ()
+    return self:getSEQ()
 end
 
 function netchain_nc_hdrHeader:setSEQ(int)
-	int = int or 0
-	self.seq = hton16(int)
+    int = int or 0
+    self.seq = hton16(int)
 end
 
 
 function netchain_nc_hdrHeader:getKEY()
-	return hton64(self.key)
+    return hton64(self.key)
 end
 
 function netchain_nc_hdrHeader:getKEYstring()
-	return self:getKEY()
+    return self:getKEY()
 end
 
 function netchain_nc_hdrHeader:setKEY(int)
-	int = int or 0
-	self.key = hton64(int)
+    int = int or 0
+    self.key = hton64(int)
 end
 
 
 function netchain_nc_hdrHeader:getVALUE()
-	return hton64(self.value)
+    return hton64(self.value)
 end
 
 function netchain_nc_hdrHeader:getVALUEstring()
-	return self:getVALUE()
+    return self:getVALUE()
 end
 
 function netchain_nc_hdrHeader:setVALUE(int)
-	int = int or 0
-	self.value = hton64(int)
+    int = int or 0
+    self.value = hton64(int)
 end
 
 
 function netchain_nc_hdrHeader:getVGROUP()
-	return hton16(self.vgroup)
+    return hton16(self.vgroup)
 end
 
 function netchain_nc_hdrHeader:getVGROUPstring()
-	return self:getVGROUP()
+    return self:getVGROUP()
 end
 
 function netchain_nc_hdrHeader:setVGROUP(int)
-	int = int or 0
-	self.vgroup = hton16(int)
+    int = int or 0
+    self.vgroup = hton16(int)
 end
 
 
@@ -153,51 +153,51 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function netchain_nc_hdrHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'netchain_nc_hdr'
+    args = args or {}
+    pre = pre or 'netchain_nc_hdr'
 
-	self:setOP(args[pre .. 'OP'])
-	self:setSC(args[pre .. 'SC'])
-	self:setSEQ(args[pre .. 'SEQ'])
-	self:setKEY(args[pre .. 'KEY'])
-	self:setVALUE(args[pre .. 'VALUE'])
-	self:setVGROUP(args[pre .. 'VGROUP'])
+    self:setOP(args[pre .. 'OP'])
+    self:setSC(args[pre .. 'SC'])
+    self:setSEQ(args[pre .. 'SEQ'])
+    self:setKEY(args[pre .. 'KEY'])
+    self:setVALUE(args[pre .. 'VALUE'])
+    self:setVGROUP(args[pre .. 'VGROUP'])
 end
 
 -- Retrieve the values of all members
 function netchain_nc_hdrHeader:get(pre)
-	pre = pre or 'netchain_nc_hdr'
+    pre = pre or 'netchain_nc_hdr'
 
-	local args = {}
-	args[pre .. 'OP'] = self:getOP()
-	args[pre .. 'SC'] = self:getSC()
-	args[pre .. 'SEQ'] = self:getSEQ()
-	args[pre .. 'KEY'] = self:getKEY()
-	args[pre .. 'VALUE'] = self:getVALUE()
-	args[pre .. 'VGROUP'] = self:getVGROUP()
+    local args = {}
+    args[pre .. 'OP'] = self:getOP()
+    args[pre .. 'SC'] = self:getSC()
+    args[pre .. 'SEQ'] = self:getSEQ()
+    args[pre .. 'KEY'] = self:getKEY()
+    args[pre .. 'VALUE'] = self:getVALUE()
+    args[pre .. 'VGROUP'] = self:getVGROUP()
 
-	return args
+    return args
 end
 
 function netchain_nc_hdrHeader:getString()
-	return 'netchain_nc_hdr \n'
-		.. 'OP' .. self:getOPString() .. '\n'
-		.. 'SC' .. self:getSCString() .. '\n'
-		.. 'SEQ' .. self:getSEQString() .. '\n'
-		.. 'KEY' .. self:getKEYString() .. '\n'
-		.. 'VALUE' .. self:getVALUEString() .. '\n'
-		.. 'VGROUP' .. self:getVGROUPString() .. '\n'
+    return 'netchain_nc_hdr \n'
+        .. 'OP' .. self:getOPString() .. '\n'
+        .. 'SC' .. self:getSCString() .. '\n'
+        .. 'SEQ' .. self:getSEQString() .. '\n'
+        .. 'KEY' .. self:getKEYString() .. '\n'
+        .. 'VALUE' .. self:getVALUEString() .. '\n'
+        .. 'VGROUP' .. self:getVGROUPString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
 }
 function netchain_nc_hdrHeader:resolveNextHeader()
-	return nil
+    return nil
 end
 
 function netchain_nc_hdrHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	return namedArgs
+    return namedArgs
 end
 
 -----------------------------------------------------

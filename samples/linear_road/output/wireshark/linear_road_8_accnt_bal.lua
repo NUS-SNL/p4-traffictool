@@ -12,13 +12,13 @@ p4_accnt_bal.fields = {p4_accnt_bal_time, p4_accnt_bal_vid, p4_accnt_bal_emit, p
 
 -- protocol dissector function
 function p4_accnt_bal.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_ACCNT_BAL'
-	local subtree = tree:add(p4_accnt_bal,buffer(),'P4_ACCNT_BAL Protocol Data')
-		subtree:add(p4_accnt_bal_time,tostring(buffer(0,2):bitfield(0,16)))
-		subtree:add(p4_accnt_bal_vid,tostring(buffer(2,4):bitfield(0,32)))
-		subtree:add(p4_accnt_bal_emit,tostring(buffer(6,2):bitfield(0,16)))
-		subtree:add(p4_accnt_bal_qid,tostring(buffer(8,4):bitfield(0,32)))
-		subtree:add(p4_accnt_bal_bal,tostring(buffer(12,4):bitfield(0,32)))
+    pinfo.cols.protocol = 'P4_ACCNT_BAL'
+    local subtree = tree:add(p4_accnt_bal,buffer(),'P4_ACCNT_BAL Protocol Data')
+        subtree:add(p4_accnt_bal_time,tostring(buffer(0,2):bitfield(0,16)))
+        subtree:add(p4_accnt_bal_vid,tostring(buffer(2,4):bitfield(0,32)))
+        subtree:add(p4_accnt_bal_emit,tostring(buffer(6,2):bitfield(0,16)))
+        subtree:add(p4_accnt_bal_qid,tostring(buffer(8,4):bitfield(0,32)))
+        subtree:add(p4_accnt_bal_bal,tostring(buffer(12,4):bitfield(0,32)))
 
 end
 

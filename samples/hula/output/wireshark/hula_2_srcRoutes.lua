@@ -11,14 +11,14 @@ p4_srcroutes.fields = {p4_srcroutes__pad0, p4_srcroutes_bos, p4_srcroutes__pad1,
 
 -- protocol dissector function
 function p4_srcroutes.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_SRCROUTES'
-	local subtree = tree:add(p4_srcroutes,buffer(),'P4_SRCROUTES Protocol Data')
-		subtree:add(p4_srcroutes__pad0,tostring(buffer(0,1):bitfield(0,7)))
-		subtree:add(p4_srcroutes_bos,tostring(buffer(0,1):bitfield(7,1)))
-		subtree:add(p4_srcroutes__pad1,tostring(buffer(1,1):bitfield(0,1)))
-		subtree:add(p4_srcroutes_port,tostring(buffer(1,2):bitfield(1,15)))
-	local mydissectortable = DissectorTable.get('p4_srcRoutes.bos')
-	mydissectortable:try(buffer(0,1):bitfield(7,1), buffer:range(3):tvb(),pinfo,tree)
+    pinfo.cols.protocol = 'P4_SRCROUTES'
+    local subtree = tree:add(p4_srcroutes,buffer(),'P4_SRCROUTES Protocol Data')
+        subtree:add(p4_srcroutes__pad0,tostring(buffer(0,1):bitfield(0,7)))
+        subtree:add(p4_srcroutes_bos,tostring(buffer(0,1):bitfield(7,1)))
+        subtree:add(p4_srcroutes__pad1,tostring(buffer(1,1):bitfield(0,1)))
+        subtree:add(p4_srcroutes_port,tostring(buffer(1,2):bitfield(1,15)))
+    local mydissectortable = DissectorTable.get('p4_srcRoutes.bos')
+    mydissectortable:try(buffer(0,1):bitfield(7,1), buffer:range(3):tvb(),pinfo,tree)
 
 end
 

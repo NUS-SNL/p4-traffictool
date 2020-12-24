@@ -43,13 +43,13 @@ local ntoh64, hton64 = ntoh64, hton64
 local linear_road_travel_estimate_req = {}
 
 linear_road_travel_estimate_req.headerFormat = [[
-	uint16_t 	 time;
-	uint32_t 	 qid;
-	uint8_t 	 xway;
-	uint8_t 	 seg_init;
-	uint8_t 	 seg_end;
-	uint8_t 	 dow;
-	uint8_t 	 tod;
+    uint16_t      time;
+    uint32_t      qid;
+    uint8_t      xway;
+    uint8_t      seg_init;
+    uint8_t      seg_end;
+    uint8_t      dow;
+    uint8_t      tod;
 ]]
 
 
@@ -65,100 +65,100 @@ linear_road_travel_estimate_reqHeader.__index = linear_road_travel_estimate_reqH
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function linear_road_travel_estimate_reqHeader:getTIME()
-	return hton16(self.time)
+    return hton16(self.time)
 end
 
 function linear_road_travel_estimate_reqHeader:getTIMEstring()
-	return self:getTIME()
+    return self:getTIME()
 end
 
 function linear_road_travel_estimate_reqHeader:setTIME(int)
-	int = int or 0
-	self.time = hton16(int)
+    int = int or 0
+    self.time = hton16(int)
 end
 
 
 function linear_road_travel_estimate_reqHeader:getQID()
-	return hton(self.qid)
+    return hton(self.qid)
 end
 
 function linear_road_travel_estimate_reqHeader:getQIDstring()
-	return self:getQID()
+    return self:getQID()
 end
 
 function linear_road_travel_estimate_reqHeader:setQID(int)
-	int = int or 0
-	self.qid = hton(int)
+    int = int or 0
+    self.qid = hton(int)
 end
 
 
 function linear_road_travel_estimate_reqHeader:getXWAY()
-	return (self.xway)
+    return (self.xway)
 end
 
 function linear_road_travel_estimate_reqHeader:getXWAYstring()
-	return self:getXWAY()
+    return self:getXWAY()
 end
 
 function linear_road_travel_estimate_reqHeader:setXWAY(int)
-	int = int or 0
-	self.xway = (int)
+    int = int or 0
+    self.xway = (int)
 end
 
 
 function linear_road_travel_estimate_reqHeader:getSEG_INIT()
-	return (self.seg_init)
+    return (self.seg_init)
 end
 
 function linear_road_travel_estimate_reqHeader:getSEG_INITstring()
-	return self:getSEG_INIT()
+    return self:getSEG_INIT()
 end
 
 function linear_road_travel_estimate_reqHeader:setSEG_INIT(int)
-	int = int or 0
-	self.seg_init = (int)
+    int = int or 0
+    self.seg_init = (int)
 end
 
 
 function linear_road_travel_estimate_reqHeader:getSEG_END()
-	return (self.seg_end)
+    return (self.seg_end)
 end
 
 function linear_road_travel_estimate_reqHeader:getSEG_ENDstring()
-	return self:getSEG_END()
+    return self:getSEG_END()
 end
 
 function linear_road_travel_estimate_reqHeader:setSEG_END(int)
-	int = int or 0
-	self.seg_end = (int)
+    int = int or 0
+    self.seg_end = (int)
 end
 
 
 function linear_road_travel_estimate_reqHeader:getDOW()
-	return (self.dow)
+    return (self.dow)
 end
 
 function linear_road_travel_estimate_reqHeader:getDOWstring()
-	return self:getDOW()
+    return self:getDOW()
 end
 
 function linear_road_travel_estimate_reqHeader:setDOW(int)
-	int = int or 0
-	self.dow = (int)
+    int = int or 0
+    self.dow = (int)
 end
 
 
 function linear_road_travel_estimate_reqHeader:getTOD()
-	return (self.tod)
+    return (self.tod)
 end
 
 function linear_road_travel_estimate_reqHeader:getTODstring()
-	return self:getTOD()
+    return self:getTOD()
 end
 
 function linear_road_travel_estimate_reqHeader:setTOD(int)
-	int = int or 0
-	self.tod = (int)
+    int = int or 0
+    self.tod = (int)
 end
 
 
@@ -168,54 +168,54 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function linear_road_travel_estimate_reqHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'linear_road_travel_estimate_req'
+    args = args or {}
+    pre = pre or 'linear_road_travel_estimate_req'
 
-	self:setTIME(args[pre .. 'TIME'])
-	self:setQID(args[pre .. 'QID'])
-	self:setXWAY(args[pre .. 'XWAY'])
-	self:setSEG_INIT(args[pre .. 'SEG_INIT'])
-	self:setSEG_END(args[pre .. 'SEG_END'])
-	self:setDOW(args[pre .. 'DOW'])
-	self:setTOD(args[pre .. 'TOD'])
+    self:setTIME(args[pre .. 'TIME'])
+    self:setQID(args[pre .. 'QID'])
+    self:setXWAY(args[pre .. 'XWAY'])
+    self:setSEG_INIT(args[pre .. 'SEG_INIT'])
+    self:setSEG_END(args[pre .. 'SEG_END'])
+    self:setDOW(args[pre .. 'DOW'])
+    self:setTOD(args[pre .. 'TOD'])
 end
 
 -- Retrieve the values of all members
 function linear_road_travel_estimate_reqHeader:get(pre)
-	pre = pre or 'linear_road_travel_estimate_req'
+    pre = pre or 'linear_road_travel_estimate_req'
 
-	local args = {}
-	args[pre .. 'TIME'] = self:getTIME()
-	args[pre .. 'QID'] = self:getQID()
-	args[pre .. 'XWAY'] = self:getXWAY()
-	args[pre .. 'SEG_INIT'] = self:getSEG_INIT()
-	args[pre .. 'SEG_END'] = self:getSEG_END()
-	args[pre .. 'DOW'] = self:getDOW()
-	args[pre .. 'TOD'] = self:getTOD()
+    local args = {}
+    args[pre .. 'TIME'] = self:getTIME()
+    args[pre .. 'QID'] = self:getQID()
+    args[pre .. 'XWAY'] = self:getXWAY()
+    args[pre .. 'SEG_INIT'] = self:getSEG_INIT()
+    args[pre .. 'SEG_END'] = self:getSEG_END()
+    args[pre .. 'DOW'] = self:getDOW()
+    args[pre .. 'TOD'] = self:getTOD()
 
-	return args
+    return args
 end
 
 function linear_road_travel_estimate_reqHeader:getString()
-	return 'linear_road_travel_estimate_req \n'
-		.. 'TIME' .. self:getTIMEString() .. '\n'
-		.. 'QID' .. self:getQIDString() .. '\n'
-		.. 'XWAY' .. self:getXWAYString() .. '\n'
-		.. 'SEG_INIT' .. self:getSEG_INITString() .. '\n'
-		.. 'SEG_END' .. self:getSEG_ENDString() .. '\n'
-		.. 'DOW' .. self:getDOWString() .. '\n'
-		.. 'TOD' .. self:getTODString() .. '\n'
+    return 'linear_road_travel_estimate_req \n'
+        .. 'TIME' .. self:getTIMEString() .. '\n'
+        .. 'QID' .. self:getQIDString() .. '\n'
+        .. 'XWAY' .. self:getXWAYString() .. '\n'
+        .. 'SEG_INIT' .. self:getSEG_INITString() .. '\n'
+        .. 'SEG_END' .. self:getSEG_ENDString() .. '\n'
+        .. 'DOW' .. self:getDOWString() .. '\n'
+        .. 'TOD' .. self:getTODString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
 }
 function linear_road_travel_estimate_reqHeader:resolveNextHeader()
-	return nil
+    return nil
 end
 
 function linear_road_travel_estimate_reqHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	return namedArgs
+    return namedArgs
 end
 
 -----------------------------------------------------

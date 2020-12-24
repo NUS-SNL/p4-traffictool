@@ -14,15 +14,15 @@ p4_pos_report.fields = {p4_pos_report_time, p4_pos_report_vid, p4_pos_report_spd
 
 -- protocol dissector function
 function p4_pos_report.dissector(buffer,pinfo,tree)
-	pinfo.cols.protocol = 'P4_POS_REPORT'
-	local subtree = tree:add(p4_pos_report,buffer(),'P4_POS_REPORT Protocol Data')
-		subtree:add(p4_pos_report_time,tostring(buffer(0,2):bitfield(0,16)))
-		subtree:add(p4_pos_report_vid,tostring(buffer(2,4):bitfield(0,32)))
-		subtree:add(p4_pos_report_spd,tostring(buffer(6,1):bitfield(0,8)))
-		subtree:add(p4_pos_report_xway,tostring(buffer(7,1):bitfield(0,8)))
-		subtree:add(p4_pos_report_lane,tostring(buffer(8,1):bitfield(0,8)))
-		subtree:add(p4_pos_report_dir,tostring(buffer(9,1):bitfield(0,8)))
-		subtree:add(p4_pos_report_seg,tostring(buffer(10,1):bitfield(0,8)))
+    pinfo.cols.protocol = 'P4_POS_REPORT'
+    local subtree = tree:add(p4_pos_report,buffer(),'P4_POS_REPORT Protocol Data')
+        subtree:add(p4_pos_report_time,tostring(buffer(0,2):bitfield(0,16)))
+        subtree:add(p4_pos_report_vid,tostring(buffer(2,4):bitfield(0,32)))
+        subtree:add(p4_pos_report_spd,tostring(buffer(6,1):bitfield(0,8)))
+        subtree:add(p4_pos_report_xway,tostring(buffer(7,1):bitfield(0,8)))
+        subtree:add(p4_pos_report_lane,tostring(buffer(8,1):bitfield(0,8)))
+        subtree:add(p4_pos_report_dir,tostring(buffer(9,1):bitfield(0,8)))
+        subtree:add(p4_pos_report_seg,tostring(buffer(10,1):bitfield(0,8)))
 
 end
 

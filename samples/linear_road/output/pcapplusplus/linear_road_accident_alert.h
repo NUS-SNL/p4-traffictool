@@ -15,47 +15,47 @@
 #endif
 
 namespace pcpp{
-	#pragma pack(push,1)
-	struct accident_alerthdr{
-		uint16_t 	 time;
-		uint32_t 	 vid;
-		uint16_t 	 emit;
-		uint8_t 	 seg;
-	};
+    #pragma pack(push,1)
+    struct accident_alerthdr{
+        uint16_t      time;
+        uint32_t      vid;
+        uint16_t      emit;
+        uint8_t      seg;
+    };
 
-	#pragma pack(pop)
-	class Accident_alertLayer: public Layer{
-		public:
-		Accident_alertLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_ACCIDENT_ALERT;}
-		Accident_alertLayer(){
-			m_DataLen = sizeof(accident_alerthdr);
-			m_Data = new uint8_t[m_DataLen];
-			memset(m_Data, 0, m_DataLen);
-			m_Protocol = P4_ACCIDENT_ALERT;
-		}
+    #pragma pack(pop)
+    class Accident_alertLayer: public Layer{
+        public:
+        Accident_alertLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet): Layer(data, dataLen, prevLayer, packet) {m_Protocol = P4_ACCIDENT_ALERT;}
+        Accident_alertLayer(){
+            m_DataLen = sizeof(accident_alerthdr);
+            m_Data = new uint8_t[m_DataLen];
+            memset(m_Data, 0, m_DataLen);
+            m_Protocol = P4_ACCIDENT_ALERT;
+        }
 
-		 // Getters and Setters for fields
-		 uint16_t getTime();
-		 void setTime(uint16_t value);
-		 uint32_t getVid();
-		 void setVid(uint32_t value);
-		 uint16_t getEmit();
-		 void setEmit(uint16_t value);
-		 uint8_t getSeg();
-		 void setSeg(uint8_t value);
+         // Getters and Setters for fields
+         uint16_t getTime();
+         void setTime(uint16_t value);
+         uint32_t getVid();
+         void setVid(uint32_t value);
+         uint16_t getEmit();
+         void setEmit(uint16_t value);
+         uint8_t getSeg();
+         void setSeg(uint8_t value);
 
-		 inline accident_alerthdr* getAccident_alertHeader() { return (accident_alerthdr*)m_Data; }
+         inline accident_alerthdr* getAccident_alertHeader() { return (accident_alerthdr*)m_Data; }
 
-		 void parseNextLayer();
+         void parseNextLayer();
 
-		 inline size_t getHeaderLen() { return sizeof(accident_alerthdr); }
+         inline size_t getHeaderLen() { return sizeof(accident_alerthdr); }
 
-		 void computeCalculateFields() {}
+         void computeCalculateFields() {}
 
-		 std::string toString();
+         std::string toString();
 
-		 OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
+         OsiModelLayer getOsiModelLayer() { return OsiModelApplicationLayer; }
 
-	};
+    };
 }
 #endif

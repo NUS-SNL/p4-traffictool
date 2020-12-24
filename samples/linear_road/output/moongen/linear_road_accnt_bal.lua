@@ -43,11 +43,11 @@ local ntoh64, hton64 = ntoh64, hton64
 local linear_road_accnt_bal = {}
 
 linear_road_accnt_bal.headerFormat = [[
-	uint16_t 	 time;
-	uint32_t 	 vid;
-	uint16_t 	 emit;
-	uint32_t 	 qid;
-	uint32_t 	 bal;
+    uint16_t      time;
+    uint32_t      vid;
+    uint16_t      emit;
+    uint32_t      qid;
+    uint32_t      bal;
 ]]
 
 
@@ -63,72 +63,72 @@ linear_road_accnt_balHeader.__index = linear_road_accnt_balHeader
 ---- Getters, Setters and String functions for fields
 -----------------------------------------------------
 function linear_road_accnt_balHeader:getTIME()
-	return hton16(self.time)
+    return hton16(self.time)
 end
 
 function linear_road_accnt_balHeader:getTIMEstring()
-	return self:getTIME()
+    return self:getTIME()
 end
 
 function linear_road_accnt_balHeader:setTIME(int)
-	int = int or 0
-	self.time = hton16(int)
+    int = int or 0
+    self.time = hton16(int)
 end
 
 
 function linear_road_accnt_balHeader:getVID()
-	return hton(self.vid)
+    return hton(self.vid)
 end
 
 function linear_road_accnt_balHeader:getVIDstring()
-	return self:getVID()
+    return self:getVID()
 end
 
 function linear_road_accnt_balHeader:setVID(int)
-	int = int or 0
-	self.vid = hton(int)
+    int = int or 0
+    self.vid = hton(int)
 end
 
 
 function linear_road_accnt_balHeader:getEMIT()
-	return hton16(self.emit)
+    return hton16(self.emit)
 end
 
 function linear_road_accnt_balHeader:getEMITstring()
-	return self:getEMIT()
+    return self:getEMIT()
 end
 
 function linear_road_accnt_balHeader:setEMIT(int)
-	int = int or 0
-	self.emit = hton16(int)
+    int = int or 0
+    self.emit = hton16(int)
 end
 
 
 function linear_road_accnt_balHeader:getQID()
-	return hton(self.qid)
+    return hton(self.qid)
 end
 
 function linear_road_accnt_balHeader:getQIDstring()
-	return self:getQID()
+    return self:getQID()
 end
 
 function linear_road_accnt_balHeader:setQID(int)
-	int = int or 0
-	self.qid = hton(int)
+    int = int or 0
+    self.qid = hton(int)
 end
 
 
 function linear_road_accnt_balHeader:getBAL()
-	return hton(self.bal)
+    return hton(self.bal)
 end
 
 function linear_road_accnt_balHeader:getBALstring()
-	return self:getBAL()
+    return self:getBAL()
 end
 
 function linear_road_accnt_balHeader:setBAL(int)
-	int = int or 0
-	self.bal = hton(int)
+    int = int or 0
+    self.bal = hton(int)
 end
 
 
@@ -138,48 +138,48 @@ end
 -----------------------------------------------------
 -- Set all members of the PROTO header
 function linear_road_accnt_balHeader:fill(args,pre)
-	args = args or {}
-	pre = pre or 'linear_road_accnt_bal'
+    args = args or {}
+    pre = pre or 'linear_road_accnt_bal'
 
-	self:setTIME(args[pre .. 'TIME'])
-	self:setVID(args[pre .. 'VID'])
-	self:setEMIT(args[pre .. 'EMIT'])
-	self:setQID(args[pre .. 'QID'])
-	self:setBAL(args[pre .. 'BAL'])
+    self:setTIME(args[pre .. 'TIME'])
+    self:setVID(args[pre .. 'VID'])
+    self:setEMIT(args[pre .. 'EMIT'])
+    self:setQID(args[pre .. 'QID'])
+    self:setBAL(args[pre .. 'BAL'])
 end
 
 -- Retrieve the values of all members
 function linear_road_accnt_balHeader:get(pre)
-	pre = pre or 'linear_road_accnt_bal'
+    pre = pre or 'linear_road_accnt_bal'
 
-	local args = {}
-	args[pre .. 'TIME'] = self:getTIME()
-	args[pre .. 'VID'] = self:getVID()
-	args[pre .. 'EMIT'] = self:getEMIT()
-	args[pre .. 'QID'] = self:getQID()
-	args[pre .. 'BAL'] = self:getBAL()
+    local args = {}
+    args[pre .. 'TIME'] = self:getTIME()
+    args[pre .. 'VID'] = self:getVID()
+    args[pre .. 'EMIT'] = self:getEMIT()
+    args[pre .. 'QID'] = self:getQID()
+    args[pre .. 'BAL'] = self:getBAL()
 
-	return args
+    return args
 end
 
 function linear_road_accnt_balHeader:getString()
-	return 'linear_road_accnt_bal \n'
-		.. 'TIME' .. self:getTIMEString() .. '\n'
-		.. 'VID' .. self:getVIDString() .. '\n'
-		.. 'EMIT' .. self:getEMITString() .. '\n'
-		.. 'QID' .. self:getQIDString() .. '\n'
-		.. 'BAL' .. self:getBALString() .. '\n'
+    return 'linear_road_accnt_bal \n'
+        .. 'TIME' .. self:getTIMEString() .. '\n'
+        .. 'VID' .. self:getVIDString() .. '\n'
+        .. 'EMIT' .. self:getEMITString() .. '\n'
+        .. 'QID' .. self:getQIDString() .. '\n'
+        .. 'BAL' .. self:getBALString() .. '\n'
 end
 
 -- Dictionary for next level headers
 local nextHeaderResolve = {
 }
 function linear_road_accnt_balHeader:resolveNextHeader()
-	return nil
+    return nil
 end
 
 function linear_road_accnt_balHeader:setDefaultNamedArgs(pre, namedArgs, nextHeader, accumulatedLength)
-	return namedArgs
+    return namedArgs
 end
 
 -----------------------------------------------------
